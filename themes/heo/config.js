@@ -8,7 +8,7 @@ const CONFIG = {
   // 首页顶部通知条滚动内容，如不需要可以留空 []
   HEO_NOTICE_BAR: [
     { title: '请使用Ctrl+左键单击 / 鼠标中键等方式访问链接，提升效率', url: 'https://aaax.me' },
-    { title: '点击使用ChatGPT', url: 'https://aaax.me/article/34' }
+    { title: 'Ctrl＋D收藏本站不迷路', url: 'https://aaax.me' }
   ],
 
   // 英雄区左右侧组件颠倒位置
@@ -17,9 +17,9 @@ const CONFIG = {
   HEO_HERO_BODY_REVERSE: false,
 
   // 英雄区(首页顶部大卡)
-  HEO_HERO_TITLE_1: '分享科技',
+  HEO_HERO_TITLE_1: '分享教程',
   HEO_HERO_TITLE_2: '与思维认知',
-  HEO_HERO_TITLE_3: '',
+  HEO_HERO_TITLE_3: '新版上线',
   HEO_HERO_TITLE_4: '',
   HEO_HERO_TITLE_5: '生活明朗 万物可爱',
   HEO_HERO_TITLE_LINK: 'https://aaax.me',
@@ -36,13 +36,10 @@ const CONFIG = {
 
   // 右侧个人资料卡牌欢迎语，点击可自动切换
   HEO_INFOCARD_GREETINGS: [
-    '睡个好觉，保证精力充沛',
     '🔍 分享与热心帮助',
-    '🤝 专修交互与设计',
     '🏃 脚踏实地行动派',
     '🏠 智能家居小能手',
-    '🤖️ 数码科技爱好者',
-    '🧱 团队小组发动机'
+    '🤖️ 数码科技爱好者'
   ],
 
   // 个人资料底部按钮
