@@ -10,6 +10,7 @@ import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
 import { HashTag } from '@/components/HeroIcons'
 import LazyImage from '@/components/LazyImage'
+import LoadingCover from '@/components/LoadingCover'
 import replaceSearchResult from '@/components/Mark'
 import NotionPage from '@/components/NotionPage'
 import ShareBar from '@/components/ShareBar'
@@ -84,6 +85,7 @@ const LayoutBase = props => {
     false,
     CONFIG
   )
+  const HEO_LOADING_COVER = siteConfig('HEO_LOADING_COVER', true, CONFIG)
 
   // 加载wow动画
   useEffect(() => {
@@ -123,6 +125,8 @@ const LayoutBase = props => {
 
       {/* 页脚 */}
       <Footer title={siteConfig('TITLE')} />
+
+      {HEO_LOADING_COVER && <LoadingCover />}
     </div>
   )
 }
