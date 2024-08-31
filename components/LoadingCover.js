@@ -1,8 +1,8 @@
 import { useGlobal } from '@/lib/global'
 import { useEffect, useState } from 'react'
 /**
- * @see https://css-loaders.com/
  * @returns 加载动画
+ * @author https://github.com/88lin/
  */
 export default function LoadingCover() {
   const { onLoading, setOnLoading } = useGlobal()
