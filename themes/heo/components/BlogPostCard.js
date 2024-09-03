@@ -23,13 +23,13 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const POST_TWO_COLS = siteConfig('HEO_HOME_POST_TWO_COLS', true, CONFIG)
   const COVER_HOVER_ENLARGE = siteConfig(
     'HEO_POST_LIST_COVER_HOVER_ENLARGE',
-    false,
+    null,
     CONFIG
   )
 
   return (
     <article
-      className={` ${COVER_HOVER_ENLARGE} ? ' hover:scale-110 transition-all duration-150' : ''}`}>
+      className={` ${siteConfig('HEO_POST_LIST_COVER_HOVER_ENLARGE', null, CONFIG) ? ' hover:scale-110 transition-all duration-150' : ''}`}>
       <div
         data-wow-delay='.2s'
         className={
