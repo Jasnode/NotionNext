@@ -23,7 +23,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const POST_TWO_COLS = siteConfig('HEO_HOME_POST_TWO_COLS', true, CONFIG)
   const COVER_HOVER_ENLARGE = siteConfig(
     'HEO_POST_LIST_COVER_HOVER_ENLARGE',
-    true,
+    false,
     CONFIG
   )
 
