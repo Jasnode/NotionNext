@@ -415,7 +415,7 @@ summary > .notion-h {
   font-size: 1.575em;
   margin-top: 1.08em;
   @apply w-full;
-  /* /* @apply border-b w-full; */ */
+  /* @apply border-b w-full; */
 }
 .notion-h2 {
   @apply w-full;
