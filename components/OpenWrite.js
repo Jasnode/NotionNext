@@ -51,13 +51,33 @@ const OpenWrite = () => {
           blogId,
           cookieAge
         })
+
+        // btw初始化后，开始监听read-more-wrap何时消失
+        const intervalId = setInterval(() => {
+          const readMoreWrapElement = document.getElementById('read-more-wrap')
+          const articleWrapElement = document.getElementById('article-wrapper')
+
+          if (!readMoreWrapElement && articleWrapElement) {
+            toggleTocItems(false) // 恢复目录项的点击
+            // 自动调整文章区域的高度
+            articleWrapElement.style.height = 'auto'
+            // 停止定时器
+            clearInterval(intervalId)
+          }
+        }, 1000) // 每秒检查一次
+
+        // Return cleanup function to clear the interval if the component unmounts
+        return () => clearInterval(intervalId)
       }
     } catch (error) {
       console.error('OpenWrite 加载异常', error)
     }
   }
-
   useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('开发环境:屏蔽OpenWrite')
+      return
+    }
     if (isBrowser && blogId) {
       // Check if the element with id 'read-more-wrap' already exists
       const readMoreWrap = document.getElementById('read-more-wrap')
@@ -65,11 +85,28 @@ const OpenWrite = () => {
       // Only load the script if the element doesn't exist
       if (!readMoreWrap) {
         loadOpenWrite()
+        toggleTocItems(true) // 禁止目录项的点击
       }
     }
   })
 
+  // 启动一个监听器，当页面上存在#read-more-wrap对象时，所有的 a .notion-table-of-contents-item 对象都禁止点击
+
   return <></>
+}
+
+// 定义禁用和恢复目录项点击的函数
+const toggleTocItems = disable => {
+  const tocItems = document.querySelectorAll('a.notion-table-of-contents-item')
+  tocItems.forEach(item => {
+    if (disable) {
+      item.style.pointerEvents = 'none'
+      item.style.opacity = '0.5'
+    } else {
+      item.style.pointerEvents = 'auto'
+      item.style.opacity = '1'
+    }
+  })
 }
 
 /**
