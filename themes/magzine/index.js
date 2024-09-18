@@ -17,6 +17,7 @@ import ArticleInfo from './components/ArticleInfo'
 import { ArticleLock } from './components/ArticleLock'
 import BannerFullWidth from './components/BannerFullWidth'
 import Catalog from './components/Catalog'
+import CatalogFloat from './components/CatalogFloat'
 import CategoryGroup from './components/CategoryGroup'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -31,7 +32,6 @@ import PostSimpleListHorizontal from './components/PostListSimpleHorizontal'
 import PostNavAround from './components/PostNavAround'
 import TagGroups from './components/TagGroups'
 import TagItemMini from './components/TagItemMini'
-import TocDrawer from './components/TocDrawer'
 import TouchMeCard from './components/TouchMeCard'
 import CONFIG from './config'
 import { Style } from './style'
@@ -189,7 +189,11 @@ const LayoutSlug = props => {
             {/* 文章区块分为三列 */}
             <div className='grid grid-cols-1 lg:grid-cols-5 gap-8 py-12'>
               <div className='h-full lg:col-span-1 hidden lg:block'>
-                <Catalog toc={post?.toc} className='sticky top-20' />
+                <Catalog
+                  post={post}
+                  toc={post?.toc || []}
+                  className='sticky top-20'
+                />
               </div>
 
               {/* Notion文章主体 */}
@@ -211,7 +215,6 @@ const LayoutSlug = props => {
                   {/* 上一篇下一篇 */}
                   <PostNavAround prev={prev} next={next} />
 
-                  <AdSlot />
                   {/* 评论区 */}
                   <Comment frontMatter={post} />
                 </section>
@@ -241,6 +244,14 @@ const LayoutSlug = props => {
                   <PostGroupLatest {...props} vertical={true} />
                 </div>
 
+                {/* Adsense */}
+                <div>
+                  <AdSlot />
+                </div>
+
+                {/* 留白 */}
+                <div></div>
+
                 {/* 文章分类区块 */}
                 <div>
                   <CategoryGroup {...props} />
@@ -260,7 +271,7 @@ const LayoutSlug = props => {
             </div>
 
             {/* 移动端目录 */}
-            <TocDrawer {...props} />
+            <CatalogFloat {...props} />
           </div>
         )}
       </div>
