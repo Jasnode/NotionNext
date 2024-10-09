@@ -92,6 +92,9 @@ function Banner(props) {
         <div className='text-xs text-gray-600  dark:text-gray-200'>
           {siteConfig('HEO_HERO_TITLE_3', null, CONFIG)}
         </div>
+        <div className='text-xs font-light'>
+          {siteConfig('HEO_HERO_TITLE_4', null, CONFIG)}
+        </div>
       </div>
 
       {/* 斜向滚动的图标 */}
@@ -369,10 +372,7 @@ function TodayCard({ cRef, siteInfo }) {
         <div
           id='today-card-info'
           className='flex justify-between w-full relative text-white p-10 items-end'>
-          <div className='flex flex-col'>
-            <div className='text-xs font-light'>
-              {siteConfig('HEO_HERO_TITLE_4', null, CONFIG)}
-            </div>
+          <div className='flex flex-col'> 
             <div className='text-3xl font-bold'>
               {siteConfig('HEO_HERO_TITLE_5', null, CONFIG)}
             </div>
