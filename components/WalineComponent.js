@@ -69,7 +69,7 @@ const WalineComponent = (props) => {
     oldest: '按倒序',
     latest: '按正序',
     hottest: '按热度',
-    reactionTitle: '你认为这篇文章怎么样呀？'
+    reactionTitle: '你认为这篇文章怎么样？'
   }
   useEffect(() => {
     if (!waline) {
@@ -87,6 +87,7 @@ const WalineComponent = (props) => {
           '//npm.elemecdn.com/@waline/emojis@1.2.0/bilibili',
           '//npm.elemecdn.com/@waline/emojis@1.2.0/weibo',
           '//npm.elemecdn.com/@waline/emojis@1.2.0/tieba',
+          '//unpkg.com/@waline/emojis@1.2.0/alus',
           '//unpkg.com/@waline/emojis@1.2.0/tw-food'
         ]
       })
