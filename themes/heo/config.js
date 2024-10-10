@@ -21,7 +21,7 @@ const CONFIG = {
   HEO_HERO_TITLE_1: '分享教程',
   HEO_HERO_TITLE_2: '与思维认知',
   HEO_HERO_TITLE_3: 'aaax.me',
-  HEO_HERO_TITLE_4: '新版上线�👋',
+  HEO_HERO_TITLE_4: '新版上线👋',
   HEO_HERO_TITLE_5: '生活明朗 万物可爱',
   HEO_HERO_TITLE_LINK: 'https://aaax.me',
   // 英雄区遮罩文字
