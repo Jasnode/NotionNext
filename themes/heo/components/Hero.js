@@ -370,7 +370,7 @@ function TodayCard({ cRef, siteInfo }) {
           id='today-card-info'
           className='flex justify-between w-full relative text-white p-10 items-end'>
           <div className='flex flex-col'>
-            <div className='text-xs font-light'>
+            <div className='text-sm font-light'>
               {siteConfig('HEO_HERO_TITLE_4', null, CONFIG)}
             </div>
             <div className='text-3xl font-bold'>
