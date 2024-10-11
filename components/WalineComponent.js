@@ -27,7 +27,7 @@ const WalineComponent = (props) => {
     mailError: '请填写正确的邮件地址',
     link: '网址',
     optional: '可选',
-    placeholder: '欢迎评论~(填写邮箱可在被回复时收到邮件提醒)',
+    placeholder: '破防了？来评论~(填写邮箱可在被回复时收到邮件提醒)',
     sofa: '来发评论吧~',
     submit: '提交',
     like: '喜欢',
@@ -87,7 +87,6 @@ const WalineComponent = (props) => {
           '//npm.elemecdn.com/@waline/emojis@1.2.0/bilibili',
           '//npm.elemecdn.com/@waline/emojis@1.2.0/weibo',
           '//npm.elemecdn.com/@waline/emojis@1.2.0/tieba',
-          '//unpkg.com/@waline/emojis@1.2.0/alus',
           '//unpkg.com/@waline/emojis@1.2.0/tw-food'
         ]
       })
