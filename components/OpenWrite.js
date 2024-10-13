@@ -11,14 +11,22 @@ import { useEffect } from 'react'
  */
 const OpenWrite = () => {
   const router = useRouter()
-  const qrcode = siteConfig('OPEN_WRITE_QRCODE', '请配置公众号二维码')
-  const blogId = siteConfig('OPEN_WRITE_BLOG_ID')
-  const name = siteConfig('OPEN_WRITE_NAME', '请配置公众号名')
+  // const qrcode = siteConfig('OPEN_WRITE_QRCODE', '请配置公众号二维码')
+  // const blogId = siteConfig('OPEN_WRITE_BLOG_ID')
+  // const name = siteConfig('OPEN_WRITE_NAME', '请配置公众号名')
+  // const id = 'container'
+  // const keyword = siteConfig('OPEN_WRITE_KEYWORD', '请配置公众号关键词')
+  // const btnText = siteConfig('OPEN_WRITE_BTN_TEXT', '原创不易，完成人机检测，阅读全文')
+  // // 验证一次后的有效时长，单位小时
+  // const cookieAge = siteConfig('OPEN_WRITE_VALIDITY_DURATION', '48')
+  const qrcode = siteConfig('https://cdn.jsdmirror.com/gh/88lin/PicX@master/qrcode_for_gh_2433b95fc21e_430.jpg')
+  const blogId = siteConfig('33316-1728532775180-262')
+  const name = siteConfig('故人小窝')
   const id = 'container'
-  const keyword = siteConfig('OPEN_WRITE_KEYWORD', '请配置公众号关键词')
-  const btnText = siteConfig('OPEN_WRITE_BTN_TEXT', '原创不易，完成人机检测，阅读全文')
+  const keyword = siteConfig('验证码')
+  const btnText = siteConfig('原创不易，请关注微信公众号，阅读全文')
   // 验证一次后的有效时长，单位小时
-  const cookieAge = siteConfig('OPEN_WRITE_VALIDITY_DURATION', '48')
+  const cookieAge = siteConfig('72')
   // 白名单
   const whiteList = siteConfig('OPEN_WRITE_WHITE_LIST', '')
 
