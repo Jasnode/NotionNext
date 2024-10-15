@@ -43,8 +43,7 @@ const OpenWrite = () => {
           id,
           keyword,
           btnText,
-          cookieAge,
-          whiteList
+          cookieAge
         })
 
         // btw初始化后，开始监听read-more-wrap何时消失
