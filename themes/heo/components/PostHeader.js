@@ -22,7 +22,7 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
   return (
     <div
       id='post-bg'
-      className='md:mb-0 -mb-5 w-full h-[30rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10 transition-all duration-300'>
+      className='md:mb-0 -mb-5 w-full h-[30rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10'>
       <style jsx>{`
         .coverdiv:after {
           position: absolute;
@@ -35,32 +35,24 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
               ? '#CA8A04'
               : '#75C9C8'} inset;
         }
-        .coverdiv:hover::after {
-          box-shadow: 110px -130px 500px 100px ${isDarkMode ? '#E3A008' : '#4FD1C5'} inset;
-        }
       `}</style>
 
       <div
-        className={`${isDarkMode ? 'bg-[#CA8A04]' : 'bg-[#75C9C8]'} absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
+        className={`${isDarkMode ? 'bg-[#CA8A04]' : 'bg-[#75C9C8] bg-opacity-70'} absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
         {/* 文章背景图 */}
         <div
           id='post-cover-wrapper'
           style={{
-            filter: 'blur(15px)',
-            transition: 'transform 0.3s ease-in-out'
+            filter: 'blur(15px)'
           }}
-          className='coverdiv lg:opacity-50 lg:translate-x-96 lg:rotate-12 hover:scale-105'>
+          className='coverdiv lg:opacity-50 lg:translate-x-96 lg:rotate-12'>
           <LazyImage
             id='post-cover'
-            className='w-full h-full object-cover max-h-[50rem] min-w-[50vw] min-h-[20rem] rounded-lg shadow-lg'
+            className='w-full h-full object-cover max-h-[50rem] min-w-[50vw] min-h-[20rem]'
             src={headerImage}
           />
         </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-3xl md:text-5xl font-bold text-white text-center px-4 py-2 bg-black bg-opacity-40 rounded">
-            {post.title}
-          </h1>
-        </div>
+
 
         {/* 文章文字描述 */}
         <div
