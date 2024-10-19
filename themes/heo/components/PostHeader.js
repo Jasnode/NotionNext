@@ -17,113 +17,50 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
     return <></>
   }
   // 文章头图
-  // 文章头图组件，接收文章信息、网站信息和暗黑模式状态作为props
-const PostHeaderImage = ({ post, siteInfo, isDarkMode }) => {
-  // 确定要使用的封面图：优先使用文章的封面图，如果没有则使用网站的默认封面图
-  const headerImage = post?.pageCover || siteInfo?.pageCover;
-
-  // 从网站配置中获取是否启用不蒜子统计的设置
-  const ANALYTICS_BUSUANZI_ENABLE = siteConfig('ANALYTICS_BUSUANZI_ENABLE');
-
-  // 根据是否为暗黑模式选择合适的颜色
-  const bgColor = isDarkMode ? 'bg-amber-600' : 'bg-teal-400';
-  const shadowColor = isDarkMode ? 'rgba(202, 138, 4, 0.8)' : 'rgba(117, 201, 200, 0.8)';
-
+  const headerImage = post?.pageCover ? post.pageCover : siteInfo?.pageCover
+  const ANALYTICS_BUSUANZI_ENABLE = siteConfig('ANALYTICS_BUSUANZI_ENABLE')
   return (
-    // 文章头图的主容器
     <div
       id='post-bg'
-      className={`md:mb-0 -mb-5 w-full h-[35rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10 ${bgColor} transition-colors duration-500`}
-    >
-      {/* 样式定义：为封面图添加渐变效果和动画 */}
+      className='md:mb-0 -mb-5 w-full h-[30rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10 transition-all duration-300'>
       <style jsx>{`
-        .coverdiv::before {
-          content: '';
+        .coverdiv:after {
           position: absolute;
+          content: '';
+          width: 100%;
+          height: 100%;
           top: 0;
           left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(135deg, ${shadowColor}, transparent 50%);
-          opacity: 0;
-          transition: opacity 0.5s ease;
+          box-shadow: 110px -130px 500px 100px ${isDarkMode
+              ? '#CA8A04'
+              : '#75C9C8'} inset;
         }
-        .coverdiv:hover::before {
-          opacity: 1;
-        }
-        @keyframes float {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-          100% { transform: translateY(0px); }
+        .coverdiv:hover::after {
+          box-shadow: 110px -130px 500px 100px ${isDarkMode ? '#E3A008' : '#4FD1C5'} inset;
         }
       `}</style>
 
-      {/* 背景容器：应用颜色和flex布局 */}
-      <div className={`absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
-        {/* 文章背景图容器：应用模糊效果和悬浮动画 */}
+      <div
+        className={`${isDarkMode ? 'bg-[#CA8A04]' : 'bg-[#75C9C8]'} absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
+        {/* 文章背景图 */}
         <div
           id='post-cover-wrapper'
-          className='coverdiv lg:opacity-80 transform lg:translate-x-32 lg:rotate-6 hover:scale-105 transition-all duration-500 ease-in-out'
           style={{
-            filter: 'blur(10px)',
-            animation: 'float 6s ease-in-out infinite'
+            filter: 'blur(15px)'
+            transition: 'transform 0.3s ease-in-out'
           }}
-        >
-          {/* 懒加载封面图片 */}
+          className='coverdiv lg:opacity-50 lg:translate-x-96 lg:rotate-12 hover:scale-105'>
           <LazyImage
             id='post-cover'
-            className='w-full h-full object-cover max-h-[55rem] min-w-[60vw] min-h-[25rem] rounded-lg shadow-2xl'
+            className='w-full h-full object-cover max-h-[50rem] min-w-[50vw] min-h-[20rem] rounded-lg shadow-lg'
             src={headerImage}
-            alt="文章封面图"
           />
         </div>
-      </div>
-
-      {/* 添加一个标题覆盖层 */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <h1 className="text-4xl md:text-6xl font-bold text-white text-center px-4 py-2 bg-black bg-opacity-50 rounded-lg transform hover:scale-105 transition-transform duration-300">
-          {post.title}
-        </h1>
-      </div>
-    </div>
-  );
-};
-
-  // const headerImage = post?.pageCover ? post.pageCover : siteInfo?.pageCover
-  // const ANALYTICS_BUSUANZI_ENABLE = siteConfig('ANALYTICS_BUSUANZI_ENABLE')
-  // return (
-  //   <div
-  //     id='post-bg'
-  //     className='md:mb-0 -mb-5 w-full h-[30rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10'>
-  //     <style jsx>{`
-  //       .coverdiv:after {
-  //         position: absolute;
-  //         content: '';
-  //         width: 100%;
-  //         height: 100%;
-  //         top: 0;
-  //         left: 0;
-  //         box-shadow: 110px -130px 500px 100px ${isDarkMode
-  //             ? '#CA8A04'
-  //             : '#75C9C8'} inset;
-  //       }
-  //     `}</style>
-
-  //     <div
-  //       className={`${isDarkMode ? 'bg-[#CA8A04]' : 'bg-[#75C9C8]'} absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
-  //       {/* 文章背景图 */}
-  //       <div
-  //         id='post-cover-wrapper'
-  //         style={{
-  //           filter: 'blur(15px)'
-  //         }}
-  //         className='coverdiv lg:opacity-50 lg:translate-x-96 lg:rotate-12'>
-  //         <LazyImage
-  //           id='post-cover'
-  //           className='w-full h-full object-cover max-h-[50rem] min-w-[50vw] min-h-[20rem]'
-  //           src={headerImage}
-  //         />
-  //       </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-3xl md:text-5xl font-bold text-white text-center px-4 py-2 bg-black bg-opacity-40 rounded">
+            {post.title}
+          </h1>
+        </div>
 
         {/* 文章文字描述 */}
         <div
