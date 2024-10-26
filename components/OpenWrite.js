@@ -17,6 +17,7 @@ const OpenWrite = () => {
   const id = 'article-wrapper'
   const keyword = siteConfig('OPEN_WRITE_KEYWORD', '请配置公众号关键词')
   const btnText = siteConfig('OPEN_WRITE_BTN_TEXT', '原创不易，完成人机检测，阅读全文')
+  const displayPercentage = siteConfig('OPEN_WRITE_DISPLAY_PERCENTAGE', '0.3')
   // 验证一次后的有效时长，单位小时
   const cookieAge = siteConfig('OPEN_WRITE_VALIDITY_DURATION', '48')
   // 白名单
@@ -43,6 +44,7 @@ const OpenWrite = () => {
           id,
           keyword,
           btnText,
+          displayPercentage,
           cookieAge
         })
 
