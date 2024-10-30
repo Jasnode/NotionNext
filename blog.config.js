@@ -24,7 +24,7 @@ const BLOG = {
 
   CUSTOM_MENU: process.env.NEXT_PUBLIC_CUSTOM_MENU || true, // 支持Menu 类型，从3.12.0版本起，各主题将逐步支持灵活的二级菜单配置，替代了原来的Page类型，此配置是试验功能、默认关闭。
 
-  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '故人', // 您的昵称 例如 tangly1024
+  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '故人', // 您的昵称
   BIO: process.env.NEXT_PUBLIC_BIO || '我与春风皆过客，你携秋水揽星河。', // 作者简介
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://aaax.me', // 网站地址
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '故人博客,故人Blog,故人,记录生活,分享资源,资源,文献,考研,教程,Windows', // 网站关键词 英文逗号隔开
@@ -160,7 +160,7 @@ const BLOG = {
   FACEBOOK_PAGE_ID: process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID || '', // Facebook Page ID 來啟用 messenger 聊天功能
   FACEBOOK_APP_ID: process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || '', // Facebook App ID 來啟用 messenger 聊天功能 获取: https://developers.facebook.com/
 
-  BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '桂ICP备21002685号-1', // 备案号 闽ICP备XXXXXXX
+  BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '', // 备案号 闽ICP备XXXXXXX
 
   // START********代码相关********
   // PrismJs 代码相关
