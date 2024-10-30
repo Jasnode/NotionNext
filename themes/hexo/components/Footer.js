@@ -46,7 +46,7 @@ const Footer = ({ title }) => {
           <a
             href='https://aaax.me'
             className='dark:text-gray-300'>
-            故人 {siteConfig('VERSION')}
+            Piscesstar02 {siteConfig('VERSION')}
           </a>
           .
         </p>
