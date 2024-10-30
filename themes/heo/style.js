@@ -22,7 +22,7 @@ const Style = () => {
       --ai-card-border: #3d3d3f;
   }
       body {
-        background-color: #f7f9fe;
+        background-color: #f1f2f3;
         overflow-x: hidden;
       }
 
