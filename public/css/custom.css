@@ -256,3 +256,8 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 #memos > ul > li > div > div.memos__text > pre > code {
   color: #000000;
 }
+/* 卡片颜色修改 */
+.bg-black {
+  --tw-bg-opacity: 1;
+  box-shadow: 0 -109px 133px -9px #052c65 inset;
+}
