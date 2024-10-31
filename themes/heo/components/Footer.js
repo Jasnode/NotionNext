@@ -1,4 +1,4 @@
-import { GongAnBeiAn } from '@/components/GongAnBeiAn'
+import { BeiAnGongAn } from '@/components/BeiAnGongAn'
 import { siteConfig } from '@/lib/config'
 import SocialButton from './SocialButton'
 
@@ -47,7 +47,7 @@ const Footer = ({ title }) => {
               </a>
             </>
           )}
-          <GongAnBeiAn />
+          <BeiAnGongAn />
 
           <span className='hidden busuanzi_container_site_pv'>
             <i className='fas fa-eye' />
