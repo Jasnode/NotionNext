@@ -13,7 +13,7 @@ export default function LoadingCover() {
     if (onLoading) {
       setIsVisible(true)
     } else {
-      const timeout = setTimeout(() => setIsVisible(false), 1500) // 等待淡出动画结束
+      const timeout = setTimeout(() => setIsVisible(false), 1800) // 等待淡出动画结束
       return () => clearTimeout(timeout)
     }
   }, [onLoading])
@@ -32,134 +32,45 @@ export default function LoadingCover() {
       onClick={handleClick}
       className={`dark:text-white text-black bg-white dark:bg-black animate__animated animate__faster ${
         onLoading ? 'animate__fadeIn' : 'animate__fadeOut'
-      } flex flex-col justify-center z-50 w-full h-screen fixed top-0 left-0`}
-    >
-      <div className="mx-auto loader-container">
-        <style jsx global>{`
-          .loader-container {
-            position: relative;
-            width: 300px;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-          }
-
-          .element {
-            position: absolute;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-          }
-
-          .sphere {
-            width: 120px;
-            height: 120px;
+      } flex flex-col justify-center z-50 w-full h-screen fixed top-0 left-0`}>
+      <div className='mx-auto'>
+        <style global>
+          {`
+          .loader {
+            width: 20px;
+            aspect-ratio: 1;
             border-radius: 50%;
-            background: radial-gradient(circle, #ff9ff3, #feca57);
-            animation: sphereMotion 5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite alternate, spin 10s linear infinite;
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
-          }
-
-          .ripple {
-            width: 120px;
-            height: 120px;
-            border: 5px solid #54a0ff;
-            border-radius: 50%;
-            position: absolute;
-            animation: rippleEffect 2s linear infinite;
-            opacity: 0.6;
-          }
-
-          .cube {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #34ace0, #ffda79);
-            transform: rotateX(45deg) rotateY(45deg);
-            animation: rotateCube 3s ease-in-out infinite;
-          }
-
-          .diamond {
-            width: 0;
-            height: 0;
-            border: 40px solid transparent;
-            border-bottom-color: #ff6b6b;
+            background: #000;
+            box-shadow: 0 0 0 0 #0004;
+            animation: l2 1.5s infinite linear;
             position: relative;
-            animation: bounceDiamond 1.5s ease-in-out infinite, spinDiamond 6s linear infinite;
           }
-          .diamond:after {
+          .loader:before,
+          .loader:after {
             content: '';
             position: absolute;
-            left: -40px;
-            top: 40px;
-            width: 0;
-            height: 0;
-            border: 40px solid transparent;
-            border-top-color: #ff6b6b;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow: 0 0 0 0 #0004;
+            animation: inherit;
+            animation-delay: -0.5s;
           }
-
-          .particle {
-            width: 4px;
-            height: 4px;
-            background-color: #ff9f43;
-            border-radius: 50%;
-            position: absolute;
-            animation: particleMove 1.5s linear infinite;
+          .loader:after {
+            animation-delay: -1s;
           }
-
-          .glow-text {
-            position: absolute;
-            bottom: -40px;
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #feca57, #34ace0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: flicker 3s infinite alternate;
+            /* 深色模式下的样式 */
+          .dark .loader {
+            background: #fff; /* 白色或灰色 */
+            box-shadow: 0 0 0 0 #fff4; /* 使用白色阴影 */
           }
-
-          @keyframes sphereMotion {
-            0%, 100% { transform: translateZ(0) scale(1); }
-            50% { transform: translateZ(50px) scale(1.2); }
+          @keyframes l2 {
+            100% {
+              box-shadow: 0 0 0 40px #0000;
+            }
           }
-
-          @keyframes rippleEffect {
-            0% { transform: scale(0.8); opacity: 0.6; }
-            50% { transform: scale(1.5); opacity: 0.2; }
-            100% { transform: scale(2); opacity: 0; }
-          }
-
-          @keyframes rotateCube {
-            0%, 100% { transform: rotateX(45deg) rotateY(45deg); }
-            50% { transform: rotateX(225deg) rotateY(225deg); }
-          }
-
-          @keyframes bounceDiamond {
-            0%, 100% { transform: translateY(-10px); }
-            50% { transform: translateY(10px); }
-          }
-
-          @keyframes spinDiamond {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-
-          @keyframes particleMove {
-            0% { transform: translate(0, 0); opacity: 1; }
-            100% { transform: translate(100px, 50px); opacity: 0; }
-          }
-
-          @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-          }
-        `}</style>
-        <div className="element sphere"></div>
-        <div className="element ripple"></div>
-        <div className="element cube"></div>
-        <div className="element diamond"></div>
-        <div className="element particle"></div>
-        <div className="glow-text">Loading...</div>
+      `}
+        </style>
+        <div className='loader'></div>
       </div>
     </div>
   ) : null;
