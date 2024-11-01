@@ -309,4 +309,5 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 .hover\:border-indigo-600:hover {
   --tw-border-opacity: 1;
   border-color: #b0c4de;
+  box-shadow: 0 0 5px #b0c4de, 0 0 10px #b0c4de;
 }
