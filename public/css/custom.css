@@ -262,7 +262,46 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
   box-shadow: 0 -109px 133px -9px #052c65 inset;
 }
 /* 此刻卡片渐变色 */
-#theme-heo > header > div.max-w-\[86rem\].w-full.mx-auto.flex.h-12.mb-4.px-5.font-bold > div{
+#theme-heo > header > div.max-w-\[86rem\].w-full.mx-auto.flex.h-12.mb-4.px-5.font-bold > div {
   backdrop-filter: blur(5px) saturate(150%);
   background: linear-gradient(60deg, #ffd7e4 0, #c8f1ff 83%) !important;
+}
+/* 黑夜模式下移除渐变色 */
+.dark #theme-heo > header > div.max-w-\[86rem\].w-full.mx-auto.flex.h-12.mb-4.px-5.font-bold > div {
+  backdrop-filter: none;
+  background: none !important; 
+}
+/* tag颜色 */
+.hover\:bg-blue-600:hover{
+  --tw-bg-opacity:1;
+  background-color:#ff6817;
+  }
+/* 标签颜色 */
+  .hover\:bg-indigo-600:hover {
+    --tw-bg-opacity: 1;
+    background-color: #ff6817;
+}
+
+.group:hover .group-hover\:bg-indigo-600 {
+  --tw-bg-opacity: 1;
+  background-color: #ff6817;
+}
+.hover\:text-indigo-600:hover {
+  --tw-text-opacity: 1;
+  color:#3a86ff;
+}
+/* 推荐字体颜色 */
+.group:hover .group-hover\:text-indigo-600 {
+  --tw-text-opacity: 1;
+  color: #3a86ff;
+}
+/* 首页字体颜色 */
+.group:hover .group-hover\:text-indigo-700 {
+  --tw-text-opacity: 1;
+  color: #3a86ff;
+}
+/* 复选框颜色 */
+.hover\:border-indigo-600:hover {
+  --tw-border-opacity: 1;
+  border-color: #b0c4de;
 }
