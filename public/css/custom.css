@@ -273,46 +273,39 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 }
 /* tag颜色 */
 .hover\:bg-blue-600:hover{
-  --tw-bg-opacity:1;
   background-color:#ff6817;
   }
 /* 标签颜色 */
   .hover\:bg-indigo-600:hover {
-    --tw-bg-opacity: 1;
     background-color: #ff6817;
 }
-
 .group:hover .group-hover\:bg-indigo-600 {
-  --tw-bg-opacity: 1;
+  background-color: #ff6817;
+}
+.bg-indigo-600 {
   background-color: #ff6817;
 }
 .hover\:text-indigo-600:hover {
-  --tw-text-opacity: 1;
   color:#3a86ff;
 }
 /* 推荐文章字体颜色 */
 .group:hover .group-hover\:text-indigo-600 {
-  --tw-text-opacity: 1;
   color: #3a86ff;
 }
 /* 首页字体颜色 */
 .group:hover .group-hover\:text-indigo-700 {
-  --tw-text-opacity: 1;
   color: #3a86ff;
 }
 /* 目录字体颜色 */
 .text-indigo-600 {
-  --tw-text-opacity: 1;
   color: #3a86ff;
 }
 /* 复选框颜色 */
 .hover\:border-indigo-600:hover {
-  --tw-border-opacity: 1;
   border-color: #b0c4de;
-  box-shadow: 0 0 5px #b0c4de, 0 0 10px #b0c4de;
+  box-shadow: 0 0 6px #b0c4de, 0 0 12px #b0c4de;
 }
 .hover\:border-blue-600:hover {
-  --tw-border-opacity: 1;
-  border-color: #ff68179e;
+  border-color: #ff6817;
   box-shadow: 0 0 6px #ff681796, 0 0 12px #ff681791;
 }
