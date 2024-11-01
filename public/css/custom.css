@@ -290,13 +290,18 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
   --tw-text-opacity: 1;
   color:#3a86ff;
 }
-/* 推荐字体颜色 */
+/* 推荐文章字体颜色 */
 .group:hover .group-hover\:text-indigo-600 {
   --tw-text-opacity: 1;
   color: #3a86ff;
 }
 /* 首页字体颜色 */
 .group:hover .group-hover\:text-indigo-700 {
+  --tw-text-opacity: 1;
+  color: #3a86ff;
+}
+/* 目录字体颜色 */
+.text-indigo-600 {
   --tw-text-opacity: 1;
   color: #3a86ff;
 }
