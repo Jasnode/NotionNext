@@ -303,9 +303,9 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 /* 复选框颜色 */
 .hover\:border-indigo-600:hover {
   border-color: #b0c4de;
-  box-shadow: 0 0 5px #b0c4de, 0 0 10px #b0c4de;
+  box-shadow: 0 0 8px #b0c4de, 0 0 16px #b0c4de;
 }
 .hover\:border-blue-600:hover {
-  border-color: #ff6817;
-  box-shadow: 0 0 6px #ff681796, 0 0 12px #ff681791;
+  border-color: #ffffff00;
+  box-shadow: 0 0 10px #ff6817ad, 0 0 20px #ff6817a3;
 }
