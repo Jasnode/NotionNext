@@ -59,10 +59,10 @@ const BLOG = {
   // START ************网站字体*****************
   // ['font-serif','font-sans'] 两种可选，分别是衬线和无衬线: 参考 https://www.jianshu.com/p/55e410bd2115
   // 后面空格隔开的font-light的字体粗细，留空是默认粗细；参考 https://www.tailwindcss.cn/docs/font-weight
-  FONT_STYLE: process.env.NEXT_PUBLIC_FONT_STYLE || 'font-sans font-medium',
+  FONT_STYLE: process.env.NEXT_PUBLIC_FONT_STYLE || 'font-sans font-semibold',
   // 字体CSS 例如 https://npm.elemecdn.com/lxgw-wenkai-webfont@1.6.0/style.css
   FONT_URL: [
-    //'https://npm.elemecdn.com/lxgw-wenkai-webfont@1.7.0/style.css',
+    'https://npm.elemecdn.com/lxgw-wenkai-webfont@1.7.0/style.css',
     'https://fonts.googleapis.com/css?family=Bitter&display=swap', // Bitter 用作英文数字的字体
     'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&display=swap',
     'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300&display=swap'
@@ -72,14 +72,14 @@ const BLOG = {
     '"PingFang SC"',
     'BlinkMacSystemFont',
     '-apple-system',
-    //'"LXGW WenKai"',
-    '"Segoe UI Emoji"',
-    '"Apple Color Emoji"',
     'HarmonyOS_Regular',
+    '"LXGW WenKai"',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
     '"Segoe UI Symbol"',
     '"Segoe UI"',
-    '"Microsoft YaHei"',
     '"Noto Sans SC"',
+    '"Microsoft YaHei"',
     '"Helvetica Neue"',
     'Helvetica',
     '"Source Han Sans SC"',

@@ -8,7 +8,7 @@ const CONFIG = {
 
   // 首页顶部通知条滚动内容，如不需要可以留空 []
   HEO_NOTICE_BAR: [
-    { title: '请使用Ctrl+左键单击 / 鼠标中键等方式访问链接，提升效率', url: 'https://aaax.me' },
+    { title: 'Ctrl+左键单击 / 鼠标中键方式访问链接，提升效率', url: 'https://pro.gleeze.com' },
     { title: 'Ctrl＋D收藏本站不迷路', url: 'https://aaax.me' }
   ],
 
@@ -20,8 +20,8 @@ const CONFIG = {
   // 英雄区(首页顶部大卡)
   HEO_HERO_TITLE_1: '分享教程',
   HEO_HERO_TITLE_2: '与思维认知',
-  HEO_HERO_TITLE_3: 'AAAX.ME',
-  HEO_HERO_TITLE_4: '欢迎来访👋',
+  HEO_HERO_TITLE_3: '提供优质学习与技术教程',
+  HEO_HERO_TITLE_4: '一起进步，共享智慧👋',
   HEO_HERO_TITLE_5: '生活明朗 万物可爱',
   HEO_HERO_TITLE_LINK: 'https://aaax.me',
   // 英雄区遮罩文字
@@ -29,7 +29,7 @@ const CONFIG = {
 
   // 英雄区显示三个置顶分类
   HEO_HERO_CATEGORY_1: { title: '必看精选', url: '/tag/必看' },
-  HEO_HERO_CATEGORY_2: { title: '热门文章', url: '/tag/热门' },
+  HEO_HERO_CATEGORY_2: { title: '热搜文章', url: '/tag/热门' },
   HEO_HERO_CATEGORY_3: { title: '实用教程', url: '/tag/教程' },
 
   // 英雄区右侧推荐文章标签, 例如 [推荐] , 最多六篇文章; 若留空白''，则推荐最近更新文章
@@ -39,9 +39,15 @@ const CONFIG = {
 
   // 右侧个人资料卡牌欢迎语，点击可自动切换
   HEO_INFOCARD_GREETINGS: [
-    '🔍 分享与热心帮助',
-    '🏃 脚踏实地行动派',
-    '🏠 智能家居小能手',
+    '✨ 追求简单幸福的日子',
+    '🌸 心思细腻的温柔派',
+    '💖 双鱼座的深情默守',
+    '🎐 收藏生活里的小美好',
+    '💫 平凡生活中的小确幸',
+    '🧸 有爱好与耐心的宠物家长',
+    '🤝 默默付出的行动派',
+    '💡 电脑技术问题的解决者',
+    '🍂 慢生活的追求者',
     '🤖️ 数码科技爱好者'
   ],
 
