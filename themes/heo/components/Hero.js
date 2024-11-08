@@ -89,7 +89,7 @@ function Banner(props) {
           <br />
           {siteConfig('HEO_HERO_TITLE_2', null, CONFIG)}
         </div>
-        <div className='text-xs text-gray-600  dark:text-gray-200'>
+        <div className='text-xs text-gray-800  dark:text-gray-200'>
           {siteConfig('HEO_HERO_TITLE_3', null, CONFIG)}
         </div>
       </div>
@@ -370,7 +370,7 @@ function TodayCard({ cRef, siteInfo }) {
           id='today-card-info'
           className='flex justify-between w-full relative text-white p-10 items-end'>
           <div className='flex flex-col'>
-            <div className='text-sm font-light'>
+            <div className='text-sm font-normal'>
               {siteConfig('HEO_HERO_TITLE_4', null, CONFIG)}
             </div>
             <div className='text-3xl font-bold'>

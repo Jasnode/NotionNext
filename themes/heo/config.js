@@ -9,7 +9,7 @@ const CONFIG = {
   // 首页顶部通知条滚动内容，如不需要可以留空 []
   HEO_NOTICE_BAR: [
     { title: 'Ctrl+左键单击 / 鼠标中键方式访问链接，提升效率', url: 'https://pro.gleeze.com' },
-    { title: 'Ctrl＋D收藏本站不迷路', url: 'https://aaax.me' }
+    { title: 'Ctrl＋D收藏本站不迷路', url: 'https://pro.gleeze.com' }
   ],
 
   // 英雄区左右侧组件颠倒位置
@@ -20,10 +20,10 @@ const CONFIG = {
   // 英雄区(首页顶部大卡)
   HEO_HERO_TITLE_1: '分享教程',
   HEO_HERO_TITLE_2: '与思维认知',
-  HEO_HERO_TITLE_3: '提供优质学习与技术教程',
+  HEO_HERO_TITLE_3: '提供优质资源与技术教程',
   HEO_HERO_TITLE_4: '一起进步，共享智慧👋',
   HEO_HERO_TITLE_5: '生活明朗 万物可爱',
-  HEO_HERO_TITLE_LINK: 'https://aaax.me',
+  HEO_HERO_TITLE_LINK: 'https://pro.gleeze.com',
   // 英雄区遮罩文字
   HEO_HERO_COVER_TITLE: '随便逛逛',
 
