@@ -26,7 +26,7 @@ const BLOG = {
 
   AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '故人', // 您的昵称
   BIO: process.env.NEXT_PUBLIC_BIO || '我与春风皆过客，你携秋水揽星河。', // 作者简介
-  LINK: process.env.NEXT_PUBLIC_LINK || 'https://aaax.me', // 网站地址
+  LINK: process.env.NEXT_PUBLIC_LINK || 'https://pro.gleeze.com', // 网站地址
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '故人博客,故人Blog,故人,记录生活,分享资源,资源,文献,考研,教程,Windows', // 网站关键词 英文逗号隔开
 
   // 社交链接，不需要可留空白，例如 CONTACT_WEIBO:''
