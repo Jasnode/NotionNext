@@ -46,7 +46,7 @@ export default function PostRecommend({ recommendPosts, siteInfo }) {
               passHref
               className='flex h-40 cursor-pointer overflow-hidden rounded-2xl'>
               <div className='h-full w-full relative group'>
-                <div className='flex items-center justify-center w-full h-full duration-300 '>
+                <div className='absolute bottom-0 left-0 w-full py-4 flex items-center justify-center'>
                   <div className='z-10 text-lg px-4 font-bold text-white text-center shadow-text select-none'>
                     {post.title}
                   </div>
