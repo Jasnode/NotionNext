@@ -148,7 +148,7 @@ const BLOG = {
     process.env.NEXT_PUBLIC_CUSTOM_RIGHT_CLICK_CONTEXT_MENU_THEME_TAG || true, // 是否显示标签
 
   // 自定义外部脚本，外部样式
-  CUSTOM_EXTERNAL_JS: ['https://cdn.jsdmirror.com/npm/pace-js@latest/pace.min.js','https://cdn.jsdmirror.com/gh/instantpage/instant.page@5.1.1/instantpage.js'], // e.g. ['http://xx.com/script.js','http://xx.com/script.js']
+  CUSTOM_EXTERNAL_JS: ['https://cdn.jsdmirror.cn/npm/pace-js@latest/pace.min.js','https://cdn.jsdmirror.cn/npm/instant.page@5.2.0/instantpage.min.js'], // e.g. ['http://xx.com/script.js','http://xx.com/script.js']
   CUSTOM_EXTERNAL_CSS: [''], // e.g. ['http://xx.com/style.css','http://xx.com/style.css']
 
   // 侧栏布局 是否反转(左变右,右变左) 已支持主题: hexo next medium fukasawa example
