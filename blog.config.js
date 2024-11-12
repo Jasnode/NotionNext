@@ -338,21 +338,21 @@ const BLOG = {
     process.env.NEXT_PUBLIC_COMMENT_HIDE_SINGLE_TAB || false, // Whether hide the tab when there's no tabs. 只有一个评论组件时是否隐藏切换组件的标签页
 
   // artalk 评论插件
-  COMMENT_ARTALK_SERVER: process.env.NEXT_PUBLIC_COMMENT_ARTALK_SERVER || '', // ArtalkServert后端地址 https://artalk.js.org/guide/deploy.html
-  COMMENT_ARTALK_JS:
-    process.env.NEXT_PUBLIC_COMMENT_ARTALK_JS ||
-    'https://cdnjs.cloudflare.com/ajax/libs/artalk/2.5.5/Artalk.js', // ArtalkServert js cdn
-  COMMENT_ARTALK_CSS:
-    process.env.NEXT_PUBLIC_COMMENT_ARTALK_CSS ||
-    'https://cdnjs.cloudflare.com/ajax/libs/artalk/2.5.5/Artalk.css', // ArtalkServert css cdn
+  // COMMENT_ARTALK_SERVER: process.env.NEXT_PUBLIC_COMMENT_ARTALK_SERVER || '', // ArtalkServert后端地址 https://artalk.js.org/guide/deploy.html
+  // COMMENT_ARTALK_JS:
+  //   process.env.NEXT_PUBLIC_COMMENT_ARTALK_JS ||
+  //   'https://cdnjs.cloudflare.com/ajax/libs/artalk/2.5.5/Artalk.js', // ArtalkServert js cdn
+  // COMMENT_ARTALK_CSS:
+  //   process.env.NEXT_PUBLIC_COMMENT_ARTALK_CSS ||
+  //   'https://cdnjs.cloudflare.com/ajax/libs/artalk/2.5.5/Artalk.css', // ArtalkServert css cdn
 
   // twikoo
-  COMMENT_TWIKOO_ENV_ID: process.env.NEXT_PUBLIC_COMMENT_ENV_ID || '', // TWIKOO后端地址 腾讯云环境填envId；Vercel环境填域名，教程：https://tangly1024.com/article/notionnext-twikoo
-  COMMENT_TWIKOO_COUNT_ENABLE:
-    process.env.NEXT_PUBLIC_COMMENT_TWIKOO_COUNT_ENABLE || true, // 博客列表是否显示评论数
-  COMMENT_TWIKOO_CDN_URL:
-    process.env.NEXT_PUBLIC_COMMENT_TWIKOO_CDN_URL ||
-    'https://cdn.jsdmirror.cn/npm/twikoo@1.6.17/dist/twikoo.all.min.js', // twikoo客户端cdn
+  // COMMENT_TWIKOO_ENV_ID: process.env.NEXT_PUBLIC_COMMENT_ENV_ID || '', // TWIKOO后端地址 腾讯云环境填envId；Vercel环境填域名，教程：https://tangly1024.com/article/notionnext-twikoo
+  // COMMENT_TWIKOO_COUNT_ENABLE:
+  //   process.env.NEXT_PUBLIC_COMMENT_TWIKOO_COUNT_ENABLE || true, // 博客列表是否显示评论数
+  // COMMENT_TWIKOO_CDN_URL:
+  //   process.env.NEXT_PUBLIC_COMMENT_TWIKOO_CDN_URL ||
+  //   'https://cdn.jsdmirror.cn/npm/twikoo@1.6.17/dist/twikoo.all.min.js', // twikoo客户端cdn
 
   // utterance
   COMMENT_UTTERRANCES_REPO:
@@ -384,20 +384,20 @@ const BLOG = {
     process.env.NEXT_PUBLIC_COMMENT_CUSDIS_SCRIPT_SRC || '/js/cusdis.es.js', // change this if you're using self-hosted version
 
   // gitalk评论插件 更多参考 https://gitalk.github.io/
-  COMMENT_GITALK_REPO: process.env.NEXT_PUBLIC_COMMENT_GITALK_REPO || '', // 你的Github仓库名，例如 'NotionNext'
-  COMMENT_GITALK_OWNER: process.env.NEXT_PUBLIC_COMMENT_GITALK_OWNER || '', // 你的用户名 e.g tangly1024
-  COMMENT_GITALK_ADMIN: process.env.NEXT_PUBLIC_COMMENT_GITALK_ADMIN || '', // 管理员用户名、一般是自己 e.g 'tangly1024'
-  COMMENT_GITALK_CLIENT_ID:
-    process.env.NEXT_PUBLIC_COMMENT_GITALK_CLIENT_ID || '', // e.g 20位ID ， 在gitalk后台获取
-  COMMENT_GITALK_CLIENT_SECRET:
-    process.env.NEXT_PUBLIC_COMMENT_GITALK_CLIENT_SECRET || '', // e.g 40位ID， 在gitalk后台获取
-  COMMENT_GITALK_DISTRACTION_FREE_MODE: false, // 类似facebook的无干扰模式
-  COMMENT_GITALK_JS_CDN_URL:
-    process.env.NEXT_PUBLIC_COMMENT_GITALK_JS_CDN_URL ||
-    'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.min.js', // gitalk客户端 js cdn
-  COMMENT_GITALK_CSS_CDN_URL:
-    process.env.NEXT_PUBLIC_COMMENT_GITALK_CSS_CDN_URL ||
-    'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.css', // gitalk客户端 css cdn
+  // COMMENT_GITALK_REPO: process.env.NEXT_PUBLIC_COMMENT_GITALK_REPO || '', // 你的Github仓库名，例如 'NotionNext'
+  // COMMENT_GITALK_OWNER: process.env.NEXT_PUBLIC_COMMENT_GITALK_OWNER || '', // 你的用户名 e.g tangly1024
+  // COMMENT_GITALK_ADMIN: process.env.NEXT_PUBLIC_COMMENT_GITALK_ADMIN || '', // 管理员用户名、一般是自己 e.g 'tangly1024'
+  // COMMENT_GITALK_CLIENT_ID:
+  //   process.env.NEXT_PUBLIC_COMMENT_GITALK_CLIENT_ID || '', // e.g 20位ID ， 在gitalk后台获取
+  // COMMENT_GITALK_CLIENT_SECRET:
+  //   process.env.NEXT_PUBLIC_COMMENT_GITALK_CLIENT_SECRET || '', // e.g 40位ID， 在gitalk后台获取
+  // COMMENT_GITALK_DISTRACTION_FREE_MODE: false, // 类似facebook的无干扰模式
+  // COMMENT_GITALK_JS_CDN_URL:
+  //   process.env.NEXT_PUBLIC_COMMENT_GITALK_JS_CDN_URL ||
+  //   'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.min.js', // gitalk客户端 js cdn
+  // COMMENT_GITALK_CSS_CDN_URL:
+  //   process.env.NEXT_PUBLIC_COMMENT_GITALK_CSS_CDN_URL ||
+  //   'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.css', // gitalk客户端 css cdn
 
   COMMENT_GITTER_ROOM: process.env.NEXT_PUBLIC_COMMENT_GITTER_ROOM || '', // gitter聊天室 see https://gitter.im/ 不需要则留空
   COMMENT_DAO_VOICE_ID: process.env.NEXT_PUBLIC_COMMENT_DAO_VOICE_ID || '', // DaoVoice http://dashboard.daovoice.io/get-started

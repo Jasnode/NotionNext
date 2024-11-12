@@ -11,11 +11,11 @@ export default function AOSAnimation() {
   const initAOS = async () => {
     Promise.all([
       loadExternalResource(
-        'https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.js',
+        'https://cdn.jsdmirror.cn/npm/aos@2.3.4/dist/aos.min.js',
         'js'
       ),
       loadExternalResource(
-        'https://cdn.bootcdn.net/ajax/libs/aos/2.3.4/aos.css',
+        'https://cdn.jsdmirror.cn/npm/aos@2.3.4/dist/aos.min.css',
         'css'
       )
     ]).then(() => {
