@@ -3,7 +3,7 @@ const BLOG = {
   // Important page_id！！！Duplicate Template from  https://www.notion.so/tanghh/02ab3b8678004aa69e9e415905ef32a5
   NOTION_PAGE_ID:
     process.env.NOTION_PAGE_ID ||
-    '4ec091814b124986a5e534ca1793387b',
+    '',
   PSEUDO_STATIC: process.env.NEXT_PUBLIC_PSEUDO_STATIC || false, // 伪静态路径，开启后所有文章URL都以 .html 结尾。
   NEXT_REVALIDATE_SECOND: process.env.NEXT_PUBLIC_REVALIDATE_SECOND || 864000, // 更新内容缓存间隔 单位(秒)；即每个页面有5秒的纯静态期、此期间无论多少次访问都不会抓取notion数据；调大该值有助于节省Vercel资源、同时提升访问速率，但也会使文章更新有延迟。
   THEME: process.env.NEXT_PUBLIC_THEME || 'heo', // 当前主题，在themes文件夹下可找到所有支持的主题；主题名称就是文件夹名，例如 example,fukasawa,gitbook,heo,hexo,landing,matery,medium,next,nobelium,plog,simple
@@ -45,7 +45,7 @@ const BLOG = {
 
   NOTION_HOST: process.env.NEXT_PUBLIC_NOTION_HOST || 'https://www.notion.so', // Notion域名，您可以选择用自己的域名进行反向代理，如果不懂得什么是反向代理，请勿修改此项
 
-  BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || 'https://cdn.jsdmirror.com/gh/88lin/PicX@master/favicon.jiupf2ws8pc.ico', // blog favicon 配置, 默认使用 /favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
+  BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || 'https://cdn.jsdmirror.cn/gh/88lin/PicX@master/favicon.jiupf2ws8pc.ico', // blog favicon 配置, 默认使用 /favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
 
   IMAGE_COMPRESS_WIDTH: process.env.NEXT_PUBLIC_IMAGE_COMPRESS_WIDTH || 800, // 图片压缩宽度默认值，作用于博客封面和文章内容 越小加载图片越快
   IMAGE_ZOOM_IN_WIDTH: process.env.NEXT_PUBLIC_IMAGE_ZOOM_IN_WIDTH || 1200, // 文章图片点击放大后的画质宽度，不代表在网页中的实际展示宽度
@@ -148,8 +148,8 @@ const BLOG = {
     process.env.NEXT_PUBLIC_CUSTOM_RIGHT_CLICK_CONTEXT_MENU_THEME_TAG || true, // 是否显示标签
 
   // 自定义外部脚本，外部样式
-  CUSTOM_EXTERNAL_JS: ['https://cdn.jsdmirror.cn/npm/pace-js@latest/pace.min.js','https://cdn.jsdmirror.cn/npm/instant.page@5.2.0/instantpage.min.js'], // e.g. ['http://xx.com/script.js','http://xx.com/script.js']
-  CUSTOM_EXTERNAL_CSS: [''], // e.g. ['http://xx.com/style.css','http://xx.com/style.css']
+  CUSTOM_EXTERNAL_JS: ['https://cdn.jsdmirror.cn/npm/pace-js@latest/pace.min.js','https://cdn.jsdmirror.cn/npm/instant.page@5.2.0/instantpage.min.js'], 
+  CUSTOM_EXTERNAL_CSS: [''], 
 
   // 侧栏布局 是否反转(左变右,右变左) 已支持主题: hexo next medium fukasawa example
   LAYOUT_SIDEBAR_REVERSE:
@@ -192,11 +192,11 @@ const BLOG = {
   // Mermaid 图表CDN
   MERMAID_CDN:
     process.env.NEXT_PUBLIC_MERMAID_CDN ||
-    'https://cdn.jsdmirror.com/npm/mermaid@10.9.0/dist/mermaid.min.js', // CDN
+    'https://cdn.jsdmirror.cn/npm/mermaid@10.9.0/dist/mermaid.min.js', // CDN
   // QRCodeCDN
   QR_CODE_CDN:
     process.env.NEXT_PUBLIC_QR_CODE_CDN ||
-    'https://cdn.jsdmirror.com/npm/qrcodejs@1.0.0/qrcode.min.js',
+    'https://cdn.jsdmirror.cn/npm/qrcodejs@1.0.0/qrcode.min.js',
 
   BACKGROUND_LIGHT: '#eeeeee', // use hex value, don't forget '#' e.g #fffefc
   BACKGROUND_DARK: '#000000', // use hex value, don't forget '#'
@@ -292,7 +292,7 @@ const BLOG = {
   WIDGET_PET: process.env.NEXT_PUBLIC_WIDGET_PET || false, // 是否显示宠物挂件
   WIDGET_PET_LINK:
     process.env.NEXT_PUBLIC_WIDGET_PET_LINK ||
-    'https://cdn.jsdmirror.com/npm/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json', // 挂件模型地址 @see https://github.com/xiazeyu/live2d-widget-models
+    'https://cdn.jsdmirror.cn/npm/live2d-widget-model-tororo@1.0.5/assets/tororo.model.json', // 挂件模型地址 @see https://github.com/xiazeyu/live2d-widget-models
   WIDGET_PET_SWITCH_THEME:
     process.env.NEXT_PUBLIC_WIDGET_PET_SWITCH_THEME || false, // 点击宠物挂件切换博客主题
 
@@ -352,7 +352,7 @@ const BLOG = {
     process.env.NEXT_PUBLIC_COMMENT_TWIKOO_COUNT_ENABLE || true, // 博客列表是否显示评论数
   COMMENT_TWIKOO_CDN_URL:
     process.env.NEXT_PUBLIC_COMMENT_TWIKOO_CDN_URL ||
-    'https://cdn.jsdelivr.net/npm/twikoo@1.6.17/dist/twikoo.all.min.js', // twikoo客户端cdn
+    'https://cdn.jsdmirror.cn/npm/twikoo@1.6.17/dist/twikoo.all.min.js', // twikoo客户端cdn
 
   // utterance
   COMMENT_UTTERRANCES_REPO:
@@ -394,10 +394,10 @@ const BLOG = {
   COMMENT_GITALK_DISTRACTION_FREE_MODE: false, // 类似facebook的无干扰模式
   COMMENT_GITALK_JS_CDN_URL:
     process.env.NEXT_PUBLIC_COMMENT_GITALK_JS_CDN_URL ||
-    'https://cdn.jsdmirror.com/npm/gitalk@1/dist/gitalk.min.js', // gitalk客户端 js cdn
+    'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.min.js', // gitalk客户端 js cdn
   COMMENT_GITALK_CSS_CDN_URL:
     process.env.NEXT_PUBLIC_COMMENT_GITALK_CSS_CDN_URL ||
-    'https://cdn.jsdmirror.com/npm/gitalk@1/dist/gitalk.css', // gitalk客户端 css cdn
+    'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.css', // gitalk客户端 css cdn
 
   COMMENT_GITTER_ROOM: process.env.NEXT_PUBLIC_COMMENT_GITTER_ROOM || '', // gitter聊天室 see https://gitter.im/ 不需要则留空
   COMMENT_DAO_VOICE_ID: process.env.NEXT_PUBLIC_COMMENT_DAO_VOICE_ID || '', // DaoVoice http://dashboard.daovoice.io/get-started
@@ -519,7 +519,7 @@ const BLOG = {
   // ANIMATE.css 动画
   ANIMATE_CSS_URL:
     process.env.NEXT_PUBLIC_ANIMATE_CSS_URL ||
-    'https://cdn.jsdmirror.com/npm/animate.css@4.1.1/animate.min.css', // 动画CDN
+    'https://cdn.jsdmirror.cn/npm/animate.css@4.1.1/animate.min.css', // 动画CDN
 
   // 网站图片
   IMG_LAZY_LOAD_PLACEHOLDER:

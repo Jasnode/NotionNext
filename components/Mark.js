@@ -9,7 +9,7 @@ export default async function replaceSearchResult({ doms, search, target }) {
   }
 
   try {
-    await loadExternalResource('https://cdn.jsdmirror.com/npm/mark.js@8.11.1/dist/mark.min.js', 'js')
+    await loadExternalResource('https://cdn.jsdmirror.cn/npm/mark.js@8.11.1/dist/mark.min.js', 'js')
     const Mark = window.Mark
     if (doms instanceof HTMLCollection) {
       for (const container of doms) {

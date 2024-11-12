@@ -77,7 +77,7 @@ const GlobalHead = props => {
   useEffect(() => {
     // 使用WebFontLoader字体加载
     loadExternalResource(
-      'https://cdn.jsdmirror.com/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.jsdmirror.cn/npm/webfontloader@1.6.28/webfontloader.min.js',
       'js'
     ).then(url => {
       const WebFont = window?.WebFont

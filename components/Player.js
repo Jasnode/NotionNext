@@ -21,7 +21,7 @@ const Player = () => {
   const musicMetingEnable = siteConfig('MUSIC_PLAYER_METING')
   const musicMetingCDNUrl = siteConfig(
     'MUSIC_PLAYER_METING_CDN_URL',
-    'https://cdn.jsdmirror.com/npm/meting@2.0.1/dist/Meting.min.js'
+    'https://cdn.jsdmirror.cn/npm/meting@2.0.1/dist/Meting.min.js'
   )
 
   const initMusicPlayer = async () => {
