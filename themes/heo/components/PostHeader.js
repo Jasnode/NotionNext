@@ -33,22 +33,19 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
           left: 0;
           box-shadow: 110px -130px 500px 100px ${isDarkMode
               ? '#CA8A04'
-              : '#75C9C8'} inset;
+              : '#09a4f5'} inset;
         }
       `}</style>
 
       <div
-        className={`${isDarkMode ? 'bg-[#CA8A04]' : 'bg-[#75C9C8]'} absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
+        className={`${isDarkMode ? 'bg-[#CA8A04]' : 'bg-[#09a4f5]'} absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
         {/* 文章背景图 */}
         <div
           id='post-cover-wrapper'
-          style={{
-            filter: 'blur(15px)'
-          }}
-          className='coverdiv lg:opacity-50 lg:translate-x-96 lg:rotate-12'>
+          className='coverdiv lg:opacity-60 lg:translate-x-96 lg:rotate-12'>
           <LazyImage
             id='post-cover'
-            className='w-full h-full object-cover max-h-[50rem] min-w-[50vw] min-h-[20rem]'
+            className='w-full h-full object-cover opacity-60 max-h-[50rem] min-w-[50vw] min-h-[20rem]'
             src={headerImage}
           />
         </div>
