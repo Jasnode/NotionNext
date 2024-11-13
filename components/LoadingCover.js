@@ -1,22 +1,26 @@
 import { useGlobal } from '@/lib/global'
 import { useEffect, useState } from 'react'
+import { loadWowJS } from '@/lib/plugins/wow'
 /**
  * @returns 加载动画
  * @author https://github.com/88lin/
  */
-export default function LoadingCover() {
+export default function LoadingCover({ isLoadWowJS }) {
   const { onLoading, setOnLoading } = useGlobal()
   const [isVisible, setIsVisible] = useState(false) // 初始状态设置为false，避免服务端渲染与客户端渲染不一致
 
   useEffect(() => {
     // 确保在客户端渲染时才设置可见性
+    const hideCover = () => setIsVisible(false)
     if (onLoading) {
       setIsVisible(true)
-    } else {
-      const timeout = setTimeout(() => setIsVisible(false), 1500) // 等待淡出动画结束
-      return () => clearTimeout(timeout)
-    }
-  }, [onLoading])
+    } else if(isLoadWowJS){
+      loadWowJS().then(hideCover)
+      }else {
+        const timeout = setTimeout(hideCover, 1800) // 等待淡出动画结束
+        return () => clearTimeout(timeout)
+      }
+    },[onLoading])
 
   const handleClick = () => {
     setOnLoading(false) // 强行关闭 LoadingCover

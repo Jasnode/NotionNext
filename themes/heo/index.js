@@ -1,11 +1,3 @@
-/**
- *   HEO 主题说明
- *  > 主题设计者 [张洪](https://zhheo.com/)
- *  > 主题开发者 [tangly1024](https://github.com/tangly1024)
- *  1. 开启方式 在blog.config.js 将主题配置为 `HEO`
- *  2. 更多说明参考此[文档](https://docs.tangly1024.com/article/notionnext-heo)
- */
-
 import Comment from '@/components/Comment'
 import { AdSlot } from '@/components/GoogleAdsense'
 import { HashTag } from '@/components/HeroIcons'
@@ -88,9 +80,9 @@ const LayoutBase = props => {
   const HEO_LOADING_COVER = siteConfig('HEO_LOADING_COVER', true, CONFIG)
 
   // 加载wow动画
-  useEffect(() => {
-    loadWowJS()
-  }, [])
+  // useEffect(() => {
+  //   loadWowJS()
+  // }, [])
 
   return (
     <div
@@ -126,7 +118,7 @@ const LayoutBase = props => {
       {/* 页脚 */}
       <Footer title={siteConfig('TITLE')} />
 
-      {HEO_LOADING_COVER && <LoadingCover />}
+      {HEO_LOADING_COVER ? <LoadingCover isLoadWowJS /> : loadWowJS()}
     </div>
   )
 }
