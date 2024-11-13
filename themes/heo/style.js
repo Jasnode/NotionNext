@@ -23,7 +23,6 @@ const Style = () => {
   }
       body {
         background-color: #f1f2f3;
-        overflow-x: hidden;
       }
 
       // 公告栏中的字体固定白色
@@ -115,3 +114,4 @@ const Style = () => {
 }
 
 export { Style }
+
