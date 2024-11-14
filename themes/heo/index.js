@@ -116,7 +116,7 @@ const LayoutBase = props => {
       </main>
 
       {/* 页脚 */}
-      <Footer title={siteConfig('TITLE')} />
+      <Footer />
 
       {HEO_LOADING_COVER && <LoadingCover />}
     </div>
@@ -340,7 +340,9 @@ const LayoutSlug = props => {
       setTimeout(
         () => {
           if (isBrowser) {
-            const article = document.querySelector('#article-wrapper #notion-article')
+            const article = document.querySelector(
+              '#article-wrapper #notion-article'
+            )
             if (!article) {
               router.push('/404').then(() => {
                 console.warn('找不到页面', router.asPath)
