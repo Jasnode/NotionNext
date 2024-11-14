@@ -85,6 +85,7 @@ const WalineComponent = (props) => {
           '//npm.elemecdn.com/@waline/emojis@1.2.0/qq',
           '//unpkg.com/@waline/emojis@1.2.0/bmoji',
           '//npm.elemecdn.com/@waline/emojis@1.2.0/bilibili',
+          '//unpkg.com/@waline/emojis@1.2.0/tw-emoji',
           '//npm.elemecdn.com/@waline/emojis@1.2.0/weibo',
           '//npm.elemecdn.com/@waline/emojis@1.2.0/tieba',
           '//unpkg.com/@waline/emojis@1.2.0/tw-food'
