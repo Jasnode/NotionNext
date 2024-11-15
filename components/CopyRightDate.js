@@ -18,8 +18,7 @@ export default function CopyRightDate() {
         <span>{copyrightDate}</span>
         <a
           href={siteConfig('LINK')}
-          className='underline font-semibold dark:text-gray-300'
-        >
+          className='underline font-semibold dark:text-gray-300'>
           {siteConfig('AUTHOR')}
         </a>
         <svg
