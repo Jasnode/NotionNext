@@ -34,7 +34,7 @@ const Footer = () => {
         <div id='footer-bottom-right'>
           {siteConfig('BEI_AN') && (
             <>
-              <i className='fas fa-shield-alt' />{' '}
+              <LazyImage src='/images/ico64.png' width={15} height={15} />
               <a href='https://icp.gov.moe/?keyword=20249980' className='mr-2'>
                 {siteConfig('BEI_AN')}
               </a>
