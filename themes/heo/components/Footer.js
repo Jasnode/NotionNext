@@ -3,6 +3,7 @@ import CopyRightDate from '@/components/CopyRightDate'
 import PoweredBy from '@/components/PoweredBy'
 import { siteConfig } from '@/lib/config'
 import SocialButton from './SocialButton'
+import LazyImage from '@/components/LazyImage'
 /**
  * 页脚
  * @returns
@@ -34,7 +35,7 @@ const Footer = () => {
         <div id='footer-bottom-right'>
           {siteConfig('BEI_AN') && (
             <>
-              <LazyImage src='/images/ico64.png' width={15} height={15} />
+              <LazyImage src='/images/ico64.png' width={22} height={22} />
               <a href='https://icp.gov.moe/?keyword=20249980' className='mr-2'>
                 {siteConfig('BEI_AN')}
               </a>

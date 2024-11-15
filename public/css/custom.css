@@ -309,3 +309,17 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
   border-color: #ffffff00;
   box-shadow: 0 0 10px #ff6817ad, 0 0 20px #ff6817a3;
 }
+/* SVG 樱花图标旋转控制 */
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-icon {
+  animation: rotate 8s linear infinite; 
+  transform-origin: center; /* 设置旋转中心 */
+}
