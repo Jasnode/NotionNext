@@ -20,7 +20,7 @@
 }
 
 /* 卡片动态渐变色 */
-div.border:not(div.animate__animated):not(div.lg\:p-6.p-4.border.rounded-xl.bg-\[\#57bd6a\]) {
+/* div.border:not(div.animate__animated):not(div.lg\:p-6.p-4.border.rounded-xl.bg-\[\#57bd6a\]) {
   background: linear-gradient(
     150deg,
     #e8d8b9 0%,
@@ -42,12 +42,12 @@ div.border:not(div.animate__animated):not(div.lg\:p-6.p-4.border.rounded-xl.bg-\
   100% {
     background-position: 0% 50%;
   }
-}
+} */
             
 /* 黑夜模式适配 */
-.dark div.border:not(div.animate__animated):not(.lg\:p-6.p-4.border.rounded-xl.bg-\[\#57bd6a\]) {
+/* .dark div.border:not(div.animate__animated):not(.lg\:p-6.p-4.border.rounded-xl.bg-\[\#57bd6a\]) {
   background:  #191919ee;
-}
+} */
 
 /*设置鼠标样式*/
 body {
