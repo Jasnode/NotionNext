@@ -50,16 +50,6 @@ export default function CopyRightDate() {
             fill="#EE9ca7"
           ></path>
         </svg>
-        <a 
-          href="https://www.foreverblog.cn/go.html" 
-          target="_blank">
-          <img 
-            src="https://img.foreverblog.cn/wormhole_3_tp.gif" 
-            alt="穿梭虫洞" 
-            style={{ width: 'auto', height: '28px' }} 
-            title="穿梭虫洞-随机访问十年之约友链博客" 
-           />
-        </a>
       </span>
     )    
 }
