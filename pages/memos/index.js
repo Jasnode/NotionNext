@@ -1,5 +1,4 @@
-import { useRouter } from 'next/router'
-import { getLayoutByTheme } from '@/themes/theme'
+import { DynamicLayout } from '@/themes/theme'
 import { siteConfig } from '@/lib/config'
 import { getGlobalData } from '@/lib/db/getSiteData'
 import React from 'react'
