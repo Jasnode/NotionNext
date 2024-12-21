@@ -9,6 +9,7 @@ import LazyImage from '@/components/LazyImage'
  * @returns
  */
 const Footer = () => {
+  const BEI_AN = siteConfig('BEI_AN')
   return (
     <footer className='relative flex-shrink-0 bg-white dark:bg-[#1a191d] justify-center text-center m-auto w-full leading-6  text-gray-600 dark:text-gray-100 text-sm'>
       {/* 颜色过度区 */}
@@ -33,7 +34,7 @@ const Footer = () => {
         </div>
 
         <div id='footer-bottom-right'>
-          {siteConfig('BEI_AN') && (
+          {BEI_AN && (
             <>
               <LazyImage src='/images/ico64.png' width={22} height={22} />
               <a href='https://icp.gov.moe/?keyword=20249980' className='mr-2'>
