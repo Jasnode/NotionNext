@@ -31,9 +31,8 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
           height: 100%;
           top: 0;
           left: 0;
-          box-shadow: 110px -130px 500px 100px ${isDarkMode
-              ? '#CA8A04'
-              : '#09a4f5'} inset;
+          box-shadow: 110px -130px 500px 100px
+            ${isDarkMode ? '#CA8A04' : '#09a4f5'} inset;
         }
         .coverdiv {
           overflow: hidden; /* 隐藏溢出部分 */
@@ -108,7 +107,10 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
           <section className='flex-wrap dark:text-gray-200 text-opacity-70 shadow-text-md flex text-sm  justify-center md:justify-start mt-4 text-white font-light leading-8'>
             <div className='flex justify-center '>
               <div className='mr-2'>
-                <WordCount />
+                <WordCount
+                  wordCount={post.wordCount}
+                  readTime={post.readTime}
+                />
               </div>
               {post?.type !== 'Page' && (
                 <>

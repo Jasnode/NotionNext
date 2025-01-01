@@ -34,6 +34,7 @@ import SearchNav from './components/SearchNav'
 import SideRight from './components/SideRight'
 import CONFIG from './config'
 import { Style } from './style'
+// import AISummary from '@/components/AISummary'
 import BlogMemos from './components/BlogMemos'
 import AISummary from './components/AISummary'
 
@@ -373,6 +374,7 @@ const LayoutSlug = props => {
               <section
                 className='wow fadeInUp p-5 justify-center mx-auto'
                 data-wow-delay='.2s'>
+                <AISummary aiSummary={post.aiSummary}/>
                 <WWAds orientation='horizontal' className='w-full' />
                 {post && <AISummary post={post} />}
                 {post && <NotionPage post={post} />}
