@@ -48,8 +48,8 @@ const TypewriterEffect = ({ text }) => {
     );
 };
 
-const AISummary = ({post}) => {
-    const summary = post.AISummary;
+const AISummar = ({post}) => {
+    const summary = post.AISummar;
 
     if (!summary) {
         return <></>
@@ -78,4 +78,4 @@ const AISummary = ({post}) => {
     )
 };
 
-export default AISummary;
+export default AISummar;

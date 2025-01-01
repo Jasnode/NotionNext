@@ -36,7 +36,7 @@ import CONFIG from './config'
 import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import BlogMemos from './components/BlogMemos'
-import AISummary from './components/AISummary'
+import AISummar from './components/AISummar'
 
 /**
  * 基础布局 采用上中下布局，移动端使用顶部侧边导航栏
@@ -376,7 +376,7 @@ const LayoutSlug = props => {
                 data-wow-delay='.2s'>
                 <AISummary aiSummary={post.aiSummary}/>
                 <WWAds orientation='horizontal' className='w-full' />
-                {post && <AISummary post={post} />}
+                {post && <AISummar post={post} />}
                 {post && <NotionPage post={post} />}
                 <WWAds orientation='horizontal' className='w-full' />
               </section>
