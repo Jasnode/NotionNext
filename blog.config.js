@@ -25,6 +25,9 @@ const BLOG = {
   GREETING_WORDS:
     process.env.NEXT_PUBLIC_GREETING_WORDS ||
     '👋Hi，我是一个大学牲✨，欢迎来到我的博客🎉',
+    
+  // uuid重定向至 slug
+  UUID_REDIRECT: process.env.UUID_REDIRECT || false,
 
   CUSTOM_MENU: process.env.NEXT_PUBLIC_CUSTOM_MENU || true, // 支持Menu 类型，从3.12.0版本起，各主题将逐步支持灵活的二级菜单配置，替代了原来的Page类型，此配置是试验功能、默认关闭。
 
@@ -576,9 +579,7 @@ const BLOG = {
       return '1.0.0' // 缺省版本号
     }
   })()
-}
 
-  // uuid重定向至 slug
-  UUID_REDIRECT: process.env.UUID_REDIRECT || false
+}
 
 module.exports = BLOG
