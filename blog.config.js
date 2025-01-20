@@ -17,126 +17,45 @@ const BLOG = {
   APPEARANCE: process.env.NEXT_PUBLIC_APPEARANCE || 'light', // ['light', 'dark', 'auto'], // light 日间模式 ， dark夜间模式， auto根据时间和主题自动夜间模式
   APPEARANCE_DARK_TIME: process.env.NEXT_PUBLIC_APPEARANCE_DARK_TIME || [23, 8], // 夜间模式起至时间，false时关闭根据时间自动切换夜间模式
 
-  TAG_SORT_BY_COUNT: true, // 标签是否按照文章数量倒序排列，文章多的标签排在前。
-  IS_TAG_COLOR_DISTINGUISHED:
-    process.env.NEXT_PUBLIC_IS_TAG_COLOR_DISTINGUISHED === 'true' || true, // 对于名称相同的tag是否区分tag的颜色
+  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || 'NotionNext', // 您的昵称 例如 tangly1024
+  BIO: process.env.NEXT_PUBLIC_BIO || '一个普通的干饭人🍚', // 作者简介
+  LINK: process.env.NEXT_PUBLIC_LINK || 'https://tangly1024.com', // 网站地址
+  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || 'Notion, 博客', // 网站关键词 英文逗号隔开
+  BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon.ico', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
+  BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '', // 备案号 闽ICP备XXXXXX
+  BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://beian.miit.gov.cn/', // 备案查询链接，如果用了萌备等备案请在这里填写
 
-  // 3.14.1版本后，欢迎语在此配置，英文逗号隔开 ,  即可支持多个欢迎语打字效果。
-  GREETING_WORDS:
-    process.env.NEXT_PUBLIC_GREETING_WORDS ||
-    '👋Hi，我是一个大学牲✨，欢迎来到我的博客🎉',
-    
-  // uuid重定向至 slug
-  UUID_REDIRECT: process.env.UUID_REDIRECT || false,
+  // RSS订阅
+  ENABLE_RSS: process.env.NEXT_PUBLIC_ENABLE_RSS || true, // 是否开启RSS订阅功能
 
-  CUSTOM_MENU: process.env.NEXT_PUBLIC_CUSTOM_MENU || true, // 支持Menu 类型，从3.12.0版本起，各主题将逐步支持灵活的二级菜单配置，替代了原来的Page类型，此配置是试验功能、默认关闭。
+  // 其它复杂配置
+  // 原配置文件过长，且并非所有人都会用到，故此将配置拆分到/conf/目录下, 按需找到对应文件并修改即可
+  ...require('./conf/comment.config'), // 评论插件
+  ...require('./conf/contact.config'), // 作者联系方式配置
+  ...require('./conf/post.config'), // 文章与列表配置
+  ...require('./conf/analytics.config'), // 站点访问统计
+  ...require('./conf/image.config'), // 网站图片相关配置
+  ...require('./conf/font.config'), // 网站字体
+  ...require('./conf/right-click-menu'), // 自定义右键菜单相关配置
+  ...require('./conf/code.config'), // 网站代码块样式
+  ...require('./conf/animation.config'), // 动效美化效果
+  ...require('./conf/widget.config'), // 悬浮在网页上的挂件，聊天客服、宠物挂件、音乐播放器等
+  ...require('./conf/ad.config'), // 广告营收插件
+  ...require('./conf/plugin.config'), // 其他第三方插件 algolia全文索引
 
-  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '故人', // 您的昵称
-  BIO: process.env.NEXT_PUBLIC_BIO || '分享技术与生活的无限可能', // 作者简介
-  LINK: process.env.NEXT_PUBLIC_LINK || 'https://pro.gleeze.com', // 网站地址
-  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '故人博客,故人Blog,故人,记录生活,分享资源,资源,文献,考研,教程,Windows', // 网站关键词 英文逗号隔开
+  // 高级用法
+  ...require('./conf/layout-map.config'), // 路由与布局映射自定义，例如自定义特定路由的页面布局
+  ...require('./conf/notion.config'), // 读取notion数据库相关的扩展配置，例如自定义表头
+  ...require('./conf/dev.config'), // 开发、调试时需要关注的配置
 
-  // 社交链接，不需要可留空白，例如 CONTACT_WEIBO:''
-  CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'guren88@888.com', // 邮箱地址 
-  CONTACT_WEIBO: process.env.NEXT_PUBLIC_CONTACT_WEIBO || '', // 你的微博个人主页
-  CONTACT_TWITTER: process.env.NEXT_PUBLIC_CONTACT_TWITTER || '', // 你的twitter个人主页
-  CONTACT_GITHUB: process.env.NEXT_PUBLIC_CONTACT_GITHUB || 'https://github.com/88lin', // 你的github个人主页 
-  CONTACT_TELEGRAM: process.env.NEXT_PUBLIC_CONTACT_TELEGRAM || '', // 你的telegram 地址 例如 https://t.me/tangly_1024
-  CONTACT_LINKEDIN: process.env.NEXT_PUBLIC_CONTACT_LINKEDIN || '', // 你的linkedIn 首页
-  CONTACT_INSTAGRAM: process.env.NEXT_PUBLIC_CONTACT_INSTAGRAM || '', // 您的instagram地址
-  CONTACT_BILIBILI: process.env.NEXT_PUBLIC_CONTACT_BILIBILI || 'https://space.bilibili.com/1412014683', // B站主页
-  CONTACT_YOUTUBE: process.env.NEXT_PUBLIC_CONTACT_YOUTUBE || '', // Youtube主页
-  CONTACT_XIAOHONGSHU: process.env.NEXT_PUBLIC_CONTACT_XIAOHONGSHU || 'https://www.xiaohongshu.com/user/profile/63ff5bde000000001f03389c?xhsshare=CopyLink&appuid=63ff5bde000000001f03389c&apptime=1723192765&share_id=6d7375ada60a4737b8c5a86ade8c4734', // 小红书主页
-  CONTACT_ZHISHIXINGQIU: process.env.NEXT_PUBLIC_CONTACT_ZHISHIXINGQIU || '', // 知识星球
-  CONTACT_WEHCHAT_PUBLIC: process.env.NEXT_PUBLIC_CONTACT_WEHCHAT_PUBLIC || 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Mzk0NDUwMTA4NA==#wechat_redirect', // 微信公众号 格式：https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=【xxxxxx】==#wechat_redirect
+  // 自定义外部脚本，外部样式
+  CUSTOM_EXTERNAL_JS: [''], // e.g. ['http://xx.com/script.js','http://xx.com/script.js']
+  CUSTOM_EXTERNAL_CSS: [''], // e.g. ['http://xx.com/style.css','http://xx.com/style.css']
 
-  NOTION_HOST: process.env.NEXT_PUBLIC_NOTION_HOST || 'https://www.notion.so', // Notion域名，您可以选择用自己的域名进行反向代理，如果不懂得什么是反向代理，请勿修改此项
+  // 自定义菜单
+  CUSTOM_MENU: process.env.NEXT_PUBLIC_CUSTOM_MENU || true, // 支持Menu类型的菜单，替代了3.12版本前的Page类型
 
-  BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || 'https://cdn.jsdmirror.cn/gh/88lin/PicX@master/favicon.jiupf2ws8pc.ico', // blog favicon 配置, 默认使用 /favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
-
-  IMAGE_COMPRESS_WIDTH: process.env.NEXT_PUBLIC_IMAGE_COMPRESS_WIDTH || 800, // 图片压缩宽度默认值，作用于博客封面和文章内容 越小加载图片越快
-  IMAGE_ZOOM_IN_WIDTH: process.env.NEXT_PUBLIC_IMAGE_ZOOM_IN_WIDTH || 1200, // 文章图片点击放大后的画质宽度，不代表在网页中的实际展示宽度
-  RANDOM_IMAGE_URL: process.env.NEXT_PUBLIC_RANDOM_IMAGE_URL || '', // 随机图片API,如果未配置下面的关键字，主页封面，头像，文章封面图都会被替换为随机图片
-  RANDOM_IMAGE_REPLACE_TEXT:
-    process.env.NEXT_PUBLIC_RANDOM_IMAGE_NOT_REPLACE_TEXT ||
-    'images.unsplash.com', // 触发替换图片的 url 关键字(多个支持用英文逗号分开)，只有图片地址中包含此关键字才会替换为上方随机图片url
-  // eg: images.unsplash.com(notion图床的所有图片都会替换),如果你在 notion 里已经添加了一个随机图片 url，恰巧那个服务跑路或者挂掉，想一键切换所有配图可以将该 url 配置在这里
-  // 默认下会将你上传到 notion的主页封面图和头像也给替换，建议将主页封面图和头像放在其他图床，在 notion 里配置 link 即可。
-
-  // START ************网站字体*****************
-  // ['font-serif','font-sans'] 两种可选，分别是衬线和无衬线: 参考 https://www.jianshu.com/p/55e410bd2115
-  // 后面空格隔开的font-light的字体粗细，留空是默认粗细；参考 https://www.tailwindcss.cn/docs/font-weight
-  FONT_STYLE: process.env.NEXT_PUBLIC_FONT_STYLE || 'font-sans font-semibold',
-  // 字体CSS 例如 https://npm.elemecdn.com/lxgw-wenkai-webfont@1.6.0/style.css
-  FONT_URL: [
-    'https://npm.elemecdn.com/lxgw-wenkai-webfont@1.7.0/style.css',
-    'https://fonts.googleapis.com/css?family=Bitter&display=swap', // Bitter 用作英文数字的字体
-    'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&display=swap',
-    'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300&display=swap'
-  ],
-  // 无衬线字体 例如'"LXGW WenKai"'
-  FONT_SANS: [
-    '"PingFang SC"',
-    'BlinkMacSystemFont',
-    '-apple-system',
-    'HarmonyOS_Regular',
-    '"LXGW WenKai"',
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-    '"Segoe UI"',
-    '"Noto Sans SC"',
-    '"Microsoft YaHei"',
-    '"Helvetica Neue"',
-    'Helvetica',
-    '"Source Han Sans SC"',
-    'Arial'
-  ],
-  // 衬线字体 例如'"LXGW WenKai"'
-  FONT_SERIF: [
-    '"LXGW WenKai"',
-    'Bitter',
-    '"Noto Serif SC"',
-    'SimSun',
-    '"Times New Roman"',
-    'Times',
-    'serif',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-    '"Apple Color Emoji"'
-  ],
-  FONT_AWESOME:
-    process.env.NEXT_PUBLIC_FONT_AWESOME_PATH ||
-    'https://cdn.bootcdn.net/ajax/libs/font-awesome/6.7.1/css/all.min.css', // font-awesome 字体图标地址; 可选 /css/all.min.css ， https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/6.0.0/css/all.min.css
-
-  // END ************网站字体*****************
-
-  // 路径和组件映射，不同路径分别展示主题的什么组件
-  LAYOUT_MAPPINGS: {
-    '-1': 'LayoutBase',
-    '/': 'LayoutIndex',
-    '/archive': 'LayoutArchive',
-    '/memos' : 'LayoutMemos',
-    '/page/[page]': 'LayoutPostList',
-    '/category/[category]': 'LayoutPostList',
-    '/category/[category]/page/[page]': 'LayoutPostList',
-    '/tag/[tag]': 'LayoutPostList',
-    '/tag/[tag]/page/[page]': 'LayoutPostList',
-    '/search': 'LayoutSearch',
-    '/search/[keyword]': 'LayoutSearch',
-    '/search/[keyword]/page/[page]': 'LayoutSearch',
-    '/404': 'Layout404',
-    '/tag': 'LayoutTagIndex',
-    '/category': 'LayoutCategoryIndex',
-    '/[prefix]': 'LayoutSlug',
-    '/[prefix]/[slug]': 'LayoutSlug',
-    '/[prefix]/[slug]/[...suffix]': 'LayoutSlug',
-    '/auth/result': 'LayoutAuth',
-    '/sign-in/[[...index]]': 'LayoutSignIn',
-    '/sign-up/[[...index]]': 'LayoutSignUp',
-    '/dashboard/[[...index]]': 'LayoutDashboard'
-  },
-
+  // 文章列表相关设置
   CAN_COPY: process.env.NEXT_PUBLIC_CAN_COPY || true, // 是否允许复制页面内容 默认允许，如果设置为false、则全栈禁止复制内容。
   // 自定义右键菜单
   CUSTOM_RIGHT_CLICK_CONTEXT_MENU:
