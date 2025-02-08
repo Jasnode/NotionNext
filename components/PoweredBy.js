@@ -6,7 +6,7 @@ import { siteConfig } from '@/lib/config'
  */
 export default function PoweredBy(props) {
   return (
-    <div className={`inline text-sm font-serif ${props.className || ''}`}>
+    <div className={`gap-x-1 flex flex-wrap text-sm font-serif ${props.className || ''}`}>
       <span>✨Powered by</span>
       <a
         href='https://github.com/88lin/NotionNext'
