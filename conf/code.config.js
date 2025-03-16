@@ -28,7 +28,7 @@ module.exports = {
   // Mermaid 图表CDN
   MERMAID_CDN:
     process.env.NEXT_PUBLIC_MERMAID_CDN ||
-    'https://cdn.jsdmirror.cn/npm/mermaid@10.9.0/dist/mermaid.min.js' // CDN
+    'https://cdn.jsdmirror.cn/npm/mermaid@11.4.0/dist/mermaid.min.js' // CDN
 
   // END********代码相关********
 }
