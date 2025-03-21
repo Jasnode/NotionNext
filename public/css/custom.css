@@ -32,18 +32,7 @@ div.border:not(div.animate__animated):not(.lg\:p-6.p-4.border.rounded-xl.bg-\[\#
   background-size: 400% 400%;
   animation: Gradient 16s ease infinite;
 }
-@keyframes Gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-            
+
 /* 黑夜模式适配 */
 .dark div.border:not(div.animate__animated):not(.lg\:p-6.p-4.border.rounded-xl.bg-\[\#57bd6a\]) {
   background:  #191919ee;
@@ -61,12 +50,13 @@ a,img {
 
 /* 滚动条样式 */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background-color: rgba(73, 177, 245, 0.2);
   border-radius: 2em;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
 ::-webkit-scrollbar-thumb {
   background-color: rgb(255 104 23);
@@ -80,6 +70,7 @@ a,img {
     transparent 75%
   );
   border-radius: 2em;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 }
 ::-webkit-scrollbar-corner {
   background-color: transparent;
@@ -123,17 +114,6 @@ a,img {
   opacity: 0;
   transition: 0.3s;
   top: -8px;
-}
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 /* 按钮特效 */
@@ -190,7 +170,7 @@ outline: none;
 overflow: hidden;
 background-color: #F3F3F3;
 border-radius: 10px;
-transition: all 0.5s;
+transition: all 0.3s ease-in-out;
 }
 input.text-black:hover,
 input.text-black:focus {
@@ -208,7 +188,7 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 /* 卡片遮罩背景颜色修改 */
 .bg-black {
   --tw-bg-opacity: 1;
-  box-shadow: 0 -109px 133px -9px #052c65 inset;
+  box-shadow: 0 -109px 133px -9px #193a6a inset;
 }
 /* tag颜色 */
 .hover\:bg-blue-600:hover{
