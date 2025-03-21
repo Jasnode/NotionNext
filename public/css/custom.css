@@ -188,7 +188,9 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 /* 卡片遮罩背景颜色修改 */
 .bg-black {
   --tw-bg-opacity: 1;
-  box-shadow: 0 -109px 133px -9px #193a6a inset;
+  box-shadow: 
+    0 -120px 140px -12px rgba(26, 34, 64, 0.95) inset,
+    0 -80px 100px -8px rgba(85, 60, 154, 0.6) inset;
 }
 /* tag颜色 */
 .hover\:bg-blue-600:hover{
