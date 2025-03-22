@@ -31,6 +31,7 @@ div.border:not(div.animate__animated):not(.lg\:p-6.p-4.border.rounded-xl.bg-\[\#
   );
   background-size: 400% 400%;
   animation: Gradient 16s ease infinite;
+  will-change: background-position; /* 优化渲染性能 */
 }
 
 /* 黑夜模式适配 */
@@ -155,7 +156,7 @@ button.group.duration-200::before {
 }
 div.bg-indigo-400:hover::before,
 button.group.duration-200:hover::before {
-  filter: blur(20px);
+  filter: blur(10px);
 }
 div.bg-indigo-400:active,
 button.group.duration-200:active {
@@ -175,7 +176,7 @@ transition: all 0.3s ease-in-out;
 input.text-black:hover,
 input.text-black:focus {
 border: 2px solid #4A9DEC;
-box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
+box-shadow: 0px 0px 0px 6px rgb(74, 157, 236, 20%);
 }
 
 /* 设置{AI文章摘要}字体大小及颜色 */
@@ -187,7 +188,6 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 }
 /* 卡片遮罩背景颜色修改 */
 .bg-black {
-  --tw-bg-opacity: 1;
   box-shadow: 
     0 -120px 140px -12px rgba(26, 34, 64, 0.95) inset,
     0 -80px 100px -8px rgba(85, 60, 154, 0.6) inset;
@@ -215,6 +215,9 @@ box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
 }
 /* 首页字体颜色 */
 .group:hover .group-hover\:text-indigo-700 {
+  color: #3a86ff;
+}
+.hover\:text-indigo-700:hover {
   color: #3a86ff;
 }
 /* 目录字体颜色 */

@@ -16,7 +16,7 @@ module.exports = {
   ],
   // 无衬线字体 例如'"LXGW WenKai"'
   FONT_SANS: [
-    '"PingFang SC"',
+    '"PingFang SC"', // 优先使用苹方字体
     '-apple-system',
     'BlinkMacSystemFont',
     '"LXGW WenKai"',
