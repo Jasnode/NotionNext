@@ -14,12 +14,12 @@ export default function CopyRightDate() {
 
     return (
       <span className='whitespace-nowrap flex items-center gap-x-1'>
-        <i className='fas fa-copyright' />
+        <i className='fa-solid fa-registered' />
         <span>{copyrightDate}</span>
         <a
           href={siteConfig('LINK')}
           className='underline font-semibold dark:text-gray-300'>
-          {siteConfig('AUTHOR')}
+          Spring
         </a>
         <svg
           width="22px"
