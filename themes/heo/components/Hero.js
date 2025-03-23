@@ -251,7 +251,7 @@ function TopGroup(props) {
                   {p?.title}
                 </div>
                 {/* hover 悬浮的 ‘荐’ 字 */}
-                <div className='opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 duration-200 transition-all absolute -top-2 -left-2 bg-pink-600 dark:bg-yellow-600  text-white rounded-xl overflow-hidden pr-2 pb-2 pl-4 pt-4 text-xs'>
+                <div className='opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 duration-200 transition-all absolute -top-2 -left-2 bg-[#3a86ff] dark:bg-[#ec4899]  text-white rounded-xl overflow-hidden pr-2 pb-2 pl-4 pt-4 text-xs'>
                   {locale.COMMON.RECOMMEND_BADGES}
                 </div>
               </div>

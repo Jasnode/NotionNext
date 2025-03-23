@@ -192,10 +192,6 @@ box-shadow: 0px 0px 0px 6px rgb(74, 157, 236, 20%);
     0 -120px 140px -12px rgba(26, 34, 64, 0.95) inset,
     0 -80px 100px -8px rgba(85, 60, 154, 0.6) inset;
 }
-/* tag颜色 */
-.hover\:bg-blue-600:hover{
-  background-color:#ff6817;
-  }
 /* 标签颜色 */
   .hover\:bg-indigo-600:hover {
     background-color: #ff6817;
