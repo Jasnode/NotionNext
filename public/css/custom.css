@@ -223,11 +223,13 @@ box-shadow: 0px 0px 0px 6px rgb(74, 157, 236, 20%);
 /* 复选框颜色 */
 .hover\:border-indigo-600:hover {
   border-color: #b0c4de;
-  box-shadow: 0 0 8px #b0c4de, 0 0 16px #b0c4de;
+  box-shadow: 0 0 6px #b0c4de, 0 0 8px #b0c4de;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .hover\:border-blue-600:hover {
-  border-color: #ffffff00;
-  box-shadow: 0 0 10px #ff6817ad, 0 0 20px #ff6817a3;
+  border-color: rgba(255, 104, 23, 0.5);
+  box-shadow: 0 0 10px rgba(255, 104, 23, 0.7), 0 0 20px rgba(255, 104, 23, 0.5);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 /* SVG 樱花图标旋转控制 */
 @keyframes rotate {
