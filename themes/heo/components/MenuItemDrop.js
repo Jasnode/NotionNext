@@ -27,16 +27,20 @@ export const MenuItemDrop = ({ link }) => {
       )}
       {/* 含子菜单的按钮 */}
       {hasSubMenu && (
-        <div
-          className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
-        >
-          {link?.icon && <i className={link?.icon} />} {link?.name}
-        </div>
+        <>
+          <div className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative hover:bg-purple-600/25 hover:shadow-lg transform">
+            {link?.icon && <i className={link?.icon} />} {link?.name}
+            {/* 主菜单下方的安全区域 */}
+            {show && (
+              <div className='absolute w-full h-4 -bottom-4 left-0 bg-transparent z-30'></div>
+            )}
+          </div>
+        </>
       )}
       {/* 子菜单 */}
       {hasSubMenu && (
         <ul
-          className={`${show ? 'visible opacity-100 top-14' : 'invisible opacity-0 top-20'} drop-shadow-md overflow-hidden rounded-3xl backdrop-blur-lg bg-purple-200/20 dark:bg-purple-600/20 transition-all duration-300 z-20 absolute`}
+          className={`${show ? 'visible opacity-100 top-14 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} drop-shadow-md overflow-hidden rounded-3xl backdrop-blur-lg bg-purple-200/20 dark:bg-purple-600/20 transition-all duration-300 z-20 absolute`}
         >
           {link.subMenus.map((sLink, index) => {
             return (
