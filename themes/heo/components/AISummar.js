@@ -57,8 +57,8 @@ const AISummar = ({post}) => {
 
     return (
         <div id="AI-Summary" className = "mx-auto overflow-hidden">
-        <div className="bg-ai-bg rounded-lg p-3 border-ai-card my-4 leading-[1.4] md:mt-6 mx-auto overflow-hidden">
-            <div id="AI-Title" className="flex items-center rounded-md px-2 cursor-default select-none relative text-ai-title">
+        <div className="bg-ai-bg rounded-2xl p-3 border-ai-card my-4 leading-[1.4] md:mt-6 mx-auto overflow-hidden">
+            <div id="AI-Title" className="flex items-center rounded-xl px-2 cursor-default select-none relative text-ai-title">
                 <i className="w-5 h-5">
                     <svg width="25px" height="25px" viewBox="0 6 48 48">
                         <title>机器人</title>
