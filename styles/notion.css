@@ -2173,6 +2173,7 @@ figure.notion-asset-wrapper.notion-asset-wrapper-video > div {
   width: 100% !important;
 }
 
+/* 画廊左右边线不展示Bug */
 .notion-gallery {
-  margin: 0px 5px;
+  padding: 0 16px;
 }
