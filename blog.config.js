@@ -14,13 +14,13 @@ const BLOG = {
   APPEARANCE: process.env.NEXT_PUBLIC_APPEARANCE || 'light', // ['light', 'dark', 'auto'], // light 日间模式 ， dark夜间模式， auto根据时间和主题自动夜间模式
   APPEARANCE_DARK_TIME: process.env.NEXT_PUBLIC_APPEARANCE_DARK_TIME || [23, 8], // 夜间模式起至时间，false时关闭根据时间自动切换夜间模式
 
-  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || '故人', // 您的昵称
+  AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || 'Spring', // 您的昵称
   BIO: process.env.NEXT_PUBLIC_BIO || '分享技术与生活的无限可能✨', // 作者简介
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://pro.gleeze.com', // 网站地址
-  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '故人博客,故人Blog,故人,记录生活,分享资源,资源,文献,考研,教程,Windows,notion,chatgpt,软件', // 网站关键词 英文逗号隔开
+  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '故人博客,故人Blog,Spring,记录生活,分享资源,资源,文献,考研,技术教程,Windows,notion,chatgpt,软件', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon1.svg', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
   BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '萌ICP备20249980号', // 备案号 闽ICP备XXXXXX
-  BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://icp.gov.moe', // 备案查询链接，如果用了萌备等备案请在这里填写
+  BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://icp.gov.moe/?keyword=20249980', // 备案查询链接，如果用了萌备等备案请在这里填写
 
   // RSS订阅
   ENABLE_RSS: process.env.NEXT_PUBLIC_ENABLE_RSS || true, // 是否开启RSS订阅功能
