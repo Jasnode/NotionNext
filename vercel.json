@@ -7,7 +7,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=7776000, s-maxage=31536000, immutable"
+          "value": "public, max-age=15768000, s-maxage=31536000, immutable"
         }
       ]
     },
@@ -16,7 +16,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600"
+          "value": "public, max-age=2592000, s-maxage=2592000, stale-while-revalidate=86400, stale-if-error=3600"
         }
       ]
     },
@@ -34,7 +34,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=1800, s-maxage=1800, stale-while-revalidate=600"
+          "value": "public, max-age=3600, s-maxage=10800, stale-while-revalidate=7200"
         }
       ]
     },
@@ -43,7 +43,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600"
+          "value": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=3600, stale-if-error=1800"
         }
       ]
     },
@@ -52,16 +52,23 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=600"
+          "value": "public, max-age=14400, s-maxage=28800, stale-while-revalidate=3600"
         }
       ]
+    },
+    {
+      "source": "/**/*.html",
+      "headers": [{ 
+        "key": "Cache-Control", 
+        "value": "public, max-age=60, s-maxage=300, stale-while-revalidate=3600, stale-if-error=1800" 
+      }]
     },
     {
       "source": "/(\\w{2})?/links",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=600, s-maxage=600, stale-while-revalidate=300"
+          "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=1800"
         }
       ]
     },
@@ -77,7 +84,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=600"
+          "value": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=600, stale-if-error=1800"
         }
       ]
     }
