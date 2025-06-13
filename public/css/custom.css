@@ -1,22 +1,44 @@
 /* 页脚footer渐变色滚动动画 */
-@keyframes Gradient {
+@keyframes GradientFlow {
   0% {
-      background-position: 0 50%;
+    background-position: 0 50%;
   }
   50% {
-      background-position: 100% 50%;
+    background-position: 100% 50%;
   }
   100% {
-      background-position: 0 50%;
+    background-position: 0 50%;
   }
 }
 #footer-bottom {
-  background: linear-gradient(-45deg, #ee7752, #ce3e75, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: Gradient 10s ease infinite;
+  background: linear-gradient(
+    -45deg, 
+    #ff9a8b,  /* 柔和的珊瑚色 */
+    #ff6b9d,  /* 温暖粉紫色 */
+    #a18cd1,  /* 梦幻薰衣草 */
+    #8bc6ec,  /* 清澈湖蓝 */
+    #80e5d2   /* 清新薄荷绿 */
+  );
+  background-size: 300% 300%;
+  animation: GradientFlow 16s ease-in-out infinite;
   user-select: none;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: background-position;
+}
+/* 添加半透明光泽层增强质感 */
+#footer-bottom::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0));
+  pointer-events: none;
 }
 
 /* 卡片动态渐变色 */
@@ -117,50 +139,94 @@ a,img {
   top: -8px;
 }
 
-/* 按钮特效 */
-div.bg-indigo-400,
+/* 液态玻璃按钮特效 */
+div.bg-indigo-400, 
 button.group.duration-200 {
   position: relative;
   border: none;
   background: linear-gradient(90deg, #03a9f4, #f441a5, #c26dd0, #03a9f4);
-  background-size: 300%;
-  border-radius: 30px;
+  background-size: 400%;
+  border-radius: 35px;
   z-index: 1;
-  transition: all 200ms ease-in-out;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0.1, 1),
+              box-shadow 0.3s cubic-bezier(0.2, 0, 0.1, 1),
+              background-position 0.1s linear;
+  will-change: transform, background-position;
+  isolation: isolate;
+  backdrop-filter: blur(5px);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.2),
+    inset 0 4px 12px rgba(255, 255, 255, 0.6);
 }
+/* 悬停动画效果 */
 div.bg-indigo-400:hover,
 button.group.duration-200:hover {
-  animation: ani 6s linear infinite;
+  animation: gradientFlow 8s linear infinite;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 40px rgba(31, 38, 135, 0.35),
+    inset 0 4px 15px rgba(255, 255, 255, 0.8);
 }
-@keyframes ani {
-  0% {
-    background-position: 0%;
-  }
-  100% {
-    background-position: 400%;
-  }
+/* 流动光效动画 */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
 }
+/* 液态玻璃边缘效果 */
 div.bg-indigo-400::before,
 button.group.duration-200::before {
   content: "";
   position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: -1;
-  background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
-  background-size: 400%;
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0.5) 0%, 
+    rgba(255,255,255,0.2) 50%, 
+    rgba(255,255,255,0.5) 100%);
   border-radius: 35px;
-  transition: 1s;
+  opacity: 0.6;
+  transition: opacity 0.4s ease;
+  filter: blur(12px);
+  pointer-events: none;
 }
-div.bg-indigo-400:hover::before,
-button.group.duration-200:hover::before {
-  filter: blur(10px);
-}
+/* 点击状态 */
 div.bg-indigo-400:active,
 button.group.duration-200:active {
-  background: linear-gradient(32deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+  animation: gradientFlow 6s linear infinite; 
+  transform: translateY(1px) scale(0.98);
+  transition: all 100ms cubic-bezier(0.3, 0, 0.5, 1);
+  box-shadow: 
+    0 2px 15px rgba(31, 38, 135, 0.25),
+    inset 0 0 25px rgba(255, 255, 255, 0.9);
+  &::before {
+    opacity: 0.9;
+    filter: blur(20px);
+    transition: opacity 100ms ease-out;
+  }
+}
+/* 移动端优化 */
+@media (hover: none) {
+  div.bg-indigo-400,
+  button.group.duration-200 {
+    animation: gradientFlow 12s linear infinite;
+    backdrop-filter: blur(3px);
+  }
+  div.bg-indigo-400:active,
+  button.group.duration-200:active {
+    transform: scale(0.97);
+  }
+}
+/* 性能优化补充 */
+@media (prefers-reduced-motion) {
+  div.bg-indigo-400,
+  button.group.duration-200 {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 /*搜索框特效*/

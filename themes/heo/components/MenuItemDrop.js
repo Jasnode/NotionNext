@@ -28,7 +28,7 @@ export const MenuItemDrop = ({ link }) => {
               href={link?.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-600/25 hover:shadow-lg transform"
             >
               {link?.icon && <i className={link?.icon} />} {link?.name}
             </a>
@@ -36,7 +36,7 @@ export const MenuItemDrop = ({ link }) => {
             // 内部链接 - 使用 Next.js 的 Link 组件
             <Link
               href={link?.href}
-              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-600/25 hover:shadow-lg transform"
             >
               {link?.icon && <i className={link?.icon} />} {link?.name}
             </Link>
@@ -47,7 +47,7 @@ export const MenuItemDrop = ({ link }) => {
       {/* 含子菜单的按钮 */}
       {hasSubMenu && (
         <>
-          <div className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative hover:bg-purple-600/25 hover:shadow-lg transform">
+          <div className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-600/25 hover:shadow-lg transform">
             {link?.icon && <i className={link?.icon} />} {link?.name}
             {/* 主菜单下方的安全区域 */}
             {show && (
@@ -59,7 +59,7 @@ export const MenuItemDrop = ({ link }) => {
       {/* 子菜单 */}
       {hasSubMenu && (
         <ul
-          className={`${show ? 'visible opacity-100 top-14 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} drop-shadow-md overflow-hidden rounded-3xl backdrop-blur-lg bg-purple-200/20 dark:bg-purple-600/20 transition-all duration-300 z-20 absolute`}
+          className={`${show ? 'visible opacity-100 top-14 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} drop-shadow-md overflow-hidden rounded-3xl backdrop-blur-lg bg-blue-100/10 backdrop-blur-md dark:bg-purple-600/20 transition-all duration-300 z-20 absolute`}
         >
           {link.subMenus.map((sLink, index) => {
             return (
