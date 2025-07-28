@@ -64,7 +64,7 @@ const Player = () => {
       <link
         rel='stylesheet'
         type='text/css'
-        href='https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.css'
+        href='https://cdn.jsdmirror.cn/npm/aplayer@1.10.0/dist/APlayer.min.css'
       />
       {meting ? (
         <meting-js
