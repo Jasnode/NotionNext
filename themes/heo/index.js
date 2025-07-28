@@ -317,70 +317,7 @@ const LayoutMemos = props => {
 const LayoutSlug = props => {
   const { post, lock, validPassword } = props
   const { locale, fullWidth } = useGlobal()
-
-  useEffect(() => {
-  if (post && !lock) {
-    let isMounted = true;
-    let debounceTimer;
-    let observer;
-
-    const handleLinks = () => {
-      if (!isMounted) return;
-      
-      const containers = document.querySelectorAll(
-        "#notion-article, .notion-page-content, #article-wrapper"
-      );
-
-      containers.forEach(container => {
-        container.querySelectorAll("a").forEach(link => {
-          const href = link.getAttribute("href");
-          if (href && /^https?:\/\//.test(href) &&
-              !href.includes(window.location.host) &&
-              !href.startsWith("#")) {
-            // 避免重复设置
-            if (link.target !== "_blank" || !link.rel?.includes("noopener")) {
-              link.target = "_blank";
-              link.rel = "noopener noreferrer";
-            }
-          }
-        });
-      });
-    };
-
-    const timer = setTimeout(() => {
-      if (!isMounted) return;
-      handleLinks();
-
-      const containers = document.querySelectorAll(
-        "#notion-article, .notion-page-content, #article-wrapper"
-      );
-
-      if (containers.length > 0) {
-        observer = new MutationObserver(() => {
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(handleLinks, 100);
-        });
-
-        // 为所有容器添加监听
-        containers.forEach(container => {
-          observer.observe(container, {
-            subtree: true,
-            childList: true,
-            attributes: true
-          });
-        });
-      }
-    }, 300);
-
-    return () => {
-      isMounted = false;
-      clearTimeout(timer);
-      clearTimeout(debounceTimer);
-      if (observer) observer.disconnect();
-    };
-  }
-}, [post, lock]);
-
+  
   const [hasCode, setHasCode] = useState(false)
 
   useEffect(() => {
