@@ -7,7 +7,7 @@ export default function Live2DWife() {
     initLive2DWife()
   }, [])
   return <>
-    <Head><link rel="stylesheet" href="https://cdn.jsdmirror.cn/npm/font-awesome/css/font-awesome.min.css" /></Head>
+    <Head><SmartLink rel="stylesheet" href="https://cdn.jsdmirror.cn/npm/font-awesome/css/font-awesome.min.css" /></Head>
   </>
 }
 
