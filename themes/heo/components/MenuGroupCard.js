@@ -1,63 +1,93 @@
-import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import SmartLink from '@/components/SmartLink'
-import CONFIG from '../config'
+import Link from 'next/link'
+import { useState } from 'react'
 
-const MenuGroupCard = props => {
-  const { postCount, categoryOptions, tagOptions } = props
-  const { locale } = useGlobal()
-  const archiveSlot = <div className='text-center'>{postCount}</div>
-  const categorySlot = (
-    <div className='text-center'>{categoryOptions?.length}</div>
-  )
-  const tagSlot = <div className='text-center'>{tagOptions?.length}</div>
+export const MenuItemDrop = ({ link }) => {
+  const [show, changeShow] = useState(false)
+  const hasSubMenu = link?.subMenus?.length > 0
 
-  const links = [
-    {
-      name: locale.COMMON.ARTICLE,
-      href: '/archive',
-      slot: archiveSlot,
-      show: siteConfig('HEO_MENU_ARCHIVE', null, CONFIG)
-    },
-    {
-      name: locale.COMMON.CATEGORY,
-      href: '/category',
-      slot: categorySlot,
-      show: siteConfig('HEO_MENU_CATEGORY', null, CONFIG)
-    },
-    {
-      name: locale.COMMON.TAGS,
-      href: '/tag',
-      slot: tagSlot,
-      show: siteConfig('HEO_MENU_TAG', null, CONFIG)
-    }
-  ]
+  if (!link || !link.show) {
+    return null
+  }
+  // 判断是否是外部链接（以 http 或 https 开头）
+  const isExternal = (url) => {
+    return url?.startsWith('http') || url?.startsWith('//')
+  }
 
   return (
-    <nav id='nav' className='dark:text-gray-200 w-full px-5'>
-      {links.map((link, index) => {
-        if (link.show) {
-          return (
-            <div key={index} className=''>
-              <SmartLink
-                title={link.href}
-                href={link.href}
-                target={link?.target}
-                className={
-                  'w-full flex items-center justify-between py-1 hover:scale-105 duration-200 transform dark:hover:text-indigo-400 hover:text-indigo-600 px-2 cursor-pointer'
-                }>
-                <>
-                  <div>{link.name} :</div>
-                  <div className='font-semibold'>{link.slot}</div>
-                </>
-              </SmartLink>
-            </div>
-          )
-        } else {
-          return null
-        }
-      })}
-    </nav>
+    <div
+      onMouseOver={() => changeShow(true)}
+      onMouseOut={() => changeShow(false)}
+      className="relative"
+    >
+      {/* 不含子菜单 */}
+      {!hasSubMenu && (
+        <>
+          {isExternal(link?.href) ? (
+            // 外部链接 - 在新窗口打开
+            <a
+              href={link?.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+            >
+              {link?.icon && <i className={link?.icon} />} {link?.name}
+            </a>
+          ) : (
+            // 内部链接 - 使用 Next.js 的 Link 组件
+            <Link
+              href={link?.href}
+              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+            >
+              {link?.icon && <i className={link?.icon} />} {link?.name}
+            </Link>
+          )}
+        </>
+      )}
+      
+      {/* 含子菜单的按钮 */}
+      {hasSubMenu && (
+        <>
+          <div className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative hover:bg-purple-600/25 hover:shadow-lg transform">
+            {link?.icon && <i className={link?.icon} />} {link?.name}
+            {/* 主菜单下方的安全区域 */}
+            {show && (
+              <div className='absolute w-full h-4 -bottom-4 left-0 bg-transparent z-30'></div>
+            )}
+          </div>
+        </>
+      )}
+      {/* 子菜单 */}
+      {hasSubMenu && (
+        <ul
+          className={`${show ? 'visible opacity-100 top-14 pointer-events-auto' : 'invisible opacity-0 top-20 pointer-events-none'} drop-shadow-md overflow-hidden rounded-3xl backdrop-blur-lg bg-purple-200/20 dark:bg-purple-600/20 transition-all duration-300 z-20 absolute`}
+        >
+          {link.subMenus.map((sLink, index) => {
+            return (
+              <li
+                key={index}
+                className="cursor-pointer hover:bg-blue-600 dark:hover:bg-[#ec4899] hover:text-white text-gray-900 dark:text-gray-100  tracking-widest transition-all duration-200 py-1 pr-6 pl-3"
+              >
+                {/* 区分内部和外部链接 */}
+                {isExternal(sLink?.href) ? (
+                  <a
+                    href={sLink.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-nowrap font-normal"
+                  >
+                    {sLink?.icon && <i className={sLink?.icon}> &nbsp; </i>}
+                    {sLink.title}
+                  </a>
+                ) : (
+                  <Link href={sLink.href} className="text-sm text-nowrap font-normal">
+                    {sLink?.icon && <i className={sLink?.icon}> &nbsp; </i>}
+                    {sLink.title}
+                  </Link>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </div>
   )
-}
-export default MenuGroupCard
