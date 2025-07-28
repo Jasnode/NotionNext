@@ -57,4 +57,3 @@ export const MenuItemDrop = ({ link }) => {
       )}
     </div>
   )
-}
