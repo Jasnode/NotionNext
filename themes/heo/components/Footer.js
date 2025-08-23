@@ -37,7 +37,7 @@ const Footer = () => {
         <div id='footer-bottom-right'>
           {BEI_AN && (
             <>
-              <i className='fas fa-shield-alt' />{' '}
+              <LazyImage src="https://icp.redcha.cn/static/picture/icplogoi.png" style={{width: '20px', height: '20px'}} alt="茶ICP备案图标"/>
               <a href={BEI_AN_LINK} className='mr-2'>
                 {siteConfig('BEI_AN')}
               </a>

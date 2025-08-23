@@ -15,12 +15,7 @@ export default function BeiAnSite() {
       <i className='fas fa-shield-alt' />
       <a href={beianLink} className='mx-1'>
         {beian}
-      </a> &nbsp;
-      <img style={{width: '20px', height: '20px'}} src="https://icp.gov.moe//images/ico64.png" alt="萌ICP备案图标"/>
-      <a href="https://icp.gov.moe/?keyword=20249980">萌ICP备20249980号</a>
-      &nbsp;
-      <img src="https://icp.redcha.cn/static/picture/icplogoi.png" style={{width: '20px', height: '20px'}} alt="茶ICP备案图标"/>
-      <a href="https://icp.redcha.cn/beian/ICP-2025080120.html">茶ICP备2025080120号</a>
+      </a>
       <br />
     </span>
   )
