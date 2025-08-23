@@ -37,7 +37,7 @@ const Footer = () => {
         <div id='footer-bottom-right'>
           {BEI_AN && (
             <>
-              <LazyImage src='/images/ico64.png' width={22} height={22} />
+              <i className='fas fa-shield-alt' />{' '}
               <a href={BEI_AN_LINK} className='mr-2'>
                 {siteConfig('BEI_AN')}
               </a>
