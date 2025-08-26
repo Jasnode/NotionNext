@@ -27,7 +27,7 @@ export const MenuItemDrop = ({ link }) => {
               href={link?.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+              className=' hover:bg-black hover:bg-opacity-10 rounded-2xl flex justify-center items-center px-3 py-1 no-underline tracking-widest'
             >
               {link?.icon && <i className={link?.icon} />} {link?.name}
             </a>
@@ -35,7 +35,7 @@ export const MenuItemDrop = ({ link }) => {
             // 内部链接 - 使用 Next.js 的 Link 组件
             <SmartLink
               href={link?.href}
-              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+              className=' hover:bg-black hover:bg-opacity-10 rounded-2xl flex justify-center items-center px-3 py-1 no-underline tracking-widest'
             >
               {link?.icon && <i className={link?.icon} />} {link?.name}
             </SmartLink>
