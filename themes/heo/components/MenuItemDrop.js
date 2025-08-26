@@ -33,12 +33,12 @@ export const MenuItemDrop = ({ link }) => {
             </a>
           ) : (
             // 内部链接 - 使用 Next.js 的 Link 组件
-            <Link
+            <SmartLink
               href={link?.href}
               className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
             >
               {link?.icon && <i className={link?.icon} />} {link?.name}
-            </Link>
+            </SmartLink>
           )}
         </>
       )}
@@ -76,11 +76,11 @@ export const MenuItemDrop = ({ link }) => {
                     {sLink.title}
                   </a>
                 ) : (
-                  <Link href={sLink.href} className="text-sm text-nowrap font-normal">
+                  <SmartLink href={sLink.href} className="text-sm text-nowrap font-normal">
                     {sLink?.icon && <i className={sLink?.icon}> &nbsp; </i>}
 
                     {sLink.title}
-                  </Link>
+                  </SmartLink>
                 )}
               </li>
             )
