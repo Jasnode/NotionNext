@@ -17,7 +17,9 @@ export const MenuItemDrop = ({ link }) => {
   return (
     <div
       onMouseOver={() => changeShow(true)}
-      onMouseOut={() => changeShow(false)}>
+      onMouseOut={() => changeShow(false)}
+      className="relative"
+    >
       {/* 不含子菜单 */}
       {!hasSubMenu && (
         <>
@@ -63,7 +65,7 @@ export const MenuItemDrop = ({ link }) => {
             return (
               <li
                 key={index}
-                className='cursor-pointer hover:bg-blue-600 dark:hover:bg-yellow-600 hover:text-white text-gray-900 dark:text-gray-100  tracking-widest transition-all duration-200 py-1 pr-6 pl-3'>
+                className="cursor-pointer hover:bg-blue-600 dark:hover:bg-[#ec4899] hover:text-white text-gray-900 dark:text-gray-100  tracking-widest transition-all duration-200 py-1 pr-6 pl-3">
                 {/* 区分内部和外部链接 */}
                 {isExternal(sLink?.href) ? (
                   <a
