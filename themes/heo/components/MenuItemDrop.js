@@ -9,18 +9,38 @@ export const MenuItemDrop = ({ link }) => {
     return null
   }
 
+  // 判断是否是外部链接（以 http 或 https 开头）
+  const isExternal = (url) => {
+    return url?.startsWith('http') || url?.startsWith('//')
+  }
+
   return (
     <div
       onMouseOver={() => changeShow(true)}
       onMouseOut={() => changeShow(false)}>
       {/* 不含子菜单 */}
       {!hasSubMenu && (
-        <SmartLink
-          target={link?.target}
-          href={link?.href}
-          className=' hover:bg-black hover:bg-opacity-10 rounded-2xl flex justify-center items-center px-3 py-1 no-underline tracking-widest'>
-          {link?.icon && <i className={link?.icon} />} {link?.name}
-        </SmartLink>
+        <>
+          {isExternal(link?.href) ? (
+            // 外部链接 - 在新窗口打开
+            <a
+              href={link?.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+            >
+              {link?.icon && <i className={link?.icon} />} {link?.name}
+            </a>
+          ) : (
+            // 内部链接 - 使用 Next.js 的 Link 组件
+            <Link
+              href={link?.href}
+              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-purple-600/25 hover:shadow-lg transform"
+            >
+              {link?.icon && <i className={link?.icon} />} {link?.name}
+            </Link>
+          )}
+        </>
       )}
       {/* 含子菜单的按钮 */}
       {hasSubMenu && (
@@ -44,12 +64,24 @@ export const MenuItemDrop = ({ link }) => {
               <li
                 key={index}
                 className='cursor-pointer hover:bg-blue-600 dark:hover:bg-yellow-600 hover:text-white text-gray-900 dark:text-gray-100  tracking-widest transition-all duration-200 py-1 pr-6 pl-3'>
-                <SmartLink href={sLink.href} target={link?.target}>
-                  <span className='text-sm text-nowrap font-normal'>
-                    {link?.icon && <i className={sLink?.icon}> &nbsp; </i>}
+                {/* 区分内部和外部链接 */}
+                {isExternal(sLink?.href) ? (
+                  <a
+                    href={sLink.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-nowrap font-normal"
+                  >
+                    {sLink?.icon && <i className={sLink?.icon}> &nbsp; </i>}
                     {sLink.title}
-                  </span>
-                </SmartLink>
+                  </a>
+                ) : (
+                  <Link href={sLink.href} className="text-sm text-nowrap font-normal">
+                    {sLink?.icon && <i className={sLink?.icon}> &nbsp; </i>}
+
+                    {sLink.title}
+                  </Link>
+                )}
               </li>
             )
           })}
