@@ -45,7 +45,7 @@ export const MenuItemDrop = ({ link }) => {
       {/* 含子菜单的按钮 */}
       {hasSubMenu && (
         <>
-          <div tabIndex={0} className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-600/25 hover:shadow-lg transform">
+          <div className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-600/25 hover:shadow-lg transform">
             {link?.icon && <i className={link?.icon} />} {link?.name}
             {/* 主菜单下方的安全区域 */}
             {show && (
@@ -58,7 +58,7 @@ export const MenuItemDrop = ({ link }) => {
       {hasSubMenu && (
         <ul
           style={{ backdropFilter: 'blur(3px)' }}
-          className={`${show ? 'opacity-100 top-full pointer-events-auto' : 'opacity-0 top-[110%] pointer-events-none'} drop-shadow-md overflow-hidden rounded-3xl bg-blue-100/20 backdrop-blur-lg dark:bg-purple-600/20 transition-opacity duration-200 ease-in-out z-20 absolute`}>
+          className={`${show ? 'opacity-100 top-14 pointer-events-auto' : 'opacity-0 top-20 pointer-events-none'} drop-shadow-md overflow-hidden rounded-3xl bg-blue-100/20 backdrop-blur-lg dark:bg-purple-600/20 transition-opacity duration-200 ease-in-out z-20 absolute`}>
           {link.subMenus.map((sLink, index) => {
             return (
               <li
@@ -71,14 +71,12 @@ export const MenuItemDrop = ({ link }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-nowrap font-normal"
-                    role="menuitem"
-                    tabIndex={show ? 0 : -1}
                   >
                     {sLink?.icon && <i className={sLink?.icon}> &nbsp; </i>}
                     {sLink.title}
                   </a>
                 ) : (
-                  <SmartLink href={sLink.href} className="text-sm text-nowrap font-normal" role="menuitem" tabIndex={show ? 0 : -1}>
+                  <SmartLink href={sLink.href} className="text-sm text-nowrap font-normal">
                     {sLink?.icon && <i className={sLink?.icon}> &nbsp; </i>}
 
                     {sLink.title}
