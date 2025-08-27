@@ -4,7 +4,7 @@ import { isBrowser, loadExternalResource } from '@/lib/utils'
 import mediumZoom from '@fisch0920/medium-zoom'
 import 'katex/dist/katex.min.css'
 import dynamic from 'next/dynamic'
-import { useCallback,useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { NotionRenderer } from 'react-notion-x'
 
 /**
@@ -18,34 +18,6 @@ const NotionPage = ({ post, className }) => {
   const POST_DISABLE_GALLERY_CLICK = siteConfig('POST_DISABLE_GALLERY_CLICK')
   const POST_DISABLE_DATABASE_CLICK = siteConfig('POST_DISABLE_DATABASE_CLICK')
   const SPOILER_TEXT_TAG = siteConfig('SPOILER_TEXT_TAG')
-
-    const LINK = siteConfig('LINK')
-
-  const SmartLink = useCallback(
-    ({ href, children, ...rest }) => {
-      const isExternal = !href.startsWith(LINK) || rest.target === '_blank'
-      if (isExternal) {
-        const shouldShowArrow =
-          !rest.className.includes('notion-bookmark') &&
-          !rest.className.includes('notion-file-link')
-        return (
-          <a href={href} target='_blank' rel='noopener noreferrer' {...rest}>
-            {children}
-            &nbsp;
-            {shouldShowArrow && (
-              <i className='fas fa-arrow-up-right-from-square'></i>
-            )}
-          </a>
-        )
-      }
-      return (
-        <Link href={href} {...rest}>
-          {children}
-        </Link>
-      )
-    },
-    [LINK]
-  )
 
   const zoom =
     isBrowser &&
@@ -153,7 +125,6 @@ const NotionPage = ({ post, className }) => {
         mapPageUrl={mapPageUrl}
         mapImageUrl={mapImgUrl}
         components={{
-          Link: SmartLink,
           Code,
           Collection,
           Equation,
