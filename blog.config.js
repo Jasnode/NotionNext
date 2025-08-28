@@ -19,8 +19,8 @@ const BLOG = {
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://pro.gleeze.com', // 网站地址
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '故人博客,故人Blog,Spring,记录生活,分享资源,资源,文献,考研,技术教程,Windows,notion,chatgpt,软件', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon1.svg', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
-  BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '茶ICP备2025080120号', // 备案号 闽ICP备XXXXXX
-  BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://icp.redcha.cn/beian/ICP-2025080120.html', // 备案查询链接，如果用了萌备等备案请在这里填写
+  BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '萌ICP备20249980号', // 备案号 闽ICP备XXXXXX
+  BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://icp.gov.moe/?keyword=20249980', // 备案查询链接，如果用了萌备等备案请在这里填写
 
   // RSS订阅
   ENABLE_RSS: process.env.NEXT_PUBLIC_ENABLE_RSS || true, // 是否开启RSS订阅功能
