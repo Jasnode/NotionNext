@@ -50,7 +50,7 @@
   --notion-brown_background_co: rgba(176, 160, 149, 0.65);
   --notion-gray_background_co: rgba(227, 242, 253, 0.6);
   --notion-green_background_co: rgba(186, 250, 228, 0.74);
-  --notion-default_background_co: rgba(221, 224, 213, 0.9);
+  --notion-default_background_co: rgb(226,246,255,0.8);
 
   --notion-item-blue: rgba(0, 120, 223, 0.2);
   --notion-item-orange: rgba(245, 93, 0, 0.2);
@@ -553,7 +553,6 @@ summary > .notion-h {
 
 .notion-hr {
   width: 100%;
-  height: 1px;
   display: block;
   position: relative;
   margin-bottom: 0em;
@@ -579,7 +578,6 @@ summary > .notion-h {
 }
 
 .notion-hr:after {
-  transition: opacity 0.3s ease, animation 0.3s ease;
   background: linear-gradient(
       to right, 
       #62efab 5%, 
@@ -594,7 +592,12 @@ summary > .notion-h {
       #62efab 95%
   );
   background-size: 200%;
-  background-position: 0%;
+}
+
+hr.notion-hr {
+  border: none;
+  background: none;
+  height: 0;
 }
 
 .notion-link {
