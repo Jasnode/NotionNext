@@ -8,34 +8,46 @@ import { useEffect, useState } from 'react'
 export default function LoadingCover() {
   const { onLoading, setOnLoading } = useGlobal()
   const [isVisible, setIsVisible] = useState(false) // 初始状态设置为false，避免服务端渲染与客户端渲染不一致
+  const [isExiting, setIsExiting] = useState(false) // 新增退出中状态，用于播放淡出动画后再卸载
 
   useEffect(() => {
-    // 确保在客户端渲染时才设置可见性
     if (onLoading) {
+      setIsExiting(false)
       setIsVisible(true)
-    } else {
-      setIsVisible(false)
+    } else if (isVisible) {
+      setIsExiting(true)
     }
-  }, [onLoading])
+  }, [onLoading, isVisible])
 
   const handleClick = () => {
     setOnLoading(false) // 强行关闭 LoadingCover
   }
 
-  if (typeof window === 'undefined') {
-    return null // 避免在服务端渲染时渲染出这个组件
+  const handleAnimationEnd = (e) => {
+    if (e.target !== e.currentTarget) return;
+    if (isExiting && e?.animationName === 'fadeOut') {
+      setIsVisible(false)
+      setIsExiting(false)
+    }
   }
 
-  return isVisible ? (
+  if (!isVisible && !isExiting) return null
+  const animationClass =
+    onLoading && !isExiting ? 'animate__fadeIn' : (isExiting ? 'animate__fadeOut' : '')
+
+  return (
     <div
       id="loading-cover"
       onClick={handleClick}
-      className={`dark:text-white text-black bg-white dark:bg-black animate__animated animate__faster ${
-        onLoading ? 'animate__fadeIn' : (isVisible ? '' : 'animate__fadeOut')
-      } flex flex-col justify-center z-50 w-full h-screen fixed top-0 left-0`}
+      onAnimationEnd={handleAnimationEnd} // CHANGED: 监听动画结束以在淡出后卸载
+      className={`dark:text-white text-black bg-white dark:bg-black animate__animated animate__faster ${animationClass} flex flex-col justify-center z-50 w-full h-screen fixed top-0 left-0`}
+      role="status"
+      aria-live="polite"
+      aria-label="Loading overlay"
+      aria-busy={onLoading}
       >
         <div className="mx-auto loader-container">
-          <style jsx global>{`
+          <style jsx>{`
             .loader-container {
               position: relative;
               width: 300px;
@@ -44,19 +56,25 @@ export default function LoadingCover() {
               justify-content: center;
               align-items: center;
               perspective: 1000px;
+              will-change: transform;
             }
             .element {
               position: absolute;
               transform-style: preserve-3d;
               backface-visibility: hidden;
+              will-change: transform, opacity;
+            }
+            .sphere-wrap {
+              animation: spin 10s linear infinite;
             }
             .sphere {
               width: 120px;
               height: 120px;
               border-radius: 50%;
               background: radial-gradient(circle, #ff9ff3, #feca57);
-              animation: sphereMotion 5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite alternate, spin 10s linear infinite;
+              animation: sphereMotion 5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite alternate;
               box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
+              will-change: transform, opacity;
             }
             .ripple {
               width: 120px;
@@ -66,6 +84,7 @@ export default function LoadingCover() {
               position: absolute;
               animation: rippleEffect 2s linear infinite;
               opacity: 0.6;
+              will-change: transform, opacity;
             }
             .cube {
               width: 60px;
@@ -74,13 +93,16 @@ export default function LoadingCover() {
               transform: rotateX(45deg) rotateY(45deg);
               animation: rotateCube 3s ease-in-out infinite;
             }
+            .diamond-wrap {
+              animation: bounceDiamond 1.5s ease-in-out infinite;
+            }
             .diamond {
               width: 0;
               height: 0;
               border: 40px solid transparent;
               border-bottom-color: #ff6b6b;
               position: relative;
-              animation: bounceDiamond 1.5s ease-in-out infinite, spinDiamond 6s linear infinite;
+              animation: spinDiamond 6s linear infinite;
             }
             .diamond:after {
               content: '';
@@ -114,6 +136,10 @@ export default function LoadingCover() {
               0%, 100% { transform: translateZ(0) scale(1); }
               50% { transform: translateZ(50px) scale(1.2); }
             }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
             @keyframes rippleEffect {
               0% { transform: scale(0.8); opacity: 0.6; }
               50% { transform: scale(1.5); opacity: 0.2; }
@@ -140,13 +166,13 @@ export default function LoadingCover() {
               50% { opacity: 0.7; }
             }
           `}</style>
-          <div className="element sphere"></div>
+          <div className="element sphere-wrap"><div className="sphere" /></div>
           <div className="element ripple"></div>
           <div className="element cube"></div>
-          <div className="element diamond"></div>
+          <div className="element diamond-wrap"><div className="diamond" /></div>
           <div className="element particle"></div>
           <div className="glow-text">Loading...</div>
         </div>
       </div>
-    ) : null;
+    );
 }
