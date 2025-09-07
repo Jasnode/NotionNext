@@ -63,10 +63,10 @@ module.exports = {
   COMMENT_GITALK_DISTRACTION_FREE_MODE: false, // 类似facebook的无干扰模式
   COMMENT_GITALK_JS_CDN_URL:
     process.env.NEXT_PUBLIC_COMMENT_GITALK_JS_CDN_URL ||
-    'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.min.js', // gitalk客户端 js cdn
+    'https://cdn.jsdmirror.com/npm/gitalk@1/dist/gitalk.min.js', // gitalk客户端 js cdn
   COMMENT_GITALK_CSS_CDN_URL:
     process.env.NEXT_PUBLIC_COMMENT_GITALK_CSS_CDN_URL ||
-    'https://cdn.jsdmirror.cn/npm/gitalk@1/dist/gitalk.css', // gitalk客户端 css cdn
+    'https://cdn.jsdmirror.com/npm/gitalk@1/dist/gitalk.css', // gitalk客户端 css cdn
 
   COMMENT_GITTER_ROOM: process.env.NEXT_PUBLIC_COMMENT_GITTER_ROOM || '', // gitter聊天室 see https://gitter.im/ 不需要则留空
   COMMENT_DAO_VOICE_ID: process.env.NEXT_PUBLIC_COMMENT_DAO_VOICE_ID || '', // DaoVoice http://dashboard.daovoice.io/get-started

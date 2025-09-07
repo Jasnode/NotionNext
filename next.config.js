@@ -128,7 +128,7 @@ const nextConfig = {
       'images.unsplash.com',
       'source.unsplash.com',
       'cdn.staticaly.com',
-      'https://cdn.jsdmirror.cn',
+      'https://cdn.jsdmirror.com',
       'p1.qhimg.com',
       'webmention.io',
       'ko-fi.com'

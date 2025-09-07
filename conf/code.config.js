@@ -11,7 +11,7 @@ module.exports = {
   // 代码主题 @see https://github.com/PrismJS/prism-themes
   PRISM_THEME_PREFIX_PATH:
     process.env.NEXT_PUBLIC_PRISM_THEME_PREFIX_PATH ||
-    'https://cdn.jsdmirror.cn/npm/prismjs@1.29.0/themes/prism-okaidia.css', // 代码块默认主题
+    'https://cdn.jsdmirror.com/npm/prismjs@1.29.0/themes/prism-okaidia.css', // 代码块默认主题
   PRISM_THEME_SWITCH: process.env.NEXT_PUBLIC_PRISM_THEME_SWITCH || true, // 是否开启浅色/深色模式代码主题切换； 开启后将显示以下两个主题
   PRISM_THEME_LIGHT_PATH:
     process.env.NEXT_PUBLIC_PRISM_THEME_LIGHT_PATH ||
@@ -28,7 +28,7 @@ module.exports = {
   // Mermaid 图表CDN
   MERMAID_CDN:
     process.env.NEXT_PUBLIC_MERMAID_CDN ||
-    'https://cdn.jsdmirror.cn/npm/mermaid@11.4.0/dist/mermaid.min.js' // CDN
+    'https://cdn.jsdmirror.com/npm/mermaid@11.4.0/dist/mermaid.min.js' // CDN
 
   // END********代码相关********
 }

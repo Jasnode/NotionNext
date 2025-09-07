@@ -7,13 +7,13 @@ export default function Live2DWife() {
     initLive2DWife()
   }, [])
   return <>
-    <Head><SmartLink rel="stylesheet" href="https://cdn.jsdmirror.cn/npm/font-awesome/css/font-awesome.min.css" /></Head>
+    <Head><SmartLink rel="stylesheet" href="https://cdn.jsdmirror.com/npm/font-awesome/css/font-awesome.min.css" /></Head>
   </>
 }
 
 function initLive2DWife() {
   // 注意：live2d_path 参数应使用绝对路径
-  const live2dPath = 'https://cdn.jsdmirror.cn/gh/stevenjoezhang/live2d-widget@latest/'
+  const live2dPath = 'https://cdn.jsdmirror.com/gh/stevenjoezhang/live2d-widget@latest/'
   // const live2d_path = "/live2d-widget/";
 
   // 加载 waifu.css live2d.min.js waifu-tips.js
@@ -27,7 +27,7 @@ function initLive2DWife() {
       initWidget({
         waifuPath: live2dPath + 'waifu-tips.json',
         // apiPath: "https://live2d.fghrsh.net/api/",
-        cdnPath: 'https://cdn.jsdmirror.cn/gh/fghrsh/live2d_api/'
+        cdnPath: 'https://cdn.jsdmirror.com/gh/fghrsh/live2d_api/'
       })
     })
   }

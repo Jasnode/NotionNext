@@ -31,5 +31,5 @@ module.exports = {
   // ANIMATE.css 动画
   ANIMATE_CSS_URL:
     process.env.NEXT_PUBLIC_ANIMATE_CSS_URL ||
-    'https://cdn.jsdmirror.cn/npm/animate.css@4.1.1/animate.min.css' // 动画CDN
+    'https://cdn.jsdmirror.com/npm/animate.css@4.1.1/animate.min.css' // 动画CDN
 }

@@ -9,7 +9,7 @@ module.exports = {
   FONT_STYLE: process.env.NEXT_PUBLIC_FONT_STYLE || 'font-sans font-semibold',
   // 字体CSS 例如 https://npm.elemecdn.com/lxgw-wenkai-webfont@1.6.0/style.css
   FONT_URL: [
-    'https://cdn.jsdmirror.cn/npm/lxgw-wenkai-webfont@1.7.0/style.min.css',
+    'https://cdn.jsdmirror.com/npm/lxgw-wenkai-webfont@1.7.0/style.min.css',
     'https://fonts.googleapis.com/css?family=Bitter&display=swap', // Bitter 用作英文数字的字体
     'https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&display=swap',
     'https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300&display=swap'

@@ -47,8 +47,8 @@ const BLOG = {
   ...require('./conf/dev.config'), // 开发、调试时需要关注的配置
 
   // 自定义外部脚本，外部样式
-  CUSTOM_EXTERNAL_JS: ['https://cdn.jsdmirror.cn/npm/pace-js@latest/pace.min.js','https://cdn.jsdmirror.cn/npm/instant.page@5.2.0/instantpage.min.js'], 
-  CUSTOM_EXTERNAL_CSS: [''], 
+  CUSTOM_EXTERNAL_JS: ['https://cdn.jsdmirror.com/npm/pace-js@latest/pace.min.js','https://cdn.jsdmirror.com/npm/instant.page@5.2.0/instantpage.min.js'], 
+  CUSTOM_EXTERNAL_CSS: ['https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/custom.css'], 
 
   // 自定义菜单
   CUSTOM_MENU: process.env.NEXT_PUBLIC_CUSTOM_MENU || true, // 支持Menu类型的菜单，替代了3.12版本前的Page类型

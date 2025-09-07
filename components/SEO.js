@@ -24,7 +24,7 @@ const SEO = props => {
   useEffect(() => {
     // 使用WebFontLoader字体加载
     loadExternalResource(
-      'https://cdn.jsdmirror.cn/npm/webfontloader@1.6.28/webfontloader.js',
+      'https://cdn.jsdmirror.com/npm/webfontloader@1.6.28/webfontloader.js',
       'js'
     ).then(url => {
       const WebFont = window?.WebFont
