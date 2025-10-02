@@ -51,7 +51,7 @@ var memo = {
     limit: '30',
     creatorId: '101',
     domId: '#memos',
-    username: '故人博客',
+    username: '茉灵智库',
     name: '林木木'
 }
 if (typeof (memos) !== "undefined") {

@@ -41,7 +41,7 @@ const BlogMemos = () => {
     
     return (
         <section id="main" className="container">
-            <h2>故人博客</h2>
+            <h2>茉灵智库</h2>
             <div className="total">一共 <span id="total">0</span> 条随想 🎉</div>
             <blockquote id="tag-filter" className="filter">
                 <div id="tags"></div>
