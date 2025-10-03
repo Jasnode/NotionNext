@@ -37,7 +37,7 @@ const Footer = () => {
         <div id='footer-bottom-right'>
           {BEI_AN && (
             <>
-              <LazyImage src="https://icp.gov.moe//images/ico64.png" style={{width: '20px', height: '20px'}} alt="萌ICP备案图标"/>
+              <LazyImage src="https://jsd.akass.cn/gh/88lin/picx-images-hosting@master/icon120.5xb0hthnf2.webp" style={{width: '20px', height: '20px'}} alt="萌ICP备案图标"/>
               <a href={BEI_AN_LINK} className='mr-2'>
                 {siteConfig('BEI_AN')}
               </a>
