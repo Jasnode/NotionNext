@@ -151,17 +151,19 @@ nav {
 }
 
 .waline-recent-content .wl-emoji {
-  height: 1.1rem !important;
+  height: 3rem !important;
+  width: auto !important;
   display: inline-block !important;
-  line-height: 1.25rem !important;
-  vertical-align: text-bottom !important;
+  vertical-align: -0.15em !important;
+  margin: 0 0.18rem;
 }
 
 .vcontent .wl-emoji {
   display: inline-block;
-  vertical-align: baseline;
-  height: 1.25em;
-  margin: -0.125em 0.25em;
+  vertical-align: -0.15em;
+  height: 3rem;
+  width: auto;
+  margin: 0 0.18rem;
 }
 
 /* twikoo 评论区超链接样式 */
