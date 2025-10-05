@@ -136,8 +136,8 @@ const ExternalPlugin = props => {
   if (isBrowser) {
     // 初始化AOS动画
     // 静态导入本地自定义样式
-    loadExternalResource('/css/custom.css', 'css')
-    loadExternalResource('/js/custom.js', 'js')
+    // loadExternalResource('/css/custom.css', 'css')
+    // loadExternalResource('/js/custom.js', 'js')
 
     // 自动添加图片阴影
     if (IMG_SHADOW) {

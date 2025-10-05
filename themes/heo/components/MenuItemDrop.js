@@ -58,7 +58,7 @@ export const MenuItemDrop = ({ link }) => {
       {hasSubMenu && (
         <ul
           style={{ backdropFilter: 'blur(3px)' }}
-          className={`${show ? 'opacity-100 top-14 pointer-events-auto' : 'opacity-0 top-20 pointer-events-none'} drop-shadow-md overflow-hidden rounded-3xl bg-blue-100/20 backdrop-blur-lg dark:bg-purple-600/20 transition-all duration-300 ease-in-out z-20 absolute`}>
+          className={`${show ? 'opacity-100 top-14 pointer-events-auto' : 'opacity-0 top-20 pointer-events-none'} shadow-md overflow-hidden rounded-3xl bg-white/70 backdrop-blur-xl ring-1 ring-white/60 ring-inset dark:bg-purple-600/20 transition-all duration-300 ease-in-out z-20 absolute`}>
           {link.subMenus.map((sLink, index) => {
             return (
               <li
