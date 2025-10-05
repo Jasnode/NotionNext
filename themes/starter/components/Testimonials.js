@@ -12,11 +12,11 @@ import { SVGRightArrow } from './svg/SVGRightArrow'
  */
 const loadExternal = async () => {
   await loadExternalResource(
-    'https://cdn.bootcdn.net/ajax/libs/Swiper/11.0.5/swiper-bundle.css',
+    'https://cdn.jsdmirror.com/npm/swiper@11.0.5/swiper-bundle.min.css',
     'css'
   )
   await loadExternalResource(
-    'https://cdn.bootcdn.net/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js',
+    'https://cdn.jsdmirror.com/npm/swiper@11.0.5/swiper-bundle.min.js',
     'js'
   )
 
