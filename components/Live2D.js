@@ -3,7 +3,15 @@ import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { isMobile, loadExternalResource } from '@/lib/utils'
 import { useEffect } from 'react'
-import { getDevicePerformance } from '@/components/PerformanceDetector'
+
+function getDevicePerformance() {
+  if (typeof window === 'undefined') return { isLowEndDevice: false }
+  const cores = navigator.hardwareConcurrency || 4
+  const memory = navigator.deviceMemory || 4
+  const prefersReducedMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return { isLowEndDevice: prefersReducedMotion || cores <= 4 || memory <= 4 }
+}
 
 /**
  * 网页动画
