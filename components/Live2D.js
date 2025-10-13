@@ -3,6 +3,7 @@ import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { isMobile, loadExternalResource } from '@/lib/utils'
 import { useEffect } from 'react'
+import { getDevicePerformance } from '@/components/PerformanceDetector'
 
 /**
  * 网页动画
@@ -13,17 +14,21 @@ export default function Live2D() {
   const showPet = JSON.parse(siteConfig('WIDGET_PET'))
   const petLink = siteConfig('WIDGET_PET_LINK')
   const petSwitchTheme = siteConfig('WIDGET_PET_SWITCH_THEME')
+  // 获取设备性能信息
+  const { isLowEndDevice } = getDevicePerformance()
 
   useEffect(() => {
+    // 低端设备不加载 Live2D
+    if (isLowEndDevice) return
+
     if (showPet && !isMobile()) {
       Promise.all([
         loadExternalResource(
           'https://cdn.jsdmirror.com/gh/stevenjoezhang/live2d-widget@latest/live2d.min.js',
           'js'
         )
-      ]).then(e => {
+      ]).then(() => {
         if (typeof window?.loadlive2d !== 'undefined') {
-          // https://github.com/xiazeyu/live2d-widget-models
           try {
             loadlive2d('live2d', petLink)
           } catch (error) {
@@ -32,7 +37,7 @@ export default function Live2D() {
         }
       })
     }
-  }, [theme])
+  }, [theme, isLowEndDevice])
 
   function handleClick() {
     if (petSwitchTheme) {
@@ -40,7 +45,8 @@ export default function Live2D() {
     }
   }
 
-  if (!showPet) {
+  // 低端设备或关闭宠物时不渲染
+  if (!showPet || isLowEndDevice) {
     return <></>
   }
 

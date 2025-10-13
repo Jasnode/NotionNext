@@ -14,7 +14,7 @@ import { isBrowser } from '@/lib/utils'
 import { Transition } from '@headlessui/react'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import BlogPostArchive from './components/BlogPostArchive'
 import BlogPostListPage from './components/BlogPostListPage'
 import BlogPostListScroll from './components/BlogPostListScroll'
@@ -51,7 +51,7 @@ const LayoutBase = props => {
   const { fullWidth, isDarkMode } = useGlobal()
   const router = useRouter()
 
-  const headerSlot = (
+  const headerSlot = useMemo(() => (
     <header>
       {/* 顶部导航 */}
       <Header {...props} />
@@ -65,13 +65,15 @@ const LayoutBase = props => {
       ) : null}
       {fullWidth ? null : <PostHeader {...props} isDarkMode={isDarkMode} />}
     </header>
-  )
+  ), [props, router.route, fullWidth, isDarkMode])
 
   // 右侧栏 用户信息+标签列表
-  const slotRight =
-    router.route === '/404' || fullWidth ? null : <SideRight {...props} />
+  const slotRight = useMemo(() => {
+    if (router.route === '/404' || fullWidth) return null
+    return <SideRight {...props} />
+  }, [router.route, fullWidth, props])
 
-  const maxWidth = fullWidth ? 'max-w-[96rem] mx-auto' : 'max-w-[86rem]' // 普通最大宽度是86rem和顶部菜单栏对齐，留空则与窗口对齐
+  const maxWidth = fullWidth ? 'max-w-[96rem]' : 'max-w-[86rem]' // 普通最大宽度是86rem和顶部菜单栏对齐，留空则与窗口对齐
 
   const HEO_HERO_BODY_REVERSE = siteConfig(
     'HEO_HERO_BODY_REVERSE',
@@ -175,8 +177,8 @@ const LayoutSearch = props => {
 
   useEffect(() => {
     // 高亮搜索结果
-    if (currentSearch) {
-      setTimeout(() => {
+    if (!currentSearch || typeof window === 'undefined') return
+      const timer = setTimeout(() => {
         replaceSearchResult({
           doms: document.getElementsByClassName('replace'),
           search: currentSearch,
@@ -186,8 +188,8 @@ const LayoutSearch = props => {
           }
         })
       }, 100)
-    }
-  }, [])
+      return () => clearTimeout(timer)
+  }, [currentSearch])
   return (
     <div currentSearch={currentSearch}>
       <div id='post-outer-wrapper' className='px-5  md:px-0'>
@@ -249,7 +251,7 @@ const LayoutMemos = props => {
   useEffect(() => {
     const codeElements = document.querySelectorAll('[class^="language-"]')
     setHasCode(codeElements.length > 0)
-  }, [fullWidth])
+  }, [])
 
   const commentEnable = siteConfig('COMMENT_WALINE_SERVER_URL')
 
@@ -262,8 +264,7 @@ const LayoutMemos = props => {
   return (
     <>
       <div className={`w-full ${fullWidth ? '' : 'xl:max-w-5xl'} ${hasCode ? 'xl:w-[73.15vw]' : ''} lg:hover:shadow lg:border rounded-2xl lg:px-2 lg:py-4 bg-white dark:bg-[#18171d] dark:border-gray-600 article`}>
-        {lock && <ArticleLock validPassword={validPassword} />}
-
+        {lock && <PostLock validPassword={validPassword} />}
         {!lock && (
           <div
             id="article-wrapper"
@@ -333,13 +334,11 @@ const LayoutSlug = props => {
       containers.forEach(container => {
         container.querySelectorAll("a").forEach(link => {
           const href = link.getAttribute("href");
-          if (href && /^https?:\/\//.test(href) &&
-              !href.includes(window.location.host) &&
-              !href.startsWith("#")) {
+          if (link.hostname && link.hostname !== window.location.hostname && !href?.startsWith('#')) {
             // 避免重复设置
             if (link.target !== "_blank" || !link.rel?.includes("noopener")) {
               link.target = "_blank";
-              link.rel = "noopener noreferrer";
+              link.rel = "noopener noreferrer external";
             }
           }
         });
@@ -401,24 +400,19 @@ const LayoutSlug = props => {
   const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
   useEffect(() => {
     // 404
-    if (!post) {
-      setTimeout(
-        () => {
-          if (isBrowser) {
-            const article = document.querySelector(
-              '#article-wrapper #notion-article'
-            )
-            if (!article) {
-              router.push('/404').then(() => {
-                console.warn('找不到页面', router.asPath)
-              })
-            }
+    if (!post && isBrowser && router.isReady) {
+      const timer = setTimeout(() => {
+        const article = document.querySelector('#article-wrapper #notion-article')
+          if (!article) {
+            router.replace('/404')
+            console.warn('找不到页面', router.asPath)
           }
         },
         waiting404
       )
+      return () => clearTimeout(timer)
     }
-  }, [post])
+  }, [post, router, waiting404])
   return (
     <>
       <div
