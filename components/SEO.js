@@ -133,7 +133,7 @@ const SEO = props => {
       <meta name='keywords' content={keywords} />
       <meta name='description' content={description} />
       <meta name='author' content={AUTHOR} />
-      <meta name='generator' content='NotionNext' />
+      <meta name='generator' content='茉灵智库' />
 
       {/* 语言和地区 */}
       <meta httpEquiv='content-language' content={siteConfig('LANG')} />
@@ -293,7 +293,7 @@ const getSEOMeta = (props, router, locale) => {
   switch (router.route) {
     case '/':
       return {
-        title: `${siteInfo?.title} | ${siteInfo?.description}`,
+        title: `${siteInfo?.title}`,
         description: `${siteInfo?.description}`,
         image: `${siteInfo?.pageCover}`,
         slug: '',
