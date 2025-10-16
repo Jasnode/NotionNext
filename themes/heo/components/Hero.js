@@ -397,7 +397,7 @@ function TodayCard({ cRef, siteInfo }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={siteInfo?.pageCover}
-          alt='茉灵智库 - AI工具与学术资源分享博客封面图'
+          alt='茉灵智库 - 资源与技术教程分享封面图'
           id='today-card-cover'
           className={`${
             isCoverUp ? '' : ' pointer-events-none'
