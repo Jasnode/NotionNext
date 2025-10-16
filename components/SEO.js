@@ -40,7 +40,7 @@ const SEO = props => {
     })
   }, [])
 
-  // SEO关键词
+  // SEO关键词 
   const KEYWORDS = siteConfig('KEYWORDS')
   let keywords = meta?.tags || KEYWORDS
   if (post?.tags && post?.tags?.length > 0) {
@@ -54,7 +54,7 @@ const SEO = props => {
   const title = meta?.title || TITLE
   const description = meta?.description || `${siteInfo?.description}`
   const type = meta?.type || 'website'
-  const lang = siteConfig('LANG').replace('-', '_') // Facebook OpenGraph 要 zh_CN 這樣的格式才抓得到語言
+  const lang = 'zh_CN' // og:locale 需要 zh_CN 格式
   const category = meta?.category || KEYWORDS // section 主要是像是 category 這樣的分類，Facebook 用這個來抓連結的分類
   const favicon = siteConfig('BLOG_FAVICON')
   const BACKGROUND_DARK = siteConfig('BACKGROUND_DARK', '', NOTION_CONFIG)
@@ -70,8 +70,6 @@ const SEO = props => {
     null,
     NOTION_CONFIG
   )
-
-  const BLOG_FAVICON = siteConfig('BLOG_FAVICON', null, NOTION_CONFIG)
 
   const COMMENT_WEBMENTION_ENABLE = siteConfig(
     'COMMENT_WEBMENTION_ENABLE',
@@ -96,19 +94,29 @@ const SEO = props => {
   )
 
   const FACEBOOK_PAGE = siteConfig('FACEBOOK_PAGE', null, NOTION_CONFIG)
-
   const AUTHOR = siteConfig('AUTHOR')
+
+  const ORIGIN = siteConfig('LINK')?.replace(/\/+$/,'')
+  const toAbsolute = (u) => {
+    if (!u) return ''
+    if (/^https?:\/\//i.test(u)) return u
+    return `${ORIGIN}${u.startsWith('/') ? '' : '/'}${u}`
+  }
+
+  const isThin = router.route === '/search' || router.route === '/search/[keyword]' || router.route === '/404'
+  const robots = isThin
+    ? 'noindex, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+    : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
   return (
     <Head>
+      <meta charSet='UTF-8' />
+      <meta name='viewport' content='width=device-width, initial-scale=1.0' />
       <link rel='icon' href={favicon} />
+      <link rel='apple-touch-icon' href={favicon} />
       <title>{title}</title>
       <meta name='theme-color' content={BACKGROUND_DARK} />
-      <meta
-        name='viewport'
-        content='width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0'
-      />
-      <meta name='robots' content='follow, index, max-snippet:-1, max-image-preview:large, max-video-preview:-1' />
-      <meta charSet='UTF-8' />
+      <meta name='robots' content={robots} />
+      {robots.startsWith('index') && <link rel='canonical' href={toAbsolute(url)} />}
       <meta name='format-detection' content='telephone=no' />
       <meta name='mobile-web-app-capable' content='yes' />
       <meta name='apple-mobile-web-app-capable' content='yes' />
@@ -136,31 +144,28 @@ const SEO = props => {
       <meta name='generator' content='茉灵智库' />
 
       {/* 语言和地区 */}
-      <meta httpEquiv='content-language' content={siteConfig('LANG')} />
+      <meta httpEquiv='content-language' content='zh-CN' />
       <meta name='geo.region' content={siteConfig('GEO_REGION', 'CN')} />
       <meta name='geo.country' content={siteConfig('GEO_COUNTRY', 'CN')} />
       {/* Open Graph 元数据 */}
       <meta property='og:locale' content={lang} />
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
-      <meta property='og:url' content={url} />
-      <meta property='og:image' content={image} />
+      <meta property='og:url' content={toAbsolute(url)} />
+      <meta property='og:image' content={toAbsolute(image)} />
+      <meta property='og:image:secure_url' content={toAbsolute(image)} />
       <meta property='og:image:width' content='1200' />
       <meta property='og:image:height' content='630' />
       <meta property='og:image:alt' content={title} />
       <meta property='og:site_name' content={siteConfig('TITLE')} />
-      <meta property='og:type' content={type} />
+      <meta property='og:type' content={meta?.type === 'Post' ? 'article' : (type || 'website')} />
 
       {/* Twitter Card 元数据 */}
       <meta name='twitter:card' content='summary_large_image' />
-      <meta name='twitter:site' content={siteConfig('TWITTER_SITE', '@NotionNext')} />
-      <meta name='twitter:creator' content={siteConfig('TWITTER_CREATOR', '@NotionNext')} />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description} />
-      <meta name='twitter:image' content={image} />
+      <meta name='twitter:image' content={toAbsolute(image)} />
       <meta name='twitter:image:alt' content={title} />
-
-      <link rel='icon' href={BLOG_FAVICON} />
 
       {COMMENT_WEBMENTION_ENABLE && (
         <>
@@ -189,7 +194,7 @@ const SEO = props => {
           <meta property='article:author' content={AUTHOR} />
           <meta property='article:section' content={category} />
           <meta property='article:tag' content={keywords} />
-          <meta property='article:publisher' content={FACEBOOK_PAGE} />
+          {FACEBOOK_PAGE && <meta property='article:publisher' content={FACEBOOK_PAGE} />}
         </>
       )}
 
@@ -205,7 +210,9 @@ const SEO = props => {
       <link rel='dns-prefetch' href='//fonts.googleapis.com' />
       <link rel='dns-prefetch' href='//www.google-analytics.com' />
       <link rel='dns-prefetch' href='//www.googletagmanager.com' />
+      <link rel='preconnect' href='https://cdn.jsdmirror.com' crossOrigin='anonymous' />
       <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
+      <meta httpEquiv='x-dns-prefetch-control' content='on' />
 
       {/* 预加载关键资源 */}
       <link rel='preload' href='/fonts/inter-var.woff2' as='font' type='font/woff2' crossOrigin='anonymous' />
@@ -225,56 +232,78 @@ const SEO = props => {
  * @returns
  */
 const generateStructuredData = (meta, siteInfo, url, image, author) => {
+  const origin = siteConfig('LINK')?.replace(/\/+$/,'')
+  const abs = (u) => (/^https?:\/\//i.test(u) ? u : `${origin}${u?.startsWith('/') ? '' : '/'}${u || ''}`)
+
   const baseData = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: siteInfo?.title,
     description: siteInfo?.description,
-    url: siteConfig('LINK'),
-    author: {
-      '@type': 'Person',
-      name: author
+    url: origin,
+    inLanguage: 'zh-CN',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${origin}/search?s={search_term_string}`,
+      'query-input': 'required name=search_term_string'
     },
+    author: { '@type': 'Person', name: author },
     publisher: {
       '@type': 'Organization',
       name: siteInfo?.title,
-      logo: {
-        '@type': 'ImageObject',
-        url: siteInfo?.icon
-      }
+      logo: { '@type': 'ImageObject', url: abs(siteInfo?.icon) }
     }
   }
 
-  // 如果是文章页面，添加文章结构化数据
   if (meta?.type === 'Post') {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
-      headline: meta.title,
-      description: meta.description,
-      image: image,
-      url: url,
-      datePublished: meta.publishDay,
-      dateModified: meta.lastEditedDay || meta.publishDay,
-      author: {
-        '@type': 'Person',
-        name: author
+    const images = Array.isArray(image) ? image.map(abs) : [abs(image)]
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: origin
+          },
+          meta?.category ? {
+            '@type': 'ListItem',
+            position: 2,
+            name: meta.category,
+            item: `${origin}/category/${encodeURIComponent(meta.category)}`
+          } : null,
+          {
+            '@type': 'ListItem',
+            position: meta?.category ? 3 : 2,
+            name: meta.title,
+            item: abs(url)
+          }
+        ].filter(Boolean)
       },
-      publisher: {
-        '@type': 'Organization',
-        name: siteInfo?.title,
-        logo: {
-          '@type': 'ImageObject',
-          url: siteInfo?.icon
-        }
-      },
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': url
-      },
-      keywords: meta.tags?.join(', '),
-      articleSection: meta.category
-    }
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: meta.title,
+        description: meta.description,
+        image: images,
+        url: abs(url),
+        mainEntityOfPage: { '@type': 'WebPage', '@id': abs(url) },
+        datePublished: meta.publishDay,
+        dateModified: meta.lastEditedDay || meta.publishDay,
+        author: { '@type': 'Person', name: author },
+        publisher: {
+          '@type': 'Organization',
+          name: siteInfo?.title,
+          logo: { '@type': 'ImageObject', url: abs(siteInfo?.icon) }
+        },
+        keywords: Array.isArray(meta.tags) ? meta.tags.join(', ') : '',
+        articleSection: meta.category || '',
+        isAccessibleForFree: true,
+        inLanguage: 'zh-CN'
+      }
+    ]
   }
 
   return baseData

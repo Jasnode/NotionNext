@@ -41,8 +41,12 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html lang={BLOG.LANG}>
+      <Html lang='zh-CN'>
         <Head>
+          {/* 预先设置深色模式，避免闪烁 */}
+          <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
+          <meta httpEquiv='x-dns-prefetch-control' content='on' />
+          <meta name='applicable-device' content='pc,mobile' />
           {/* 预加载字体 */}
           {BLOG.FONT_AWESOME && (
             <>
@@ -60,9 +64,6 @@ class MyDocument extends Document {
               />
             </>
           )}
-
-          {/* 预先设置深色模式，避免闪烁 */}
-          <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
         </Head>
 
         <body>

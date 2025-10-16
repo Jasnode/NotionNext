@@ -18,7 +18,7 @@ const BLOG = {
   AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || 'Spring', // 您的昵称
   BIO: process.env.NEXT_PUBLIC_BIO || '分享技术与生活的无限可能✨', // 作者简介
   LINK: process.env.NEXT_PUBLIC_LINK || 'https://nuaa.tech', // 网站地址
-  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '茉灵智库, AI工具导航, 学术科研导航, 科研效率, 学术资源分享, 免费论文下载, 电子书资源, 论文检索, 技术教程, 编程教学, Windows问题解决, 电脑故障排查, 考研资料, 校招资料, 面试题库, 学习效率, 艾宾浩斯记忆法, 学习方法, 实用经验分享, 生活经验, 软件资源, 工具推荐, 知识型博客, 学术下载, 技术分享, 在线工具, 学习笔记, 记录生活, AI学术搜索助手', // 网站关键词 英文逗号隔开
+  KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '论文下载, 电子书资源, 技术教程, Windows故障排查, 考研资料, 面试题库, 经验分享, 软件资源, 工具推荐', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon1.svg', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
   BEI_AN: process.env.NEXT_PUBLIC_BEI_AN || '萌ICP备20249980号', // 备案号 闽ICP备XXXXXX
   BEI_AN_LINK: process.env.NEXT_PUBLIC_BEI_AN_LINK || 'https://icp.gov.moe/?keyword=20249980', // 备案查询链接，如果用了萌备等备案请在这里填写
