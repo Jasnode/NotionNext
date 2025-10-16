@@ -157,7 +157,7 @@ const SEO = props => {
       <meta property='og:image:width' content='1200' />
       <meta property='og:image:height' content='630' />
       <meta property='og:image:alt' content={title} />
-      <meta property='og:site_name' content={siteConfig('TITLE')} />
+      <meta property='og:site_name' content= '茉灵智库' />
       <meta property='og:type' content={meta?.type === 'Post' ? 'article' : (type || 'website')} />
 
       {/* Twitter Card 元数据 */}
@@ -212,6 +212,7 @@ const SEO = props => {
       <link rel='dns-prefetch' href='//www.googletagmanager.com' />
       <link rel='preconnect' href='https://cdn.jsdmirror.com' crossOrigin='anonymous' />
       <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
+      <link rel="preconnect" href="https://jsd.akass.cn" crossorigin="anonymous" />
       <meta httpEquiv='x-dns-prefetch-control' content='on' />
 
       {/* 预加载关键资源 */}
