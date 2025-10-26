@@ -300,3 +300,45 @@ img {
   @keyframes l1 {
   0% {background-position: right}
 }
+
+@layer utilities {
+  @keyframes Gradient {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .card-gradient {
+    position: relative;
+    isolation: isolate; /* 防止层混合 */
+    background: transparent;
+  }
+
+  .card-gradient::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;          /* 在内容下方 */
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      #e8d8b9 0%,
+      #eccec5 25%,
+      #a3e9eb 50%,
+      #bdbdf0 75%,
+      #eec1ea 100%
+    );
+    background-size: 400% 400%;
+    animation: Gradient 16s linear infinite;
+
+    /* 抗闪烁优化 */
+    will-change: transform, background-position;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .dark .card-gradient::before {
+    background: #191919ee;
+    animation: none;
+  }
+}
