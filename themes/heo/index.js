@@ -35,7 +35,6 @@ import SideRight from './components/SideRight'
 import CONFIG from './config'
 import { Style } from './style'
 import AISummary from '@/components/AISummary'
-import BlogMemos from './components/BlogMemos'
 import AISummar from './components/AISummar'
 
 /**
@@ -554,7 +553,6 @@ const LayoutTagIndex = props => {
 export {
   Layout404,
   LayoutArchive,
-  LayoutMemos, //增加LayoutMemos组件Export
   LayoutBase,
   LayoutCategoryIndex,
   LayoutIndex,
