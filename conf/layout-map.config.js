@@ -3,12 +3,10 @@
  * 可在添加新的路径和对应主题下的布局名称
  *  */
 module.exports = {
-  //
   LAYOUT_MAPPINGS: {
     '-1': 'LayoutBase',
     '/': 'LayoutIndex',
     '/archive': 'LayoutArchive',
-    '/memos' : 'LayoutMemos',
     '/page/[page]': 'LayoutPostList',
     '/category/[category]': 'LayoutPostList',
     '/category/[category]/page/[page]': 'LayoutPostList',

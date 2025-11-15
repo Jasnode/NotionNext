@@ -35,7 +35,6 @@ import SideRight from './components/SideRight'
 import CONFIG from './config'
 import { Style } from './style'
 import AISummary from '@/components/AISummary'
-import BlogMemos from './components/BlogMemos'
 import AISummar from './components/AISummar'
 
 /**
@@ -234,78 +233,6 @@ const LayoutArchive = props => {
         ))}
       </div>
     </div>
-  )
-}
-
-/**
- * 说说
- * @param {*} props
- * @returns
- */
-const LayoutMemos = props => {
-  const { lock, validPassword } = props
-  const { locale, fullWidth } = useGlobal()
-
-  const [hasCode, setHasCode] = useState(false)
-
-  useEffect(() => {
-    const codeElements = document.querySelectorAll('[class^="language-"]')
-    setHasCode(codeElements.length > 0)
-  }, [])
-
-  const commentEnable = siteConfig('COMMENT_WALINE_SERVER_URL')
-
-  const memoPageInfo = {
-    id: "2ab7483d3d42419ebf6dfa90b229103c", 
-    type: "memos",
-    title: "我的说说",
-  };
-
-  return (
-    <>
-      <div className={`w-full ${fullWidth ? '' : 'xl:max-w-5xl'} ${hasCode ? 'xl:w-[73.15vw]' : ''} lg:hover:shadow lg:border rounded-2xl lg:px-2 lg:py-4 bg-white dark:bg-[#18171d] dark:border-gray-600 article`}>
-        {lock && <PostLock validPassword={validPassword} />}
-        {!lock && (
-          <div
-            id="article-wrapper"
-            className="overflow-x-auto flex-grow mx-auto md:w-full md:px-5 "
-          >
-            <article
-              itemScope
-              itemType="https://schema.org/Movie"
-              data-wow-delay=".2s"
-              className="wow fadeInUp subpixel-antialiased overflow-y-hidden"
-            >
-              {/* Notion文章主体 */}
-              <section className="px-5 justify-center mx-auto">
-                <WWAds orientation="horizontal" className="w-full" />
-                <BlogMemos {...props}/>
-                <WWAds orientation="horizontal" className="w-full" />
-              </section>
-            </article>
-
-            {fullWidth
-              ? null
-              : <div className={`${commentEnable && memoPageInfo ? '' : 'hidden'}`}>
-                <hr className="my-4 border-dashed" />
-                {/* 评论区上方广告 */}
-                <div className="py-2">
-                    <AdSlot />
-                </div>
-                {/* 评论互动 */}
-                <div className="duration-200 overflow-x-auto px-5">
-                  <div className="text-2xl dark:text-white">
-                    <i className="fas fa-comment mr-1" />
-                    {locale.COMMON.COMMENTS}
-                  </div>
-                  <Comment frontMatter={memoPageInfo} />
-                </div>
-              </div>}
-          </div>
-        )}
-      </div>
-      <FloatTocButton {...props} />
-    </>
   )
 }
 
@@ -626,7 +553,6 @@ const LayoutTagIndex = props => {
 export {
   Layout404,
   LayoutArchive,
-  LayoutMemos, //增加LayoutMemos组件Export
   LayoutBase,
   LayoutCategoryIndex,
   LayoutIndex,
