@@ -212,7 +212,7 @@ const SEO = props => {
       <link rel='dns-prefetch' href='//www.googletagmanager.com' />
       <link rel='preconnect' href='https://cdn.jsdmirror.com' crossOrigin='anonymous' />
       <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
-      <link rel="preconnect" href="https://jsd.akass.cn" crossorigin="anonymous" />
+      <link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin="anonymous" />
       <meta httpEquiv='x-dns-prefetch-control' content='on' />
 
       {/* 预加载关键资源 */}
