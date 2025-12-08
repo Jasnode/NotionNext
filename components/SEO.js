@@ -48,7 +48,7 @@ const SEO = props => {
   }
   if (meta) {
     url = `${url}/${meta.slug}`
-    image = meta.image || '/bg_image.jpg'
+    image = meta.image || 'https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/chiiikawa.64e0o4q2po.webp'
   }
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
