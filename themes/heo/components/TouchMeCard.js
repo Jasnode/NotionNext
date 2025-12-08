@@ -27,7 +27,7 @@ export default function TouchMeCard() {
               className='absolute left-0 top-0 w-full h-full'
               style={{
                 background:
-                  'url(https://jsd.akass.cn/gh/88lin/PicX@master/gzh_cover.png) center center no-repeat'
+                  'url(https://cdn.jsdmirror.com/gh/88lin/PicX@master/gzh_cover.png) center center no-repeat'
               }}></div>
           </div>
         }
