@@ -139,7 +139,7 @@ const SEO = props => {
 
       {/* 基础SEO元数据 */}
       <meta name='keywords' content={keywords} />
-      <meta name='description' content={description} />
+      <meta name='description' content={description?.substring(0, 160)} />
       <meta name='author' content={AUTHOR} />
       <meta name='generator' content='茉灵智库' />
 
@@ -150,7 +150,7 @@ const SEO = props => {
       {/* Open Graph 元数据 */}
       <meta property='og:locale' content={lang} />
       <meta property='og:title' content={title} />
-      <meta property='og:description' content={description} />
+      <meta property='og:description' content={description?.substring(0, 200)} />
       <meta property='og:url' content={toAbsolute(url)} />
       <meta property='og:image' content={toAbsolute(image)} />
       <meta property='og:image:secure_url' content={toAbsolute(image)} />
@@ -163,9 +163,14 @@ const SEO = props => {
       {/* Twitter Card 元数据 */}
       <meta name='twitter:card' content='summary_large_image' />
       <meta name='twitter:title' content={title} />
-      <meta name='twitter:description' content={description} />
+      <meta name='twitter:description' content={description?.substring(0, 200)} />
       <meta name='twitter:image' content={toAbsolute(image)} />
       <meta name='twitter:image:alt' content={title} />
+
+      {/* 微信分享优化 */}
+      <meta property='weixin:title' content={title} />
+      <meta property='weixin:description' content={description?.substring(0, 160)} />
+      <meta property='weixin:image' content={image} />
 
       {COMMENT_WEBMENTION_ENABLE && (
         <>
@@ -240,7 +245,7 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: siteInfo?.title,
-    description: siteInfo?.description,
+    description: siteInfo?.description?.substring(0, 160),
     url: origin,
     inLanguage: 'zh-CN',
     potentialAction: {
@@ -287,7 +292,7 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         headline: meta.title,
-        description: meta.description,
+        description: meta.description?.substring(0, 160),
         image: images,
         url: abs(url),
         mainEntityOfPage: { '@type': 'WebPage', '@id': abs(url) },
@@ -301,6 +306,7 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
         },
         keywords: Array.isArray(meta.tags) ? meta.tags.join(', ') : '',
         articleSection: meta.category || '',
+        wordCount: meta.wordCount,
         isAccessibleForFree: true,
         inLanguage: 'zh-CN'
       }
@@ -418,7 +424,10 @@ const getSEOMeta = (props, router, locale) => {
         slug: post?.slug,
         image: post?.pageCoverThumbnail || `${siteInfo?.pageCover}`,
         category: post?.category?.[0],
-        tags: post?.tags
+        tags: post?.tags,
+        wordCount: post?.wordCount,
+        publishDay: post?.publishDay,
+        lastEditedDay: post?.lastEditedDay
       }
   }
 }
