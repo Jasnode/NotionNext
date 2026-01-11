@@ -1,5 +1,5 @@
 import { siteConfig } from '@/lib/config'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { handleEmailClick } from '@/lib/plugins/mailEncrypt'
 
 /**
@@ -19,8 +19,25 @@ const SocialButton = () => {
   const CONTACT_BILIBILI = siteConfig('CONTACT_BILIBILI')
   const CONTACT_YOUTUBE = siteConfig('CONTACT_YOUTUBE')
   const [showWechatQR, setShowWechatQR] = useState(false)
+  const wechatWrapperRef = useRef(null)
 
   const emailIcon = useRef(null)
+
+  useEffect(() => {
+  if (!showWechatQR) return
+
+  const handleClickOutside = (e) => {
+    if (
+      wechatWrapperRef.current &&
+      !wechatWrapperRef.current.contains(e.target)
+    ) {
+      setShowWechatQR(false)
+    }
+  }
+
+  document.addEventListener('click', handleClickOutside)
+  return () => document.removeEventListener('click', handleClickOutside)
+}, [showWechatQR])
 
   return (
     <div className='w-full justify-center flex-wrap flex'>
@@ -38,6 +55,7 @@ const SocialButton = () => {
             />
           </a>
           <div
+            ref={wechatWrapperRef}
             className='relative inline-flex'
             onPointerEnter={(e) => {
               if (e.pointerType === 'mouse') setShowWechatQR(true)
@@ -58,7 +76,10 @@ const SocialButton = () => {
             </span>
             {showWechatQR && (
               <div className='absolute bottom-12 left-1/2 -translate-x-1/2 z-40'>
-                <div className='w-36 rounded-xl bg-white dark:bg-neutral-800 shadow-2xl ring-1 ring-black/5 flex flex-col items-center px-3 py-2'>
+                <div
+                  className='w-36 rounded-xl bg-white dark:bg-neutral-800 shadow-2xl ring-1 ring-black/5 flex flex-col items-center px-3 py-2'
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <img
                     src='https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/qrcode.1ovwa0ke25.png'
                     alt='微信公众号二维码'
