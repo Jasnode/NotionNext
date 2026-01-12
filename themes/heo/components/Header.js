@@ -130,6 +130,24 @@ const Header = props => {
         .fade-in-up {
           animation: fade-in-up 0.3s ease-in-out;
         }
+        .heo-glass-nav {
+          background: linear-gradient(
+              135deg,
+              rgba(255, 255, 255, 0.45),
+              rgba(255, 255, 255, 0.25)
+          );
+          backdrop-filter: blur(18px) saturate(160%);
+          -webkit-backdrop-filter: blur(18px) saturate(160%);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        :global(.dark) .heo-glass-nav {
+          background: linear-gradient(
+              135deg,
+              rgba(30, 30, 34, 0.45),
+              rgba(30, 30, 34, 0.25)
+          );
+          border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
       `}</style>
 
       {/* fixed时留白高度 */}
@@ -143,7 +161,7 @@ const Header = props => {
         className={`z-20 h-16 top-0 w-full duration-300 transition-all
             ${fixedNav ? 'fixed' : 'relative bg-transparent'} 
             ${textWhite ? 'text-white ' : 'text-black dark:text-white'}  
-            ${navBgWhite ? 'bg-white dark:bg-[#18171d] shadow' : 'bg-transparent'}`}>
+            ${navBgWhite ? 'heo-glass-nav' : 'bg-transparent'}`}>
         <div className='flex h-full mx-auto justify-between items-center max-w-[86rem] px-6'>
           {/* 左侧logo */}
           <Logo {...props} />
