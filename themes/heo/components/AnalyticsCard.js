@@ -34,13 +34,13 @@ export function AnalyticsCard(props) {
             <div className='hidden busuanzi_container_page_pv'>
                 <div className='flex justify-between'>
                     <div>{siteVisitTitle}</div>
-                    <div id='busuanzi_page_pv' className='busuanzi_value_page_pv'> </div>
+                    <div className='busuanzi_value_page_pv' />
                 </div>
             </div>
             <div className='hidden busuanzi_container_site_uv'>
                 <div className='flex justify-between'>
                     <div>{siteVisitorTitle}</div>
-                    <div id='busuanzi_site_uv' className='busuanzi_value_site_uv'> </div>
+                    <div className='busuanzi_value_site_uv' />
                 </div>
             </div>
         </div>

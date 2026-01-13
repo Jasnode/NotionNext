@@ -7,17 +7,11 @@ export default function AnalyticsBusuanzi() {
     <div className='flex gap-x-1'>
       <span className='hidden busuanzi_container_site_pv whitespace-nowrap'>
         <i className='fas fa-eye' />
-        <span
-          id='busuanzi_site_pv'
-          className='px-1 busuanzi_value_site_pv'
-        > </span>
+        <span className='px-1 busuanzi_value_site_pv'> </span>
       </span>
       <span className='hidden busuanzi_container_site_uv whitespace-nowrap'>
         <i className='fas fa-users' />
-        <span
-          id='busuanzi_site_uv'
-          className='px-1 busuanzi_value_site_uv'
-        > </span>
+        <span className='px-1 busuanzi_value_site_uv'> </span>
       </span>
     </div>
   )

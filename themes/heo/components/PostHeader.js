@@ -134,7 +134,7 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
             {ANALYTICS_BUSUANZI_ENABLE && (
               <div className='busuanzi_container_page_pv font-light mr-2'>
                 <i className='fa-solid fa-fire-flame-curved'></i>{' '}
-                <span id='busuanzi_page_pv' className='mr-2 busuanzi_value_page_pv'> </span>
+                <span className='mr-2 busuanzi_value_page_pv' />
               </div>
             )}
           </section>

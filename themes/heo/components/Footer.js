@@ -47,11 +47,11 @@ const Footer = () => {
 
           <span className='hidden busuanzi_container_site_pv'>
             <i className='fas fa-eye' />
-            <span id='busuanzi_site_pv' className='px-1 busuanzi_value_site_pv'> </span>
+            <span className='px-1 busuanzi_value_site_pv'> </span>{' '}
           </span>
           <span className='pl-2 hidden busuanzi_container_site_uv'>
-            <i className='fas fa-users' />
-            <span id='busuanzi_site_uv' className='px-1 busuanzi_value_site_uv'> </span>
+            <i className='fas fa-users' />{' '}
+            <span className='px-1 busuanzi_value_site_uv'> </span>{' '}
           </span>
         </div>
       </div>
