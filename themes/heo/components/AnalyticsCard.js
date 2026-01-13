@@ -40,7 +40,7 @@ export function AnalyticsCard(props) {
             <div className='hidden busuanzi_container_site_uv'>
                 <div className='flex justify-between'>
                     <div>{siteVisitorTitle}</div>
-                    <div className='busuanzi_value_site_uv' />
+                    <div className='busuanzi_site_uv' />
                 </div>
             </div>
         </div>
