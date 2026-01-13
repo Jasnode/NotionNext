@@ -57,7 +57,7 @@ const AISummar = ({post}) => {
 
     return (
         <div id="AI-Summary" className = "mx-auto overflow-hidden">
-        <div className="bg-ai-bg rounded-2xl p-3 border-ai-card my-4 leading-[1.4] md:mt-6 mx-auto overflow-hidden">
+        <div className="bg-ai-bg rounded-3xl p-5 border-ai-card my-4 leading-[1.4] md:mt-6 mx-auto overflow-hidden">
             <div id="AI-Title" className="flex items-center rounded-xl px-2 cursor-default select-none relative text-ai-title">
                 <i className="w-5 h-5">
                     <svg width="25px" height="25px" viewBox="0 6 48 48">
@@ -70,7 +70,7 @@ const AISummar = ({post}) => {
                 <div className="font-bold ml-2 leading-[1]">文章摘要</div>
                 <div id="AI-tag" className="text-xs bg-ai-title text-ai-title-text font-bole rounded-3xl p-1.5 flex items-center justify-center transition-all duration-300 absolute right-2">茉灵智库</div>
             </div>
-            <div id="AI-Summary" className="block mt-3 px-3 py-2 bg-ai-card-bg rounded-lg border-ai-card text-[18px] leading-7 dark:text-white">
+            <div id="AI-Summary" className="block mt-3 px-3 py-2 bg-ai-card-bg rounded-2xl border-ai-card text-[18px] leading-7 dark:text-white">
                 <TypewriterEffect text={summary} />
             </div>
         </div>

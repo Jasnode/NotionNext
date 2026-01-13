@@ -41,7 +41,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html lang='zh-CN'>
+      <Html lang={BLOG.LANG}>
         <Head>
           {/* 预先设置深色模式，避免闪烁 */}
           <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />

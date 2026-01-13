@@ -68,7 +68,7 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
                   className='mr-4'
                   passHref
                   legacyBehavior>
-                  <div className='cursor-pointer font-sm font-bold px-3 py-1 rounded-lg  hover:bg-white text-white bg-blue-500 dark:bg-yellow-500 hover:text-blue-500 duration-200 '>
+                  <div className='cursor-pointer font-sm font-bold px-3 py-1 rounded-2xl  hover:bg-white text-white bg-blue-500 dark:bg-yellow-500 hover:text-blue-500 duration-200 '>
                     {post.category}
                   </div>
                 </SmartLink>
@@ -104,39 +104,33 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
           </div>
 
           {/* 标题底部补充信息 */}
-          <section className='flex-wrap dark:text-gray-200 text-opacity-70 shadow-text-md flex text-sm  justify-center md:justify-start mt-4 text-white font-light leading-8'>
-            <div className='flex justify-center '>
-              <div className='mr-2'>
-                <WordCount
-                  wordCount={post.wordCount}
-                  readTime={post.readTime}
-                />
-              </div>
-              {post?.type !== 'Page' && (
-                <>
-                  <SmartLink
-                    href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
-                    passHref
-                    className='pl-1 mr-2 cursor-pointer hover:underline'>
-                    <i className='fa-regular fa-calendar'></i>{' '}
-                    {post?.publishDay}
-                  </SmartLink>
-                </>
-              )}
-
-              <div className='pl-1 mr-2'>
-                <i className='fa-regular fa-calendar-check'></i>{' '}
-                {post.lastEditedDay}
-              </div>
-            </div>
-
-            {/* 阅读统计 */}
+          <section
+            className='mt-4 text-white text-sm font-light text-opacity-70 shadow-text-md leading-7
+                      flex flex-wrap justify-center items-center gap-x-5 gap-y-2 text-center
+                      md:justify-start md:text-left'>
+            <span className='inline-flex items-center gap-1 whitespace-nowrap'>
+              <WordCount wordCount={post.wordCount} readTime={post.readTime} />
+            </span>
             {ANALYTICS_BUSUANZI_ENABLE && (
-              <div className='busuanzi_container_page_pv font-light mr-2'>
-                <i className='fa-solid fa-fire-flame-curved'></i>{' '}
-                <span className='mr-2 busuanzi_value_page_pv' />
-              </div>
+              <span className='busuanzi_container_page_pv inline-flex items-center whitespace-nowrap'>
+                <i className='fa-solid fa-fire-flame-curved mr-1' />
+                <span className='busuanzi_value_page_pv' />
+              </span>
             )}
+            <span className='basis-full h-0 md:basis-auto md:hidden' />
+            {post?.type !== 'Page' && (
+              <SmartLink
+                href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
+                passHref
+                className='inline-flex items-center gap-1 whitespace-nowrap cursor-pointer hover:underline'>
+                <i className='fa-regular fa-calendar'></i>
+                {post?.publishDay}
+              </SmartLink>
+            )}
+            <span className='inline-flex items-center gap-1 whitespace-nowrap'>
+              <i className='fa-regular fa-calendar-check'></i>
+              {post.lastEditedDay}
+            </span>
           </section>
         </div>
 
