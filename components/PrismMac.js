@@ -128,7 +128,9 @@ const renderCollapseCode = (codeCollapse, codeCollapseExpandDefault) => {
     }
 
     const code = codeBlock.querySelector('code')
-    const language = code.getAttribute('class').match(/language-(\w+)/)[1]
+    const className = code?.getAttribute('class') || ''
+    const match = className.match(/language-([^\s]+)/)
+    const language = match?.[1] || 'code'
 
     const collapseWrapper = document.createElement('div')
     collapseWrapper.className = 'collapse-wrapper w-full py-2'
@@ -149,6 +151,7 @@ const renderCollapseCode = (codeCollapse, codeCollapseExpandDefault) => {
     panelWrapper.appendChild(panel)
     collapseWrapper.appendChild(panelWrapper)
 
+    if (!codeBlock.parentNode) continue
     codeBlock.parentNode.insertBefore(collapseWrapper, codeBlock)
     panel.appendChild(codeBlock)
 
@@ -233,9 +236,11 @@ const renderCustomCode = () => {
   const toolbars = document.querySelectorAll('div.code-toolbar');
 
   toolbars.forEach((toolbarEl) => {
+    if (toolbarEl.dataset.customRendered === '1') return
     const codeElements = toolbarEl.querySelectorAll('code');
     codeElements.forEach(codeElement => {
-      const language = codeElement.className.replace('language-', '');
+      const match = codeElement.className.match(/language-([^\s]+)/);
+      const language = match?.[1] || '';
       const firstChild = codeElement.firstChild;
       if (firstChild) {
         const firstComment = firstChild.textContent || '';
@@ -315,6 +320,7 @@ const renderCustomCode = () => {
         }
       }
     });
+    toolbarEl.dataset.customRendered = '1';
   });
 };
 
@@ -346,11 +352,11 @@ function renderPrismMac(codeLineNumbers) {
   if (codeToolBars) {
     Array.from(codeToolBars).forEach(item => {
       const existPreMac = item.getElementsByClassName('pre-mac')
-      if (existPreMac.length < codeToolBars.length) {
+      if (existPreMac.length === 0) {
         const preMac = document.createElement('div')
         preMac.classList.add('pre-mac')
         preMac.innerHTML = '<span></span><span></span><span></span>'
-        item?.appendChild(preMac, item)
+        item.appendChild(preMac)
       }
     })
   }
