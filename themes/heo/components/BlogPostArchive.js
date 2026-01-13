@@ -39,7 +39,7 @@ const BlogPostArchive = ({ posts = [], archiveTitle, siteInfo }) => {
               <div
                 key={post.id}
                 className={
-                  'cursor-pointer flex flex-row mb-4 h-24 md:flex-row group w-full  dark:border-gray-600 hover:border-indigo-600  dark:hover:border-yellow-600 duration-300 transition-colors justify-between overflow-hidden'
+                  'cursor-pointer flex flex-row mb-4 h-24 md:flex-row group w-full  dark:border-gray-600 hover:border-indigo-600  dark:hover:border-yellow-600 duration-300 transition-colors justify-between overflow-hidden rounded-2xl'
                 }>
                 {/* 图片封面 */}
                 {showPageCover && (

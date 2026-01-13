@@ -312,6 +312,8 @@ img {
     position: relative;
     isolation: isolate; /* 防止层混合 */
     background: transparent;
+    overflow: hidden;
+    border-radius: 1.5rem;
   }
 
   .card-gradient::before {
