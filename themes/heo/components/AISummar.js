@@ -70,7 +70,7 @@ const AISummar = ({post}) => {
                 <div className="font-bold ml-2 leading-[1]">文章摘要</div>
                 <div id="AI-tag" className="text-xs bg-ai-title text-ai-title-text font-bole rounded-3xl p-1.5 flex items-center justify-center transition-all duration-300 absolute right-2">茉灵智库</div>
             </div>
-            <div id="AI-Summary" className="block mt-3 px-3 py-2 bg-ai-card-bg rounded-2xl border-ai-card text-[18px] leading-7 dark:text-white">
+            <div id="AI-Summary" className="block mt-3 px-3 py-2 bg-ai-card-bg rounded-2xl border-ai-card text-[18px] leading-7 dark:text-white w-full text-justify">
                 <TypewriterEffect text={summary} />
             </div>
         </div>
