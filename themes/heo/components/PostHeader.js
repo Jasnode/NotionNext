@@ -128,7 +128,7 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
               </SmartLink>
             )}
             <span className='inline-flex items-center gap-1 whitespace-nowrap'>
-              <i className='fa-regular fa-calendar-check'></i>
+              <i className='fa-regular fa-pen-to-square'></i>
               {post.lastEditedDay}
             </span>
           </section>

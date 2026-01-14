@@ -8,7 +8,7 @@ const CONFIG = {
 
   // 首页顶部通知条滚动内容，如不需要可以留空 []
   HEO_NOTICE_BAR: [
-    { title: 'Ctrl+左键单击 / 鼠标中键方式访问链接，提升效率', url: 'https://blog.nuaa.tech' },
+    { title: '欢迎来到我的博客！', url: 'https://blog.nuaa.tech' },
     { title: 'Ctrl＋D收藏本站不迷路', url: 'https://blog.nuaa.tech' }
   ],
 
