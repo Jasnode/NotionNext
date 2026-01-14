@@ -10,12 +10,12 @@ export default function WordCount({ wordCount, readTime }) {
     <span id='wordCountWrapper' className='flex gap-5 font-light'>
       <span className='flex whitespace-nowrap items-center'>
         <i className='mr-1 fas fa-file-word' />
-        <span>{locale.COMMON.WORD_COUNT}</span>
+        <span>{locale.COMMON.WORD_COUNT}</span>&nbsp;
         <span id='wordCount'>{wordCount}</span>
       </span>
       <span className='flex whitespace-nowrap items-center'>
         <i className='mr-1 fas fa-clock' />
-        <span>{locale.COMMON.READ_TIME}</span>
+        <span>{locale.COMMON.READ_TIME}≈</span>&nbsp;
         <span id='readTime'>{readTime}</span>&nbsp;{locale.COMMON.MINUTE}
       </span>
     </span>
