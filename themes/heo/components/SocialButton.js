@@ -46,7 +46,7 @@ const SocialButton = () => {
             target='_blank'
             rel='noreferrer'
             title='xiaohongshu'
-            href='https://xhslink.com/m/A3LHqn6y9ni'>
+            href=''>
             <img
               src='https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/xiaohongshu.b9cpfgij9.svg'
               alt='xiaohongshu'
