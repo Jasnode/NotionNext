@@ -48,6 +48,22 @@ export default function LoadingCover() {
     >
       <div className="mx-auto loader-container">
         <style jsx>{`
+          :global(#loading-cover) {
+            --c-ink: rgba(0, 0, 0, 0.28);
+            --c-white: rgba(255, 255, 255, 0.92);
+            --c-cyan: #56E6FF;
+            --c-cyan2: #1FB6FF;
+            --c-violet: #A855F7;
+            --c-pink: #FF4FD8;
+            --c-amber: #FFB86B;
+            --glow-cyan: rgba(86, 230, 255, 0.18);
+            --glow-violet: rgba(168, 85, 247, 0.16);
+            --glow-pink: rgba(255, 79, 216, 0.12);
+            background-image:
+              radial-gradient(900px 520px at 50% 45%, rgba(31, 182, 255, 0.06), transparent 62%),
+              radial-gradient(800px 480px at 44% 60%, rgba(168, 85, 247, 0.05), transparent 66%),
+              radial-gradient(850px 520px at 58% 62%, rgba(255, 184, 107, 0.04), transparent 68%);
+          }
           .loader-container {
             position: relative;
             width: 300px;
@@ -55,14 +71,13 @@ export default function LoadingCover() {
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1000px;
+            perspective: 900px;
             will-change: transform;
           }
           .element {
             position: absolute;
             transform-style: preserve-3d;
             backface-visibility: hidden;
-            will-change: transform, opacity;
           }
           .sphere-wrap {
             animation: spin 10s linear infinite;
@@ -71,28 +86,53 @@ export default function LoadingCover() {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 28%, #ffe1fb 0%, #ff9ff3 38%, #feca57 78%, #ffb142 100%);
-            animation: sphereMotion 5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite alternate;
-            box-shadow: 0 0 12px rgba(255, 105, 180, 0.45), 0 0 22px rgba(254, 202, 87, 0.18);
-            will-change: transform, opacity;
+            background:
+              radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.35) 18%, transparent 44%),
+              radial-gradient(circle at 55% 60%, rgba(86, 230, 255, 0.85) 0%, rgba(168, 85, 247, 0.55) 42%, rgba(255, 79, 216, 0.30) 68%, transparent 78%),
+              radial-gradient(circle at 50% 70%, rgba(0, 0, 0, 0.22), transparent 55%);
+            animation: sphereMotion 4.2s cubic-bezier(0.55, -0.35, 0.25, 1.35) infinite alternate;
+            box-shadow:
+              0 0 0 1px rgba(255, 255, 255, 0.10) inset,
+              0 0 26px var(--glow-cyan),
+              0 0 28px var(--glow-violet),
+              0 16px 38px rgba(0, 0, 0, 0.18);
+            filter: saturate(1.05) contrast(1.03);
           }
           .ripple {
             width: 120px;
             height: 120px;
-            border: 5px solid rgba(84, 160, 255, 0.85);
+            border: 4px solid rgba(84, 184, 255, 0.85);
             border-radius: 50%;
             position: absolute;
-            animation: rippleEffect 2s linear infinite;
+            animation: rippleEffect 1.9s linear infinite;
             opacity: 0.6;
-            will-change: transform, opacity;
+            box-shadow: 0 0 18px rgba(31, 182, 255, 0.14);
           }
           .cube {
             width: 60px;
             height: 60px;
-            background: linear-gradient(45deg, #34ace0 0%, #ffda79 100%);
+            background: linear-gradient(
+              135deg,
+              rgba(31, 182, 255, 0.92) 0%,
+              rgba(168, 85, 247, 0.75) 55%,
+              rgba(255, 79, 216, 0.40) 100%
+            );
             transform: rotateX(45deg) rotateY(45deg);
             animation: rotateCube 3s ease-in-out infinite;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+            box-shadow:
+              0 0 0 1px rgba(255, 255, 255, 0.10) inset,
+              0 10px 22px rgba(0, 0, 0, 0.14);
+            position: absolute;
+            overflow: hidden;
+          }
+          .cube::after {
+            content: '';
+            position: absolute;
+            inset: -30%;
+            background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.35), transparent 55%);
+            transform: rotate(18deg);
+            opacity: 0.9;
+            pointer-events: none;
           }
           .diamond-wrap {
             animation: bounceDiamond 1.5s ease-in-out infinite;
@@ -101,10 +141,10 @@ export default function LoadingCover() {
             width: 0;
             height: 0;
             border: 40px solid transparent;
-            border-bottom-color: #ff6b6b;
+            border-bottom-color: rgba(168, 85, 247, 0.92);
             position: relative;
             animation: spinDiamond 6s linear infinite;
-            box-shadow: 0 12px 22px rgba(255, 107, 107, 0.12);
+            box-shadow: 0 12px 22px rgba(168, 85, 247, 0.12);
           }
           .diamond:after {
             content: '';
@@ -114,25 +154,27 @@ export default function LoadingCover() {
             width: 0;
             height: 0;
             border: 40px solid transparent;
-            border-top-color: #ff6b6b;
+            border-top-color: rgba(168, 85, 247, 0.92);
           }
           .particle {
             width: 4px;
             height: 4px;
-            background-color: #ff9f43;
+            background-color: rgba(255, 184, 107, 0.95);
             border-radius: 50%;
             position: absolute;
             animation: particleMove 1.5s linear infinite;
-            box-shadow: 0 0 10px rgba(255, 159, 67, 0.28);
+            box-shadow: 0 0 12px rgba(255, 184, 107, 0.18);
           }
           .glow-text {
             position: absolute;
             bottom: -40px;
             font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #feca57, #34ace0);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            background: linear-gradient(90deg, var(--c-cyan), var(--c-violet), var(--c-amber));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 14px rgba(31, 182, 255, 0.10);
             animation: flicker 2.8s ease-in-out infinite alternate;
             user-select: none;
             pointer-events: none;
@@ -143,7 +185,7 @@ export default function LoadingCover() {
               transform: translate3d(0, 0, 0) scale(1);
             }
             50% {
-              transform: translate3d(0, 0, 50px) scale(1.2);
+              transform: translate3d(0, 0, 44px) scale(1.18);
             }
           }
           @keyframes spin {
@@ -156,15 +198,15 @@ export default function LoadingCover() {
           }
           @keyframes rippleEffect {
             0% {
-              transform: scale(0.8);
-              opacity: 0.6;
+              transform: scale(0.82);
+              opacity: 0.65;
             }
-            50% {
-              transform: scale(1.5);
-              opacity: 0.2;
+            55% {
+              transform: scale(1.55);
+              opacity: 0.18;
             }
             100% {
-              transform: scale(2);
+              transform: scale(2.05);
               opacity: 0;
             }
           }
@@ -211,7 +253,7 @@ export default function LoadingCover() {
               transform: translate3d(0, 0, 0);
             }
             50% {
-              opacity: 0.78;
+              opacity: 0.82;
               transform: translate3d(0, -1px, 0);
             }
           }
@@ -224,8 +266,8 @@ export default function LoadingCover() {
             .diamond,
             .particle,
             .glow-text {
-              animation-duration: calc(var(--animation-duration, 1s) * 3);
-              animation-timing-function: ease-out;
+              animation-duration: 3s !important;
+              animation-timing-function: ease-out !important;
             }
           }
         `}</style>

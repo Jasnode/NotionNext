@@ -170,7 +170,7 @@ const SEO = props => {
       {/* 微信分享优化 */}
       <meta property='weixin:title' content={title} />
       <meta property='weixin:description' content={description?.substring(0, 160)} />
-      <meta property='weixin:image' content={image} />
+      <meta property='weixin:image' content={toAbsolute(image)} />
 
       {COMMENT_WEBMENTION_ENABLE && (
         <>
@@ -196,6 +196,7 @@ const SEO = props => {
         <>
           <meta property='article:published_time' content={meta.publishDay} />
           <meta property='article:modified_time' content={meta.lastEditedDay} />
+          <meta property='og:updated_time' content={meta.lastEditedDay || meta.publishDay} />
           <meta property='article:author' content={AUTHOR} />
           <meta property='article:section' content={category} />
           <meta property='article:tag' content={keywords} />
@@ -217,7 +218,6 @@ const SEO = props => {
       <link rel='dns-prefetch' href='//www.googletagmanager.com' />
       <link rel='preconnect' href='https://cdn.jsdmirror.com' crossOrigin='anonymous' />
       <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
-      <link rel="preconnect" href="https://cdn.jsdmirror.com" crossorigin="anonymous" />
       <meta httpEquiv='x-dns-prefetch-control' content='on' />
 
       {/* 预加载关键资源 */}

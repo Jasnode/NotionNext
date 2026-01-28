@@ -3,7 +3,6 @@
  * @param config
  */
 function createFireworks({ config, anime }) {
-  // 创建这个Canvas元素 <canvas id='fireworks' className='fireworks'></canvas> 给我代码
   const canvasElement = document.createElement('canvas')
   canvasElement.id = 'fireworks'
   canvasElement.className = 'fireworks'
