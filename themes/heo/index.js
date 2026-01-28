@@ -10,7 +10,6 @@ import WWAds from '@/components/WWAds'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { loadWowJS } from '@/lib/plugins/wow'
-import { isBrowser } from '@/lib/utils'
 import { Transition } from '@headlessui/react'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
@@ -323,23 +322,6 @@ const LayoutSlug = props => {
     siteConfig('COMMENT_GITALK_CLIENT_ID') ||
     siteConfig('COMMENT_WEBMENTION_ENABLE')
 
-  const router = useRouter()
-  const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
-  useEffect(() => {
-    // 404
-    if (!post && isBrowser && router.isReady) {
-      const timer = setTimeout(() => {
-        const article = document.querySelector('#article-wrapper #notion-article')
-          if (!article) {
-            router.replace('/404')
-            console.warn('找不到页面', router.asPath)
-          }
-        },
-        waiting404
-      )
-      return () => clearTimeout(timer)
-    }
-  }, [post, router, waiting404])
   return (
     <>
       <div
