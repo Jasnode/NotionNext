@@ -35,6 +35,7 @@ import CONFIG from './config'
 import { Style } from './style'
 import AISummary from '@/components/AISummary'
 import AISummar from './components/AISummar'
+import Lenis from '@/components/Lenis'
 
 /**
  * 基础布局 采用上中下布局，移动端使用顶部侧边导航栏
@@ -79,6 +80,7 @@ const LayoutBase = props => {
     CONFIG
   )
   const HEO_LOADING_COVER = siteConfig('HEO_LOADING_COVER', true, CONFIG)
+  const HEO_LENIS_ENABLE = siteConfig('HEO_LENIS_ENABLE', true, CONFIG)
 
   // 加载wow动画
   useEffect(() => {
@@ -88,7 +90,7 @@ const LayoutBase = props => {
   return (
     <div
       id='theme-heo'
-      className={`${siteConfig('FONT_STYLE')} bg-[#f1f2f3] dark:bg-[#18171d] h-full min-h-screen flex flex-col scroll-smooth`}>
+      className={`${siteConfig('FONT_STYLE')} bg-[#f1f2f3] dark:bg-[#18171d] min-h-screen flex flex-col scroll-smooth`}>
       <Style />
 
       {/* 顶部嵌入 导航栏，首页放hero，文章页放文章详情 */}
@@ -118,6 +120,9 @@ const LayoutBase = props => {
 
       {/* 页脚 */}
       <Footer />
+
+      {/* 滚动阻尼动画 */}
+      {HEO_LENIS_ENABLE && <Lenis />}
 
       {HEO_LOADING_COVER && <LoadingCover />}
     </div>

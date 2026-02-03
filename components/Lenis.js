@@ -3,13 +3,15 @@ import { loadExternalResource } from '@/lib/utils'
 
 /**
  * 滚动阻尼特效
- * 目前只用在proxio主题
- * @returns
+ * @returns {JSX.Element}
  */
 const Lenis = () => {
   const lenisRef = useRef(null) // 用于存储 Lenis 实例
+  const rafIdRef = useRef(null) // 用于存储 requestAnimationFrame ID
+  const isAbortedRef = useRef(false) // 防止组件卸载后继续初始化
 
   useEffect(() => {
+    isAbortedRef.current = false
     // 异步加载
     async function loadLenis() {
       try {
@@ -20,12 +22,22 @@ const Lenis = () => {
           console.error('Lenis not loaded')
           return
         }
-        const Lenis = window.Lenis
+        const LenisLib = window.Lenis
+        if (isAbortedRef.current) return
+
+        // 等待 DOM 完全加载
+        if (document.readyState === 'loading') {
+          await new Promise(resolve => {
+            const done = () => resolve()
+            window.addEventListener('DOMContentLoaded', done, { once: true })
+          })
+          if (isAbortedRef.current) return
+        }
 
         // 创建 Lenis 实例
-        const lenis = new Lenis({
-          duration: 1.2,
-          easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+        const lenis = new LenisLib({
+          duration: 1.3,
+          easing: t => 1 - Math.pow(1 - t, 4), // https://www.desmos.com/calculator/brs54l4xou
           direction: 'vertical', // vertical, horizontal
           gestureDirection: 'vertical', // vertical, horizontal, both
           smooth: true,
@@ -40,16 +52,17 @@ const Lenis = () => {
 
         // 监听滚动事件
         // lenis.on('scroll', ({ scroll, limit, velocity, direction, progress }) => {
-        //   // console.log({ scroll, limit, velocity, direction, progress })
+        // console.log({ scroll, limit, velocity, direction, progress })
         // })
 
         // 动画帧循环
-        function raf(time) {
-          lenis.raf(time)
-          requestAnimationFrame(raf)
+        const raf = (time) => {
+          if (isAbortedRef.current || !lenisRef.current) return
+          lenisRef.current.raf(time)
+          rafIdRef.current = requestAnimationFrame(raf)
         }
 
-        requestAnimationFrame(raf)
+        rafIdRef.current = requestAnimationFrame(raf)
       } catch (error) {
         console.error('Failed to load Lenis:', error)
       }
@@ -59,6 +72,11 @@ const Lenis = () => {
 
     return () => {
       // 在组件卸载时清理资源
+      isAbortedRef.current = true
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current)
+        rafIdRef.current = null
+      }
       if (lenisRef.current) {
         lenisRef.current.destroy() // 销毁 Lenis 实例
         lenisRef.current = null

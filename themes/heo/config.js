@@ -165,6 +165,7 @@ const CONFIG = {
   HEO_WIDGET_TO_TOP: true,
   HEO_WIDGET_TO_COMMENT: true, // 跳到评论区
   HEO_WIDGET_DARK_MODE: true, // 夜间模式
-  HEO_WIDGET_TOC: true // 移动端悬浮目录
+  HEO_WIDGET_TOC: true, // 移动端悬浮目录
+  HEO_LENIS_ENABLE: true // 启用 Lenis 惯性滚动效果
 }
 export default CONFIG
