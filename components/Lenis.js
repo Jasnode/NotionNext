@@ -37,7 +37,7 @@ const Lenis = () => {
         // 创建 Lenis 实例
         const lenis = new LenisLib({
           duration: 1.2,
-          easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          easing: t => 1 - Math.pow(1 - t, 3),
           direction: 'vertical', // vertical, horizontal
           gestureDirection: 'vertical', // vertical, horizontal, both
           smooth: true,
