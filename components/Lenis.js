@@ -36,13 +36,13 @@ const Lenis = () => {
 
         // 创建 Lenis 实例
         const lenis = new LenisLib({
-          duration: 1.2,
+          duration: 1.1,
           easing: t => 1 - Math.pow(1 - t, 3),
           direction: 'vertical', // vertical, horizontal
           gestureDirection: 'vertical', // vertical, horizontal, both
           smooth: true,
           mouseMultiplier: 1,
-          smoothTouch: false,
+          smoothTouch: true,
           touchMultiplier: 2,
           infinite: false
         })
