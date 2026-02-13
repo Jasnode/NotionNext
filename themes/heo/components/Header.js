@@ -131,28 +131,16 @@ const Header = props => {
           animation: fade-in-up 0.3s ease-in-out;
         }
         .heo-glass-nav {
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.45),
-            rgba(255, 255, 255, 0.25)
-          );
-          backdrop-filter: blur(18px) saturate(160%);
-          -webkit-backdrop-filter: blur(18px) saturate(160%);
+          background-color: rgba(255, 255, 255, 0.65);
+          backdrop-filter: blur(20px) saturate(160%);
+          -webkit-backdrop-filter: blur(20px) saturate(160%);
           border-bottom: none;
-          box-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.1),
-            0 6px 18px rgba(0, 0, 0, 0.04);
         }
         :global(.dark) .heo-glass-nav {
-          background: linear-gradient(
-            135deg,
-            rgba(30, 30, 34, 0.45),
-            rgba(30, 30, 34, 0.25)
-          );
+          background-color: rgba(27, 28, 32, 0.65);
+          backdrop-filter: blur(24px) saturate(120%);
+          -webkit-backdrop-filter: blur(24px) saturate(120%);
           border-bottom: none;
-          box-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.08),
-            0 8px 22px rgba(0, 0, 0, 0.35);
         }
       `}</style>
 

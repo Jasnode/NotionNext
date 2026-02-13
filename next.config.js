@@ -127,8 +127,7 @@ const nextConfig = {
       'avatars.githubusercontent.com',
       'images.unsplash.com',
       'source.unsplash.com',
-      'cdn.staticaly.com',
-      'https://cdn.jsdmirror.com',
+      'cdn.jsdmirror.com',
       'p1.qhimg.com',
       'webmention.io',
       'ko-fi.com'

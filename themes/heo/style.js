@@ -35,7 +35,7 @@ const Style = () => {
       }
 
       body {
-        background-color: #f1f2f3;
+        background-color: #f7f9fe;
       }
 
       ::-webkit-scrollbar-thumb {
