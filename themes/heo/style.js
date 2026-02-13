@@ -14,7 +14,7 @@ const Style = () => {
         --ai-card-bg: #fff;
         --ai-card-border: #e3e8f7;
         --heo-surface-strong: #ffffff;
-        --heo-surface-dark: rgba(27, 28, 32, 0.92);
+        --heo-surface-dark: #070B14;
         --heo-text: rgba(0, 0, 0, 0.88);
       }
         
@@ -126,11 +126,19 @@ const Style = () => {
         left: 0;
         width: 100%;
         height: 100vh;
+        height: 100dvh;
         z-index: 1001;
+        opacity: 1;
+        visibility: visible;
+        transition:
+          opacity .4s ease 1.6s,
+          visibility 0s linear 2.0s;
       }
 
       #loading-box.loaded {
         pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
       }
 
       /* 退出动画：滑出效果 */
@@ -138,11 +146,11 @@ const Style = () => {
       #loading-box.loaded .loading-animation {
         border-radius: 3rem;
         transform: translateX(100%);
-        transition: 1.3s ease;
+        transition: transform 1.3s ease;
       }
 
       #loading-box.loaded .loading-bg {
-        transition-delay: 0.3s; /* 背景延迟，最后结束 */
+        transition-delay: 0.3s;
       }
 
       #loading-box .loading-bg,
@@ -276,6 +284,18 @@ const Style = () => {
         63% { transform: skewX(10deg) skewY(-5deg); }
         70% { transform: skewX(-50deg) skewY(-20deg); }
         71% { transform: skewX(10deg) skewY(-10deg); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #loading-box,
+        #loading-box * {
+          animation: none !important;
+          transition: none !important;
+        }
+        #loading-box.loaded .loading-bg,
+        #loading-box.loaded .loading-animation {
+          transform: none !important;
+        }
       }
     `}</style>
   )
