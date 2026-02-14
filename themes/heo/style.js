@@ -146,7 +146,7 @@ const Style = () => {
       #loading-box.loaded .loading-animation {
         border-radius: 3rem;
         transform: translateX(100%);
-        transition: transform 1.3s ease;
+        transition: 1.3s ease;
       }
 
       #loading-box.loaded .loading-bg {
