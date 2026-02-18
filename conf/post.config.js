@@ -31,7 +31,7 @@ module.exports = {
 
   // 文章过期提醒配置 p.s. 目前此功能暂时只适用于heo主题
   ARTICLE_EXPIRATION_DAYS:
-    process.env.NEXT_PUBLIC_ARTICLE_EXPIRATION_DAYS || 180, // 文章过期提醒阈值（天）
+    process.env.NEXT_PUBLIC_ARTICLE_EXPIRATION_DAYS || 120, // 文章过期提醒阈值（天）
   ARTICLE_EXPIRATION_MESSAGE:
     process.env.NEXT_PUBLIC_ARTICLE_EXPIRATION_MESSAGE ||
     '这篇文章发布于 %%DAYS%% 天前，内容可能已过时，请谨慎参考。', // 过期提示信息，使用 %%DAYS%% 作为天数占位符

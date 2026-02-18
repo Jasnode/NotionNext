@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 export default function QrCode({ value }) {
   const qrCodeCDN =
     process.env.NEXT_PUBLIC_QR_CODE_CDN ||
-    'https://sf.akass.cn/qrcodejs/1.0.0/qrcode.min.js'
+    'https://s4.zstatic.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
 
   useEffect(() => {
     let qrcode
