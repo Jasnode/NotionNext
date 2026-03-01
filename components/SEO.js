@@ -144,7 +144,7 @@ const SEO = props => {
       <meta name='generator' content='茉灵智库' />
 
       {/* 语言和地区 */}
-      <meta httpEquiv='content-language' content='zh-CN' />
+      <meta httpEquiv='content-language' content={siteConfig('LANG')} />
       <meta name='geo.region' content={siteConfig('GEO_REGION', 'CN')} />
       <meta name='geo.country' content={siteConfig('GEO_COUNTRY', 'CN')} />
       {/* Open Graph 元数据 */}
@@ -162,6 +162,7 @@ const SEO = props => {
 
       {/* Twitter Card 元数据 */}
       <meta name='twitter:card' content='summary_large_image' />
+      <meta name='twitter:site' content='@茉灵智库' />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description?.substring(0, 200)} />
       <meta name='twitter:image' content={toAbsolute(image)} />
