@@ -20,33 +20,20 @@ const Hero = props => {
   return (
     <div
       id='hero-wrapper'
-      className='w-full overflow-hidden select-none mb-4'>
+      className='recent-top-post-group w-full overflow-hidden select-none mb-4'>
       <div
-        id='hero-outer'
-        className='max-w-[86rem] w-full mx-auto md:px-5'>
-        <div className='xl:flex w-full px-5 md:px-0'>
-          {/* 主内容区：与文章列表同宽 */}
-          <div className='w-full'>
-            <div
-              id='hero'
-              style={{ zIndex: 1 }}
-              className={`${HEO_HERO_REVERSE ? 'xl:flex-row-reverse' : ''}
-                recent-post-top rounded-[12px] recent-top-post-group overflow-x-scroll w-full flex-row flex-nowrap flex relative`}>
-              {/* 左侧banner组 */}
-              <BannerGroup {...props} />
+        id='hero'
+        style={{ zIndex: 1 }}
+        className={`${HEO_HERO_REVERSE ? 'xl:flex-row-reverse' : ''}
+           recent-post-top rounded-[12px] recent-top-post-group max-w-[86rem] overflow-x-scroll w-full mx-auto px-5 flex-row flex-nowrap flex relative`}>
+        {/* 左侧banner组 */}
+        <BannerGroup {...props} />
 
-              {/* 中间留白 */}
-              <div className='px-1.5 h-full'></div>
+        {/* 中间留白 */}
+        <div className='px-1.5 h-full'></div>
 
-              {/* 右侧置顶文章组 */}
-              <TopGroup {...props} />
-            </div>
-          </div>
-
-          {/* 右侧占位：与侧边栏同宽，保持对齐 */}
-          <div className='hidden xl:block xl:px-2'></div>
-          <div className='hidden xl:block w-72 flex-shrink-0'></div>
-        </div>
+        {/* 右侧置顶文章组 */}
+        <TopGroup {...props} />
       </div>
     </div>
   )
