@@ -85,8 +85,6 @@ const SocialButton = () => {
                   <img
                     src='https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/qrcode.1ovwa0ke25.png'
                     alt='微信公众号二维码'
-                    loading='lazy'
-                    decoding='async'
                     className='block w-28 h-28 object-contain'
                     draggable={false}
                   />
