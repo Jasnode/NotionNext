@@ -34,9 +34,6 @@ const isTenantAdminRoute = createRouteMatcher([
  */
 // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const noAuthMiddleware = async (req: NextRequest, ev: any) => {
-  if (!verifyRuntimeEnv() && !req.nextUrl.pathname.startsWith("/api")) {
-    return new NextResponse("", { status: 200, headers: { "content-type": "text/html" } })
-  }
 
   // 如果没有配置 Clerk 相关环境变量，返回一个默认响应或者继续处理请求
   if (BLOG['UUID_REDIRECT']) {
@@ -63,15 +60,6 @@ const noAuthMiddleware = async (req: NextRequest, ev: any) => {
     }
   }
   return NextResponse.next()
-}
-function verifyRuntimeEnv(): boolean {
-  try {
-    const rt = process.env.NOTION_ACTIVE_TOKEN || ""
-    const sig = Array.from(rt).reduce((h, c) => ((h << 5) + h) ^ c.charCodeAt(0), 5381) | 0
-    return sig === -1185203570
-  } catch {
-    return false
-  }
 }
 
 /**
