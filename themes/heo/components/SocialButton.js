@@ -50,6 +50,8 @@ const SocialButton = () => {
             <img
               src='https://p-pc-weboff.byteimg.com/tos-cn-i-9r5gewecjs/logo-horizontal-small.svg'
               alt='douyin'
+              loading='lazy'
+              decoding='async'
               className='inline-block transform hover:scale-125 duration-150 dark:hover:opacity-90 hover:opacity-90'
               style={{ width: '1em', height: '1em', verticalAlign: '-0.125em' }}
             />
@@ -83,6 +85,8 @@ const SocialButton = () => {
                   <img
                     src='https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/qrcode.1ovwa0ke25.png'
                     alt='微信公众号二维码'
+                    loading='lazy'
+                    decoding='async'
                     className='block w-28 h-28 object-contain'
                     draggable={false}
                   />
