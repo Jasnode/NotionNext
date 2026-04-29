@@ -93,7 +93,9 @@ const installReadmoreNetworkProbe = debug => {
 
   const XHR = window.XMLHttpRequest
   if (XHR?.prototype?.open && XHR?.prototype?.send) {
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalOpen = XHR.prototype.open
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     const originalSend = XHR.prototype.send
 
     XHR.prototype.open = function(method, url, ...rest) {
@@ -174,26 +176,22 @@ const logReadmoreState = (debug, contentId, stage) => {
  * 公众号导流插件（TechGrow）
  * @returns
  */
-const TechGrow = () => {
+const TechGrow = ({ lock } = {}) => {
   const router = useRouter()
   const qrcode = getFirstConfig(['TECH_GROW_QRCODE'], '请配置公众号二维码')
   const blogId = getFirstConfig(['TECH_GROW_BLOG_ID'])
   const name = getFirstConfig(['TECH_GROW_NAME'], '请配置公众号名')
-  const id = getFirstConfig(
-    ['TECH_GROW_ARTICLE_CONTENT_ID', 'TECH_GROW_CONTENT_ID'],
-    'notion-article'
-  )
+  const id = getFirstConfig(['TECH_GROW_CONTENT_ID'], 'notion-article')
   const keyword = getFirstConfig(['TECH_GROW_KEYWORD'], '请配置公众号关键词')
   const btnText = getFirstConfig(['TECH_GROW_BTN_TEXT'], '原创不易，完成人机检测，阅读全文')
+  // 验证一次后的有效时长，单位小时
   const cookieAge = getFirstConfig(['TECH_GROW_VALIDITY_DURATION'], 1)
   const random = getFirstConfig(['TECH_GROW_RANDOM'], 1)
-  const interval = getFirstConfig(['TECH_GROW_INTERVAL'], 300)
-  const expires = getFirstConfig(['TECH_GROW_EXPIRES'], 5)
+  const interval = getFirstConfig(['TECH_GROW_INTERVAL'], 60)
+  const expires = getFirstConfig(['TECH_GROW_EXPIRES'], 365)
   const lockToc = getFirstConfig(['TECH_GROW_LOCK_TOC'], 'yes')
   const height = getFirstConfig(['TECH_GROW_HEIGHT'], 'auto')
-  const tocSelector = getFirstConfig(['TECH_GROW_TOC_SELECTOR'], '')
-  const debug = getFirstConfig(['TECH_GROW_DEBUG'], true)
-  const allowMobile = getFirstConfig(['TECH_GROW_ALLOW_MOBILE'], false)
+  const tocSelector = getFirstConfig(['TECH_GROW_TOC_SELECTOR'], 'a.catalog-item')
   // 白名单，想要放行的页面
   const whiteList = getFirstConfig(['TECH_GROW_WHITE_LIST'], '')
   // 黄名单，优先级最高，设置后只有这里的路径会被上锁，其他页面自动全部放行
@@ -201,6 +199,11 @@ const TechGrow = () => {
   const jsUrl = getFirstConfig(['TECH_GROW_JS_URL'], DEFAULT_TECH_GROW_JS)
   const cssUrl = getFirstConfig(['TECH_GROW_CSS_URL'], DEFAULT_TECH_GROW_CSS)
   const baseUrl = getFirstConfig(['TECH_GROW_BASE_URL'], '')
+
+  // 调试开关（默认关闭，避免线上日志噪音与额外探测开销）
+  const debug = getFirstConfig(['TECH_GROW_DEBUG'], false)
+  // 是否允许移动端场景（如果配置不存在则默认允许，避免误拦截）
+  const allowMobile = getFirstConfig(['TECH_GROW_ALLOW_MOBILE'], true)
 
   // 登录信息
   const { isLoaded, isSignedIn } = useGlobal()
@@ -213,7 +216,9 @@ const TechGrow = () => {
   const waitForContentReady = () =>
     new Promise(resolve => {
       let attempts = 0
-      const maxAttempts = 20
+      // Password 解锁后，内容容器子元素出现可能有延迟；
+      // 这里适当拉长轮询窗口以提升稳定性（避免“解锁后不再触发初始化”）。
+      const maxAttempts = 60
       const timer = setInterval(() => {
         const target = document.getElementById(id)
         if (target && target.childElementCount > 0) {
@@ -231,15 +236,6 @@ const TechGrow = () => {
 
   const loadReadmore = async () => {
     try {
-      const isMobile = /phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone/i.test(
-        navigator.userAgent
-      )
-      if (isMobile && !allowMobile) {
-        if (debug) {
-          console.log('Readmore: 移动端已禁用')
-        }
-        return
-      }
       const isReady = await waitForContentReady()
       if (!isReady) {
         if (debug) {
@@ -303,7 +299,6 @@ const TechGrow = () => {
           lockToc,
           height,
           tocSelector,
-          debug,
           execute: 'yes',
           type: 'hexo',
           ...(baseUrl ? { baseUrl } : {})
@@ -346,14 +341,10 @@ const TechGrow = () => {
 
         return undefined
       } else {
-        if (debug) {
-          console.warn(`Readmore 插件加载成功但构造器不存在: ${jsUrl}`)
-        }
+        console.warn(`Readmore 插件加载成功但构造器不存在: ${jsUrl}`)
       }
     } catch (error) {
-      if (debug) {
-        console.error('Readmore 加载异常', error)
-      }
+      console.error('Readmore 加载异常', error)
     }
   }
 
@@ -385,18 +376,38 @@ const TechGrow = () => {
       return
     }
 
+    // 文章密码锁定时，页面内容容器可能暂时为空；
+    // 延后到锁状态解除后再尝试初始化，避免初始化失败后“不会再触发”。
+    if (lock) {
+      return
+    }
+
     if (isBrowser && blogId && !isSignedIn) {
+      toggleTocItems(true) // 禁止目录项的点击
       // 检查是否已加载
       const readMoreWrap = getReadmoreWrapper()
       if (!readMoreWrap) {
         loadReadmore()
       }
     }
-  }, [isLoaded, router, id, tocSelector])
+  }, [isLoaded, router, id, lock])
 
   return <></>
 }
 
+// 定义禁用和恢复目录项点击的函数
+const toggleTocItems = disable => {
+  const tocItems = document.querySelectorAll('a.catalog-item')
+  tocItems.forEach(item => {
+    if (disable) {
+      item.style.pointerEvents = 'none'
+      item.style.opacity = '0.5'
+    } else {
+      item.style.pointerEvents = 'auto'
+      item.style.opacity = '1'
+    }
+  })
+}
 /**
  * 检查路径是否在名单中
  * @param {*} path 当前url的字符串
@@ -412,13 +423,32 @@ function isPathInList(path, listStr) {
     .replace(/\?.*$/, '') // 移除查询参数
     .replace(/.*\/([^/]+)(?:\.html)?$/, '$1') // 提取最后部分
 
-  const isInList = listStr.includes(processedPath)
+  // 兼容 config 里常见的多分隔符写法：逗号、换行、空白
+  const tokens = String(listStr)
+    .split(/[,\n\r\s]+/)
+    .map(t => t.trim())
+    .filter(Boolean)
 
-  if (isInList) {
-    // console.log(`当前路径在名单中: ${processedPath}`)
+  if (tokens.includes(processedPath)) {
+    return true
   }
 
-  return isInList
+  // 兼容带通配符（*）的配置：支持前缀/后缀匹配
+  return tokens.some(token => {
+    if (!token.includes('*')) {
+      return false
+    }
+    if (token.startsWith('*') && token.endsWith('*')) {
+      return processedPath.includes(token.slice(1, -1))
+    }
+    if (token.endsWith('*')) {
+      return processedPath.startsWith(token.slice(0, -1))
+    }
+    if (token.startsWith('*')) {
+      return processedPath.endsWith(token.slice(1))
+    }
+    return false
+  })
 }
 
 export default TechGrow
