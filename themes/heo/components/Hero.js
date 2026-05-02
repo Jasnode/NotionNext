@@ -68,9 +68,13 @@ function Banner(props) {
    * 随机跳转文章
    */
   function handleClickBanner() {
-    const randomIndex = Math.floor(Math.random() * allNavPages.length)
-    const randomPost = allNavPages[randomIndex]
-    router.push(`${siteConfig('SUB_PATH', '')}/${randomPost?.slug}`)
+    const posts = Array.isArray(allNavPages)
+      ? allNavPages.filter(post => post?.slug)
+      : []
+    if (posts.length === 0) return
+
+    const randomPost = posts[Math.floor(Math.random() * posts.length)]
+    router.push(`${siteConfig('SUB_PATH', '')}/${randomPost.slug}`)
   }
 
   // 遮罩文字
@@ -267,16 +271,22 @@ function TopGroup(props) {
  * 获取推荐置顶文章
  */
 function getTopPosts({ latestPosts, allNavPages }) {
+  const fallbackPosts = Array.isArray(latestPosts)
+    ? latestPosts.filter(post => post?.slug)
+    : []
+
   // 默认展示最近更新
   if (
     !siteConfig('HEO_HERO_RECOMMEND_POST_TAG', null, CONFIG) ||
     siteConfig('HEO_HERO_RECOMMEND_POST_TAG', null, CONFIG) === ''
   ) {
-    return latestPosts
+    return fallbackPosts
   }
 
   // 显示包含‘推荐’标签的文章
-  let sortPosts = []
+  let sortPosts = Array.isArray(allNavPages)
+    ? allNavPages.filter(post => post?.slug)
+    : []
 
   // 排序方式
   if (
@@ -284,13 +294,11 @@ function getTopPosts({ latestPosts, allNavPages }) {
       siteConfig('HEO_HERO_RECOMMEND_POST_SORT_BY_UPDATE_TIME', null, CONFIG)
     )
   ) {
-    sortPosts = Object.create(allNavPages).sort((a, b) => {
-      const dateA = new Date(a?.lastEditedDate)
-      const dateB = new Date(b?.lastEditedDate)
+    sortPosts.sort((a, b) => {
+      const dateA = new Date(a?.lastEditedDate || 0)
+      const dateB = new Date(b?.lastEditedDate || 0)
       return dateB - dateA
     })
-  } else {
-    sortPosts = Object.create(allNavPages)
   }
 
   const topPosts = []

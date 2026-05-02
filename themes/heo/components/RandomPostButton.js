@@ -9,13 +9,22 @@ export default function RandomPostButton(props) {
   const { latestPosts } = props
   const router = useRouter()
   const { locale } = useGlobal()
+  const posts = Array.isArray(latestPosts)
+    ? latestPosts.filter(post => post?.slug)
+    : []
+
   /**
    * 随机跳转文章
    */
   function handleClick() {
-    const randomIndex = Math.floor(Math.random() * latestPosts.length)
-    const randomPost = latestPosts[randomIndex]
-    router.push(`${siteConfig('SUB_PATH', '')}/${randomPost?.slug}`)
+    if (posts.length === 0) return
+
+    const randomPost = posts[Math.floor(Math.random() * posts.length)]
+    router.push(`${siteConfig('SUB_PATH', '')}/${randomPost.slug}`)
+  }
+
+  if (posts.length === 0) {
+    return null
   }
 
   return (

@@ -344,7 +344,7 @@ const LayoutSlug = props => {
             <article
               id='article-wrapper'
               itemScope
-              itemType='https://schema.org/Movie'>
+              itemType='https://schema.org/BlogPosting'>
               {/* Notion文章主体 */}
               <section
                 className='wow fadeInUp p-5 justify-center mx-auto'
