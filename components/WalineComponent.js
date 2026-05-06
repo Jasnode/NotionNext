@@ -1,8 +1,9 @@
-import  { createRef, useEffect } from 'react'
+import { createRef, useEffect } from 'react'
 import { init } from '@waline/client'
 import { useRouter } from 'next/router'
 import '@waline/client/style'
 import { siteConfig } from '@/lib/config'
+import { createWalineAnchorObserver } from '@/lib/utils/waline'
 
 const path = ''
 let waline = null
@@ -72,6 +73,8 @@ const WalineComponent = (props) => {
     reactionTitle: '你认为这篇文章怎么样？'
   }
   useEffect(() => {
+    let anchorObserver = null
+
     if (!waline) {
       waline = init({
         ...props,
@@ -94,32 +97,13 @@ const WalineComponent = (props) => {
     }
     // 跳转评论
     router.events.on('routeChangeComplete', updateWaline)
-    const anchor = window.location.hash
-    if (anchor) {
-      // 选择需要观察变动的节点
-      const targetNode = document.getElementsByClassName('wl-cards')[0]
-      // 当观察到变动时执行的回调函数
-      const mutationCallback = (mutations) => {
-        for (const mutation of mutations) {
-          const type = mutation.type
-          if (type === 'childList') {
-            const anchorElement = document.getElementById(anchor.substring(1))
-            if (anchorElement && anchorElement.className === 'wl-item') {
-              anchorElement.scrollIntoView({ block: 'end', behavior: 'smooth' })
-              setTimeout(() => {
-                anchorElement.classList.add('animate__animated')
-                anchorElement.classList.add('animate__bounceInRight')
-                observer.disconnect()
-              }, 300)
-            }
-          }
-        }
-      }
-      // 观察子节点 变化
-      const observer = new MutationObserver(mutationCallback)
-      observer.observe(targetNode, { childList: true })
-    }
+    anchorObserver = createWalineAnchorObserver({
+      anchor: window.location.hash,
+      container: containerRef.current
+    })
+
     return () => {
+      anchorObserver?.disconnect()
       if (waline) {
         waline.destroy()
         waline = null

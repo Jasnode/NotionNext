@@ -1,4 +1,5 @@
 import { siteConfig } from '@/lib/config'
+import { buildQQShareUrl } from '@/lib/utils/share'
 import { useGlobal } from '@/lib/global'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -341,7 +342,7 @@ const ShareButtons = ({ post }) => {
                   target='_blank'
                   rel='noreferrer'
                   aria-label='Share by QQ'
-                  href={`https://connect.qq.com/widget/shareqq/index.html?url=${shareUrl}&sharesource=qzone&title=${title}&desc=${body}`}>
+                  href={buildQQShareUrl({ shareUrl, title, body })}>
                   <i className='fab fa-qq w-8' />
                 </a>
               </button>
