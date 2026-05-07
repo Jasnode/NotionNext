@@ -93,9 +93,18 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
           </header>
 
           {/* 摘要 */}
-          {(!showPreview || showSummary) && (
+          {(!showPreview || showSummary) && !post.results && (
             <main className='line-clamp-2 replace text-gray-700  dark:text-gray-300 text-sm font-light leading-tight'>
               {post.summary}
+            </main>
+          )}
+
+          {/* 搜索结果 */}
+          {post.results && (
+            <main className='line-clamp-3 replace text-gray-700 dark:text-gray-300 text-sm font-light leading-tight'>
+              {post.results.map((result, resultIndex) => (
+                <span key={resultIndex}>{result}</span>
+              ))}
             </main>
           )}
 
