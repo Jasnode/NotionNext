@@ -60,7 +60,6 @@
     "@clerk/localizations": "^3.17.1",
     "@clerk/nextjs": "^5.7.5",
     "@headlessui/react": "^1.7.19",
-    "@hpcc-js/wasm": "^2.25.0",
     "@next/bundle-analyzer": "^12.3.7",
     "@supabase/supabase-js": "^2.57.4",
     "@tabler/icons-react": "^3.36.1",
