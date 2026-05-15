@@ -19,6 +19,7 @@ const { getOrSetDataWithCache } = require('@/lib/cache/cache_manager')
 const { fetchGlobalAllData } = require('@/lib/db/SiteDataApi')
 const { getPriorityPages, prefetchAllBlockMaps } = require('@/lib/build/prefetch')
 const { isExport } = require('@/lib/utils/buildMode')
+const BLOG = require('@/blog.config')
 
 describe('staticPaths build helpers', () => {
   beforeEach(() => {
@@ -69,6 +70,24 @@ describe('staticPaths build helpers', () => {
 
       expect(fetchGlobalAllData).toHaveBeenCalledTimes(2)
       expect(getOrSetDataWithCache).toHaveBeenCalledTimes(2)
+    })
+  })
+
+  it('uses the configured Notion page id when building cache keys without an explicit page id', async () => {
+    isExport.mockReturnValue(false)
+    fetchGlobalAllData.mockResolvedValue({
+      allPages: [{ id: '1', slug: 'hello', type: 'Post', status: 'Published' }]
+    })
+
+    await jest.isolateModulesAsync(async () => {
+      const { getSharedAllPages } = require('@/lib/build/staticPaths')
+
+      await getSharedAllPages({ from: 'slug-paths', pageId: null })
+
+      expect(getOrSetDataWithCache).toHaveBeenCalledWith(
+        `build_static_paths_all_pages_default_${BLOG.NOTION_PAGE_ID}`,
+        expect.any(Function)
+      )
     })
   })
 
