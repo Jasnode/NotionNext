@@ -198,7 +198,7 @@ const LayoutSearch = props => {
       return () => clearTimeout(timer)
   }, [currentSearch])
   return (
-    <div currentSearch={currentSearch}>
+    <div data-current-search={currentSearch || ''}>
       <div id='post-outer-wrapper' className='px-5  md:px-0'>
         {!currentSearch ? (
           <SearchNav {...props} />
