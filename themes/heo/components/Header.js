@@ -28,6 +28,9 @@ const Header = props => {
   // 缓存 #post-bg 节点的引用，避免每次滚动都重新查询 DOM
   const postBgRef = useRef(null)
 
+  const themeSwitch = siteConfig('THEME_SWITCH')
+  const themeSwitchEnabled = themeSwitch === true || themeSwitch === 'true'
+
   const toggleMenuOpen = () => {
     slideOverRef?.current?.toggleSlideOvers()
   }
@@ -261,7 +264,7 @@ const Header = props => {
               ${navBgWhite ? 'glass-active px-0.5 py-0.5' : ''}`}>
             <RandomPostButton {...props} />
             <SearchButton {...props} />
-            {!JSON.parse(siteConfig('THEME_SWITCH')) && (
+            {!themeSwitchEnabled && (
               <div className='hidden md:block'>
                 <DarkModeButton {...props} />
               </div>

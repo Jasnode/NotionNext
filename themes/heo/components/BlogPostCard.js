@@ -8,17 +8,13 @@ import TagItemMini from './TagItemMini'
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const showPreview =
     siteConfig('HEO_POST_LIST_PREVIEW', null, CONFIG) && post.blockMap
-  if (
-    post &&
-    !post.pageCoverThumbnail &&
-    siteConfig('HEO_POST_LIST_COVER_DEFAULT', null, CONFIG)
-  ) {
-    post.pageCoverThumbnail = siteInfo?.pageCover
-  }
+  const cover =
+    post?.pageCoverThumbnail ||
+    (siteConfig('HEO_POST_LIST_COVER_DEFAULT', null, CONFIG)
+      ? siteInfo?.pageCover
+      : null)
   const showPageCover =
-    siteConfig('HEO_POST_LIST_COVER', null, CONFIG) &&
-    post?.pageCoverThumbnail &&
-    !showPreview
+    siteConfig('HEO_POST_LIST_COVER', null, CONFIG) && cover && !showPreview
 
   const POST_TWO_COLS = siteConfig('HEO_HOME_POST_TWO_COLS', true, CONFIG)
   const COVER_HOVER_ENLARGE = siteConfig(
@@ -46,7 +42,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
               }>
               <LazyImage
                 priority={index === 0}
-                src={post?.pageCoverThumbnail}
+                src={cover}
                 alt={post?.title}
                 className='h-60 w-full object-cover group-hover:scale-105 group-hover:brightness-75 transition-all duration-500 ease-in-out' //宽高都调整为自适应,保证封面居中
                 title={post?.title} // 为图片添加title属性以提高SEO

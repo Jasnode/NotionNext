@@ -1,4 +1,3 @@
-import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import { useRouter } from 'next/router'
 
@@ -10,7 +9,7 @@ export default function RandomPostButton(props) {
   const router = useRouter()
   const { locale } = useGlobal()
   const posts = Array.isArray(latestPosts)
-    ? latestPosts.filter(post => post?.slug)
+    ? latestPosts.filter(post => post?.href)
     : []
 
   /**
@@ -20,7 +19,7 @@ export default function RandomPostButton(props) {
     if (posts.length === 0) return
 
     const randomPost = posts[Math.floor(Math.random() * posts.length)]
-    router.push(`${siteConfig('SUB_PATH', '')}/${randomPost.slug}`)
+    router.push(randomPost.href)
   }
 
   if (posts.length === 0) {

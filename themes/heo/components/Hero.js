@@ -69,12 +69,12 @@ function Banner(props) {
    */
   function handleClickBanner() {
     const posts = Array.isArray(allNavPages)
-      ? allNavPages.filter(post => post?.slug)
+      ? allNavPages.filter(post => post?.href)
       : []
     if (posts.length === 0) return
 
     const randomPost = posts[Math.floor(Math.random() * posts.length)]
-    router.push(`${siteConfig('SUB_PATH', '')}/${randomPost.slug}`)
+    router.push(randomPost.href)
   }
 
   // 遮罩文字
@@ -241,7 +241,7 @@ function TopGroup(props) {
         className='w-full flex space-x-3 xl:space-x-0 xl:grid xl:grid-cols-3 xl:gap-3 xl:h-[342px]'>
         {topPosts?.map((p, index) => {
           return (
-            <SmartLink href={`${siteConfig('SUB_PATH', '')}/${p?.slug}`} key={index}>
+            <SmartLink href={p?.href} key={index}>
               <div className='cursor-pointer h-[164px] group relative flex flex-col w-52 xl:w-full overflow-hidden shadow bg-white dark:bg-[#1e1e1e] dark:text-white rounded-2xl'>
                 <LazyImage
                   priority={index === 0}
@@ -272,7 +272,7 @@ function TopGroup(props) {
  */
 function getTopPosts({ latestPosts, allNavPages }) {
   const fallbackPosts = Array.isArray(latestPosts)
-    ? latestPosts.filter(post => post?.slug)
+    ? latestPosts.filter(post => post?.href)
     : []
 
   // 默认展示最近更新
@@ -285,15 +285,16 @@ function getTopPosts({ latestPosts, allNavPages }) {
 
   // 显示包含‘推荐’标签的文章
   let sortPosts = Array.isArray(allNavPages)
-    ? allNavPages.filter(post => post?.slug)
+    ? allNavPages.filter(post => post?.href)
     : []
 
   // 排序方式
-  if (
-    JSON.parse(
-      siteConfig('HEO_HERO_RECOMMEND_POST_SORT_BY_UPDATE_TIME', null, CONFIG)
-    )
-  ) {
+  const sortByUpdate = siteConfig(
+    'HEO_HERO_RECOMMEND_POST_SORT_BY_UPDATE_TIME',
+    null,
+    CONFIG
+  )
+  if (sortByUpdate === true || sortByUpdate === 'true') {
     sortPosts.sort((a, b) => {
       const dateA = new Date(a?.lastEditedDate || 0)
       const dateB = new Date(b?.lastEditedDate || 0)

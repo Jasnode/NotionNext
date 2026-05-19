@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { siteConfig } from '@/lib/config'
-import { resolveLinkHref } from '@/lib/utils/link'
+import { resolveLinkHref, getHrefUrlString, isPublicHtmlHref } from '@/lib/utils/link'
 
 // 过滤 <a> 标签不能识别的 props
 const filterDOMProps = props => {
@@ -19,6 +19,15 @@ const SmartLink = ({ href, children, ...rest }) => {
         target='_blank'
         rel='noopener noreferrer'
         {...filterDOMProps(rest)}>
+        {children}
+      </a>
+    )
+  }
+
+  if (isPublicHtmlHref(resolvedHref)) {
+    const anchorHref = getHrefUrlString(resolvedHref)
+    return (
+      <a href={anchorHref} {...filterDOMProps(rest)}>
         {children}
       </a>
     )
