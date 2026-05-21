@@ -8,17 +8,13 @@ import TagItemMini from './TagItemMini'
 const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
   const showPreview =
     siteConfig('HEO_POST_LIST_PREVIEW', null, CONFIG) && post.blockMap
-  if (
-    post &&
-    !post.pageCoverThumbnail &&
-    siteConfig('HEO_POST_LIST_COVER_DEFAULT', null, CONFIG)
-  ) {
-    post.pageCoverThumbnail = siteInfo?.pageCover
-  }
+  const cover =
+    post?.pageCoverThumbnail ||
+    (siteConfig('HEO_POST_LIST_COVER_DEFAULT', null, CONFIG)
+      ? siteInfo?.pageCover
+      : null)
   const showPageCover =
-    siteConfig('HEO_POST_LIST_COVER', null, CONFIG) &&
-    post?.pageCoverThumbnail &&
-    !showPreview
+    siteConfig('HEO_POST_LIST_COVER', null, CONFIG) && cover && !showPreview
 
   const POST_TWO_COLS = siteConfig('HEO_HOME_POST_TWO_COLS', true, CONFIG)
   const COVER_HOVER_ENLARGE = siteConfig(
@@ -29,7 +25,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
 
   return (
     <article
-      className={` ${COVER_HOVER_ENLARGE} ? ' hover:transition-all duration-150' : ''}`}>
+      className={`${COVER_HOVER_ENLARGE ? 'hover:transition-all duration-150' : ''}`}>
       <div
         data-wow-delay='.2s'
         className={
@@ -46,7 +42,7 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
               }>
               <LazyImage
                 priority={index === 0}
-                src={post?.pageCoverThumbnail}
+                src={cover}
                 alt={post?.title}
                 className='h-60 w-full object-cover group-hover:scale-105 group-hover:brightness-75 transition-all duration-500 ease-in-out' //宽高都调整为自适应,保证封面居中
                 title={post?.title} // 为图片添加title属性以提高SEO
@@ -93,9 +89,18 @@ const BlogPostCard = ({ index, post, showSummary, siteInfo }) => {
           </header>
 
           {/* 摘要 */}
-          {(!showPreview || showSummary) && (
+          {(!showPreview || showSummary) && !post.results && (
             <main className='line-clamp-2 replace text-gray-700  dark:text-gray-300 text-sm font-light leading-tight'>
               {post.summary}
+            </main>
+          )}
+
+          {/* 搜索结果 */}
+          {post.results && (
+            <main className='line-clamp-3 replace text-gray-700 dark:text-gray-300 text-sm font-light leading-tight'>
+              {post.results.map((result, resultIndex) => (
+                <span key={resultIndex}>{result}</span>
+              ))}
             </main>
           )}
 

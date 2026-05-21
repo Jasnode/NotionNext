@@ -1,7 +1,7 @@
 import { siteConfig } from '@/lib/config'
 import throttle from 'lodash.throttle'
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import DarkModeButton from './DarkModeButton'
 import Logo from './Logo'
 import { MenuListTop } from './MenuListTop'
@@ -20,9 +20,16 @@ const Header = props => {
   const [textWhite, setTextWhite] = useState(false)
   const [navBgWhite, setBgWhite] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
+  // 是否存在文章页背景图（仅客户端检测）
+  const [hasPostBg, setHasPostBg] = useState(false)
 
   const router = useRouter()
   const slideOverRef = useRef()
+  // 缓存 #post-bg 节点的引用，避免每次滚动都重新查询 DOM
+  const postBgRef = useRef(null)
+
+  const themeSwitch = siteConfig('THEME_SWITCH')
+  const themeSwitchEnabled = themeSwitch === true || themeSwitch === 'true'
 
   const toggleMenuOpen = () => {
     slideOverRef?.current?.toggleSlideOvers()
@@ -30,40 +37,45 @@ const Header = props => {
 
   /**
    * 根据滚动条，切换导航栏样式
+   * 用 useMemo + useRef 持有 throttle 实例，避免每次渲染重建
    */
   const prevScrollYRef = useRef(0)
-  const scrollTrigger = useCallback(
-    throttle(() => {
-      const scrollS = window.scrollY
+  const scrollTrigger = useMemo(
+    () =>
+      throttle(() => {
+        const scrollS = window.scrollY
 
-      // 导航栏样式切换
-      if (scrollS <= 1) {
-        setFixedNav(false)
-        setBgWhite(false)
-        setTextWhite(false)
+        // 导航栏样式切换
+        if (scrollS <= 1) {
+          setFixedNav(false)
+          setBgWhite(false)
+          setTextWhite(false)
 
-        if (document?.querySelector('#post-bg')) {
+          if (postBgRef.current) {
+            setFixedNav(true)
+            setTextWhite(true)
+          }
+        } else {
           setFixedNav(true)
-          setTextWhite(true)
+          setTextWhite(false)
+          setBgWhite(true)
         }
-      } else {
-        setFixedNav(true)
-        setTextWhite(false)
-        setBgWhite(true)
-      }
 
-      // 滚动方向判断，切换菜单/标题
-      if (scrollS > prevScrollYRef.current) {
-        setActiveIndex(1)
-      } else if (scrollS < prevScrollYRef.current) {
-        setActiveIndex(0)
-      }
-      prevScrollYRef.current = scrollS
-    }, 100),
+        // 滚动方向判断，切换菜单/标题
+        if (scrollS > prevScrollYRef.current) {
+          setActiveIndex(1)
+        } else if (scrollS < prevScrollYRef.current) {
+          setActiveIndex(0)
+        }
+        prevScrollYRef.current = scrollS
+      }, 100),
     []
   )
 
+  // 路由变化后重新探测 #post-bg 与初始化滚动位置
   useEffect(() => {
+    postBgRef.current = document.querySelector('#post-bg')
+    setHasPostBg(!!postBgRef.current)
     prevScrollYRef.current = window.scrollY
     scrollTrigger()
   }, [router.asPath, scrollTrigger])
@@ -192,7 +204,7 @@ const Header = props => {
       `}</style>
 
       {/* fixed时留白高度 */}
-      {fixedNav && !document?.querySelector('#post-bg') && (
+      {fixedNav && !hasPostBg && (
         <div className='h-16'></div>
       )}
 
@@ -252,7 +264,7 @@ const Header = props => {
               ${navBgWhite ? 'glass-active px-0.5 py-0.5' : ''}`}>
             <RandomPostButton {...props} />
             <SearchButton {...props} />
-            {!JSON.parse(siteConfig('THEME_SWITCH')) && (
+            {!themeSwitchEnabled && (
               <div className='hidden md:block'>
                 <DarkModeButton {...props} />
               </div>

@@ -24,16 +24,14 @@ const BlogPostArchive = ({ posts = [], archiveTitle, siteInfo }) => {
           {posts?.map(post => {
             const showPreview =
               siteConfig('HEO_POST_LIST_PREVIEW', null, CONFIG) && post.blockMap
-            if (
-              post &&
-              !post.pageCoverThumbnail &&
-              siteConfig('HEO_POST_LIST_COVER_DEFAULT', null, CONFIG)
-            ) {
-              post.pageCoverThumbnail = siteInfo?.pageCover
-            }
+            const cover =
+              post?.pageCoverThumbnail ||
+              (siteConfig('HEO_POST_LIST_COVER_DEFAULT', null, CONFIG)
+                ? siteInfo?.pageCover
+                : null)
             const showPageCover =
               siteConfig('HEO_POST_LIST_COVER', null, CONFIG) &&
-              post?.pageCoverThumbnail &&
+              cover &&
               !showPreview
             return (
               <div
@@ -47,7 +45,7 @@ const BlogPostArchive = ({ posts = [], archiveTitle, siteInfo }) => {
                     <SmartLink href={post?.href} passHref legacyBehavior>
                       <LazyImage
                         className={'rounded-xl bg-center bg-cover w-28 h-full md:w-40 object-cover'}
-                        src={post?.pageCoverThumbnail}
+                        src={cover}
                       />
                     </SmartLink>
                   </div>

@@ -96,7 +96,7 @@ const SEO = props => {
 
   const ORIGIN = siteConfig('LINK')?.replace(/\/+$/,'')
 
-  const isThin = router.route === '/search' || router.route === '/search/[keyword]' || router.route === '/404'
+  const isThin = isThinPageRoute(router.route)
   const robots = isThin
     ? 'noindex, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
     : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
@@ -374,6 +374,31 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
   return baseData
 }
 
+const isThinPageRoute = route =>
+  route === '/search' ||
+  route === '/search/[keyword]' ||
+  route === '/search/[keyword]/page/[page]' ||
+  route === '/404'
+
+const getSingleValue = value => {
+  if (Array.isArray(value)) return value[0]
+  return value
+}
+
+const normalizeQueryValue = value => {
+  const singleValue = getSingleValue(value)
+  if (singleValue === undefined || singleValue === null) return ''
+  return String(singleValue).trim()
+}
+
+const getSearchKeyword = (props = {}, router = {}) =>
+  normalizeQueryValue(
+    router?.query?.keyword ?? props?.keyword ?? router?.query?.s
+  )
+
+const getSearchPage = (props = {}, router = {}) =>
+  normalizeQueryValue(router?.query?.page ?? props?.page)
+
 /**
  * 获取SEO信息
  * @param {*} props
@@ -381,7 +406,8 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
  */
 const getSEOMeta = (props, router, locale) => {
   const { post, siteInfo, tag, category, page } = props
-  const keyword = router?.query?.s
+  const keyword = getSearchKeyword(props, router)
+  const searchPage = getSearchPage(props, router)
 
   // SEO title 后缀使用短品牌名，与 Notion TITLE（可能是长标题）解耦
   const SITE_NAME = siteConfig('SEO_BRAND') || siteConfig('TITLE') || siteInfo?.title
@@ -460,7 +486,12 @@ const getSEOMeta = (props, router, locale) => {
         title: `${keyword || ''}${keyword ? ' | ' : ''}${locale.NAV.SEARCH} | ${SITE_NAME}`,
         description: keyword ? `搜索「${keyword}」的结果 - ${SITE_NAME}` : `在${SITE_NAME}中搜索内容`,
         image: `${siteInfo?.pageCover}`,
-        slug: 'search/' + (keyword || ''),
+        slug:
+          'search/' +
+          (keyword || '') +
+          (router.route === '/search/[keyword]/page/[page]' && searchPage
+            ? `/page/${searchPage}`
+            : ''),
         type: 'website'
       }
     case '/404':

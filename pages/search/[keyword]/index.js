@@ -2,8 +2,8 @@ import BLOG from '@/blog.config'
 import { getDataFromCache } from '@/lib/cache/cache_manager'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { buildPostSearchResult } from '@/lib/utils/search'
 import { DynamicLayout } from '@/themes/theme'
-import { getPageContentText } from '@/lib/db/notion/getPageContentText'
 
 const Index = props => {
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
@@ -23,7 +23,7 @@ export async function getStaticProps({ params: { keyword }, locale }) {
   const { allPages } = props
   const allPosts = allPages?.filter(
     page => page.type === 'Post' && page.status === 'Published'
-  )
+  ) || []
   props.posts = await filterByMemCache(allPosts, keyword)
   props.postCount = props.posts.length
   const POST_LIST_STYLE = siteConfig(
@@ -67,40 +67,12 @@ export function getStaticPaths() {
  */
 async function filterByMemCache(allPosts, keyword) {
   const filterPosts = []
-  if (keyword) {
-    keyword = keyword.trim().toLowerCase()
-  }
   for (const post of allPosts) {
     const cacheKey = 'page_block_' + post.id
     const page = await getDataFromCache(cacheKey, true)
-    const tagContent =
-      post?.tags && Array.isArray(post?.tags) ? post?.tags.join(' ') : ''
-    const categoryContent = post.category
-      ? (Array.isArray(post.category) ? post.category.join(' ') : post.category)
-      : ''
-    const articleInfo = post.title + post.summary + tagContent + categoryContent
-    let hit = articleInfo.toLowerCase().indexOf(keyword) > -1
-    const contentTextList = getPageContentText(post, page)
-    post.results = []
-    let hitCount = 0
-    for (const i of contentTextList) {
-      const c = contentTextList[i]
-      if (!c) {
-        continue
-      }
-      const index = c.toLowerCase().indexOf(keyword)
-      if (index > -1) {
-        hit = true
-        hitCount += 1
-        post.results.push(c)
-      } else {
-        if ((post.results.length - 1) / hitCount < 3 || i === 0) {
-          post.results.push(c)
-        }
-      }
-    }
-    if (hit) {
-      filterPosts.push(post)
+    const resultPost = buildPostSearchResult(post, page, keyword)
+    if (resultPost) {
+      filterPosts.push(resultPost)
     }
   }
   return filterPosts

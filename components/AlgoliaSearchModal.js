@@ -140,6 +140,22 @@ export default function AlgoliaSearchModal({ cRef }) {
     }
   }, [isModalOpen])
 
+  useEffect(() => {
+    if (!isModalOpen || typeof document === 'undefined') return
+
+    const { body, documentElement } = document
+    const previousBodyOverflow = body.style.overflow
+    const previousDocumentOverflow = documentElement.style.overflow
+
+    body.style.overflow = 'hidden'
+    documentElement.style.overflow = 'hidden'
+
+    return () => {
+      body.style.overflow = previousBodyOverflow
+      documentElement.style.overflow = previousDocumentOverflow
+    }
+  }, [isModalOpen])
+
   /**
    * 对外暴露方法
    **/
@@ -246,6 +262,7 @@ export default function AlgoliaSearchModal({ cRef }) {
   return (
     <div
       id='search-wrapper'
+      data-lenis-prevent
       className={`${
         isModalOpen ? 'opacity-100' : 'invisible opacity-0 pointer-events-none'
       } z-30 fixed inset-0 flex items-start justify-center px-3 pt-4 sm:px-4 sm:pt-[10vh]`}>
@@ -288,7 +305,7 @@ export default function AlgoliaSearchModal({ cRef }) {
             </p>
           </div>
         )}
-        <ul className='flex-1 min-h-0 overflow-y-auto'>
+        <ul className='flex-1 min-h-0 overflow-y-auto overscroll-contain'>
           {searchResults.map((result, index) => (
             <li
               key={result.objectID}

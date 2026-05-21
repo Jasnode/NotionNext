@@ -33,7 +33,6 @@ import SearchNav from './components/SearchNav'
 import SideRight from './components/SideRight'
 import CONFIG from './config'
 import { Style } from './style'
-import AISummary from '@/components/AISummary'
 import AISummar from './components/AISummar'
 import Lenis from '@/components/Lenis'
 
@@ -199,7 +198,7 @@ const LayoutSearch = props => {
       return () => clearTimeout(timer)
   }, [currentSearch])
   return (
-    <div currentSearch={currentSearch}>
+    <div data-current-search={currentSearch || ''}>
       <div id='post-outer-wrapper' className='px-5  md:px-0'>
         {!currentSearch ? (
           <SearchNav {...props} />
@@ -317,9 +316,54 @@ const LayoutSlug = props => {
   const [hasCode, setHasCode] = useState(false)
 
   useEffect(() => {
-    const hasCode = document.querySelectorAll('[class^="language-"]').length > 0
-    setHasCode(hasCode)
-  }, [])
+    if (!post || lock) {
+      setHasCode(false)
+      return
+    }
+
+    let frameId = null
+    const article = document.getElementById('article-wrapper')
+
+    const updateHasCode = () => {
+      frameId = null
+      const nextHasCode = Boolean(
+        article?.querySelector(
+          'pre.notion-code, .code-toolbar, pre[class*="language-"], code[class*="language-"]'
+        )
+      )
+      setHasCode(current => (current === nextHasCode ? current : nextHasCode))
+    }
+
+    const scheduleUpdateHasCode = () => {
+      if (frameId !== null) return
+      frameId = requestAnimationFrame(updateHasCode)
+    }
+
+    scheduleUpdateHasCode()
+
+    if (!article) {
+      return () => {
+        if (frameId !== null) {
+          cancelAnimationFrame(frameId)
+        }
+      }
+    }
+
+    const observer = new MutationObserver(scheduleUpdateHasCode)
+    observer.observe(article, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    return () => {
+      observer.disconnect()
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId)
+      }
+    }
+  }, [post, lock])
 
   const commentEnable =
     siteConfig('COMMENT_TWIKOO_ENV_ID') ||
@@ -349,7 +393,6 @@ const LayoutSlug = props => {
               <section
                 className='wow fadeInUp p-5 justify-center mx-auto'
                 data-wow-delay='.2s'>
-                <AISummary aiSummary={post.aiSummary}/>
                 <WWAds orientation='horizontal' className='w-full' />
                 {post && <AISummar post={post} />}
                 {post && <NotionPage post={post} />}

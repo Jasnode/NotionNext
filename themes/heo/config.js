@@ -36,6 +36,9 @@ const CONFIG = {
   HEO_HERO_RECOMMEND_POST_TAG: '',
   HEO_HERO_RECOMMEND_POST_SORT_BY_UPDATE_TIME: true, // 推荐文章排序，为`true`时将强制按最后修改时间倒序
   HERO_RECOMMEND_COVER: '', // 英雄区右侧图片
+  
+  // 英雄区右侧推荐文章遮罩控制
+  HEO_HERO_RECOMMEND_COVER_ENABLE: true, // 是否显示推荐文章遮罩图片，true显示遮罩需点击查看，false直接显示推荐文章
 
   // 右侧个人资料卡牌欢迎语，点击可自动切换
   HEO_INFOCARD_GREETINGS: [
@@ -163,9 +166,6 @@ const CONFIG = {
   HEO_WIDGET_LATEST_POSTS: true, // 显示最新文章卡
   HEO_WIDGET_ANALYTICS: true, // 显示统计卡
   HEO_WIDGET_TO_TOP: true,
-  HEO_WIDGET_TO_COMMENT: true, // 跳到评论区
-  HEO_WIDGET_DARK_MODE: true, // 夜间模式
-  HEO_WIDGET_TOC: true, // 移动端悬浮目录
   HEO_LENIS_ENABLE: true, // 启用 Lenis 惯性滚动效果
   HEO_ENABLE_AOS: false // heo主题是否启用AOS滚动动画
 }

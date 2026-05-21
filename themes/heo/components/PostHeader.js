@@ -22,7 +22,10 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
   return (
     <div
       id='post-bg'
-      className='md:mb-0 -mb-5 w-full h-[30rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10 -mt-20 md:mt-0'>
+      className='md:mb-0 -mb-5 w-full h-[30rem] relative md:flex-shrink-0 overflow-hidden bg-cover bg-center bg-no-repeat z-10 -mt-20 md:mt-0'
+      style={{
+        '--heo-post-bg-accent': isDarkMode ? '#6366f1' : '#09a4f5'
+      }}>
       <style jsx>{`
         .coverdiv:after {
           position: absolute;
@@ -32,7 +35,7 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
           top: 0;
           left: 0;
           box-shadow: 110px -130px 500px 100px
-            ${isDarkMode ? '#6366f1' : '#09a4f5'} inset;
+            var(--heo-post-bg-accent) inset;
         }
         .coverdiv {
           overflow: hidden; /* 隐藏溢出部分 */
@@ -42,7 +45,8 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
       `}</style>
 
       <div
-        className={`${isDarkMode ? 'bg-[#6366f1]' : 'bg-[#09a4f5]'} absolute top-0 w-full h-full py-10 flex justify-center items-center`}>
+        className='absolute top-0 w-full h-full py-10 flex justify-center items-center'
+        style={{ backgroundColor: 'var(--heo-post-bg-accent)' }}>
         {/* 文章背景图 */}
         <div
           id='post-cover-wrapper'

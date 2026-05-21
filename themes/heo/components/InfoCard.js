@@ -102,11 +102,16 @@ function MoreButton() {
  */
 function GreetingsWords() {
   const greetings = siteConfig('HEO_INFOCARD_GREETINGS', null, CONFIG)
-  const [greeting, setGreeting] = useState(greetings[0])
+  const [greeting, setGreeting] = useState(greetings?.[0] ?? '')
   // 每次点击，随机获取greetings中的一个
   const handleChangeGreeting = () => {
+    if (!greetings?.length) return
     const randomIndex = Math.floor(Math.random() * greetings.length)
     setGreeting(greetings[randomIndex])
+  }
+
+  if (!greeting) {
+    return null
   }
 
   return (

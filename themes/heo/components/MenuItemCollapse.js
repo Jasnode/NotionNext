@@ -25,6 +25,8 @@ export const MenuItemCollapse = ({ link }) => {
     return null
   }
 
+  const linkTargetProps = link?.target ? { target: link.target } : {}
+
   return (
     <>
       <div
@@ -33,7 +35,7 @@ export const MenuItemCollapse = ({ link }) => {
         {!hasSubMenu && (
           <SmartLink
             href={link?.href}
-            target={link?.target}
+            {...linkTargetProps}
             className='font-extralight  flex justify-between pl-2 pr-4 dark:text-gray-200 no-underline tracking-widest'>
             <span className=' transition-all items-center duration-200'>
               {link?.icon && <i className={link.icon + ' mr-4'} />}
@@ -60,13 +62,17 @@ export const MenuItemCollapse = ({ link }) => {
         <Collapse isOpen={isOpen} className='rounded-[1.45rem]'>
           <div className='mt-2 rounded-[1.45rem] bg-[#f5f0e8] p-2 shadow-[inset_3px_3px_7px_rgba(255,255,255,0.65),inset_-3px_-3px_7px_rgba(0,0,0,0.05)] dark:bg-hexo-black-gray dark:text-gray-200 dark:shadow-none'>
             {link.subMenus.map((sLink, index) => {
+              const subLinkTargetProps = sLink?.target
+                ? { target: sLink.target }
+                : {}
+
               return (
                 <div
                   key={index}
                   className='mb-1 last:mb-0 rounded-[1.05rem] bg-transparent px-3 py-3 pr-6 text-left tracking-widest transition-all duration-200 hover:bg-[rgba(255,255,255,0.38)] dark:hover:bg-blue-500/10'>
-                  <SmartLink href={sLink.href} target={link?.target}>
+                  <SmartLink href={sLink.href} {...subLinkTargetProps}>
                     <span className='ml-4 whitespace-nowrap text-sm'>
-                      {link?.icon && (<i className={sLink.icon + ' mr-2 opacity-80'} />)}{' '}
+                      {sLink?.icon && (<i className={sLink.icon + ' mr-2 opacity-80'} />)}{' '}
                       {sLink.title}
                     </span>
                   </SmartLink>
