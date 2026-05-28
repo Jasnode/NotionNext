@@ -8,15 +8,8 @@ module.exports = {
   ALGOLIA_SEARCH_ONLY_APP_KEY:
     process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_ONLY_APP_KEY || null, // 客户端搜索用的KEY
   ALGOLIA_INDEX: process.env.NEXT_PUBLIC_ALGOLIA_INDEX || null, // 在Algolia中创建一个index用作数据库
-  //   ********挂件组件相关********
-  // AI 文章摘要生成 @see https://docs_s.tianli0.top/
-  TianliGPT_CSS:
-    process.env.NEXT_PUBLIC_TIANLI_GPT_CSS ||
-    '',
-  TianliGPT_JS:
-    process.env.NEXT_PUBLIC_TIANLI_GPT_JS ||
-    '',
-  TianliGPT_KEY: process.env.NEXT_PUBLIC_TIANLI_GPT_KEY || '',
+
+  // AI 相关配置已迁移至 conf/ai.config.js
 
   // 邮件
   MAILCHIMP_LIST_ID: process.env.MAILCHIMP_LIST_ID || null, // 开启mailichimp邮件订阅 客户列表ID ，具体使用方法参阅文档
