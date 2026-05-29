@@ -3,6 +3,7 @@ import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData, getPostBlocks } from '@/lib/db/SiteDataApi'
 import { formatNotionBlock } from '@/lib/db/notion/getPostBlocks'
 import { generateRobotsTxt } from '@/lib/utils/robots.txt'
+import { generateLlmsTxt } from '@/lib/utils/llms.txt'
 import { generateRss, shouldGenerateRssForLocale } from '@/lib/utils/rss'
 import { generateSitemapXml } from '@/lib/utils/sitemap.xml'
 import { DynamicLayout } from '@/themes/theme'
@@ -96,6 +97,8 @@ export async function getStaticProps(req) {
   if (isBuildLifecycle) {
     // 生成robotTxt
     generateRobotsTxt(props)
+    // 生成面向 AI 搜索与引用代理的机器可读站点索引
+    generateLlmsTxt(props)
     // 生成Feed订阅
     if (shouldGenerateRssForLocale({ locale })) {
       await generateRss(props)

@@ -52,7 +52,9 @@ yarn-error.log*
 /public/robots.txt
 /public/sitemap.xml
 /public/rss/*
+/public/llms.txt
 /sitemap.xml
+/llms.txt
 
 # yarn
 package-lock.json
