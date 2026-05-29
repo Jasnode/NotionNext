@@ -68,7 +68,7 @@ const PrismMac = () => {
       if (!hasCodeBlocks) return false
 
       initialized = true
-      if (codeMacBar) {
+      if (codeMacBar || codeCollapse) {
         loadExternalResource('/css/prism-mac-style.css', 'css')
       }
       // 加载prism样式
@@ -92,7 +92,7 @@ const PrismMac = () => {
               window.Prism.plugins.autoloader.languages_path = prismjsPath
             }
 
-            const dispose = renderPrismMac(codeLineNumbers)
+            const dispose = renderPrismMac(codeLineNumbers, codeMacBar)
             stopLineNumbers = typeof dispose === 'function' ? dispose : () => {}
             const disposeMermaid = renderMermaid(mermaidCDN)
             stopMermaid =
@@ -545,7 +545,7 @@ const renderCustomCode = () => {
   });
 };
 
-function renderPrismMac(codeLineNumbers) {
+function renderPrismMac(codeLineNumbers, codeMacBar) {
   const container = getNotionArticle()
 
   // Add line numbers
@@ -574,7 +574,7 @@ function renderPrismMac(codeLineNumbers) {
 
   const codeToolBars = container?.getElementsByClassName('code-toolbar')
   // Add pre-mac element for Mac Style UI
-  if (codeToolBars) {
+  if (codeMacBar && codeToolBars) {
     Array.from(codeToolBars).forEach(item => {
       try {
         const existPreMac = item.getElementsByClassName('pre-mac')

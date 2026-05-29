@@ -10,6 +10,7 @@ const BLOG = {
 
   PSEUDO_STATIC: process.env.NEXT_PUBLIC_PSEUDO_STATIC || false, // 伪静态路径，开启后所有文章URL都以 .html 结尾。
   NEXT_REVALIDATE_SECOND: process.env.NEXT_PUBLIC_REVALIDATE_SECOND || 2592000, // 更新缓存间隔 单位(秒)
+  REVALIDATION_TOKEN: process.env.REVALIDATION_TOKEN || '', // On-Demand Revalidation Token，设置后可通过 POST /api/revalidate 立即刷新页面缓存（解决 Notion 内容更新延迟问题）
   APPEARANCE: process.env.NEXT_PUBLIC_APPEARANCE || 'light', // ['light', 'dark', 'auto'], // light 日间模式 ， dark夜间模式， auto根据时间和主题自动夜间模式
   APPEARANCE_DARK_TIME: process.env.NEXT_PUBLIC_APPEARANCE_DARK_TIME || [23, 8], // 夜间模式起至时间，false时关闭根据时间自动切换夜间模式
 
@@ -39,6 +40,7 @@ const BLOG = {
   ...require('./conf/widget.config'), // 悬浮在网页上的挂件，聊天客服、宠物挂件、音乐播放器等
   ...require('./conf/ad.config'), // 广告营收插件
   ...require('./conf/plugin.config'), // 其他第三方插件 algolia全文索引
+  ...require('./conf/ai.config'), // AI 相关配置（AI摘要、AI聊天机器人等）
   ...require('./conf/performance.config'), // 性能优化配置
   ...require('./conf/top-tag.config'), // 置顶文章全局配置
   ...require('./conf/techgrow.config'), // 公众号导流插件（TechGrow）
