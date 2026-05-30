@@ -28,7 +28,7 @@ export const MenuItemDrop = ({ link }) => {
               href={mainLink.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-900 hover:shadow-lg transform"
+              className="heo-nav-hover rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest transform"
             >
               {link?.icon && <i className={link?.icon} />} {link?.name}
             </a>
@@ -36,7 +36,7 @@ export const MenuItemDrop = ({ link }) => {
             // 内部链接 - 使用 Next.js 的 Link 组件
             <SmartLink
               href={mainLink.href}
-              className="rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-900 hover:shadow-lg transform"
+              className="heo-nav-hover rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest transform"
             >
               {link?.icon && <i className={link?.icon} />} {link?.name}
             </SmartLink>
@@ -46,7 +46,7 @@ export const MenuItemDrop = ({ link }) => {
       {/* 含子菜单的按钮 */}
       {hasSubMenu && (
         <>
-          <div className="cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative hover:bg-gradient-to-r from-cyan-400/20 to-blue-500/20 dark:hover:from-transparent dark:hover:to-transparent dark:hover:bg-purple-900 hover:shadow-lg transform">
+          <div className="heo-nav-hover cursor-pointer rounded-full flex justify-center items-center px-3 py-1 no-underline tracking-widest relative transform">
             {link?.icon && <i className={link?.icon} />} {link?.name}
             {/* 主菜单下方的安全区域 */}
             {show && (

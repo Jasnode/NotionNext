@@ -21,8 +21,8 @@ const CONFIG = {
   HEO_HERO_TITLE_1: '分享教程',
   HEO_HERO_TITLE_2: '与思维认知',
   HEO_HERO_TITLE_3: '提供优质资源与技术教程',
-  HEO_HERO_TITLE_4: '💖一起进步，共享智慧',
-  HEO_HERO_TITLE_5: '✨生活明朗 万物可爱',
+  HEO_HERO_TITLE_4: '新版上线',
+  HEO_HERO_TITLE_5: '生活明朗 万物可爱',
   HEO_HERO_TITLE_LINK: 'https://blog.88lin.eu.org',
   // 英雄区遮罩文字
   HEO_HERO_COVER_TITLE: '随便逛逛',
@@ -35,7 +35,7 @@ const CONFIG = {
   // 英雄区右侧推荐文章标签, 例如 [推荐] , 最多六篇文章; 若留空白''，则推荐最近更新文章
   HEO_HERO_RECOMMEND_POST_TAG: '',
   HEO_HERO_RECOMMEND_POST_SORT_BY_UPDATE_TIME: true, // 推荐文章排序，为`true`时将强制按最后修改时间倒序
-  HERO_RECOMMEND_COVER: '', // 英雄区右侧图片
+  HERO_RECOMMEND_COVER: '/images/heo/hello.svg', // 英雄区右侧图片
   
   // 英雄区右侧推荐文章遮罩控制
   HEO_HERO_RECOMMEND_COVER_ENABLE: true, // 是否显示推荐文章遮罩图片，true显示遮罩需点击查看，false直接显示推荐文章
