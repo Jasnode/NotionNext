@@ -1,5 +1,5 @@
 // import Image from 'next/image'
-import { ArrowSmallRight, PlusSmall } from '@/components/HeroIcons'
+import { ArrowSmallRight } from '@/components/HeroIcons'
 import LazyImage from '@/components/LazyImage'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
@@ -262,7 +262,7 @@ function TopGroup(props) {
         })}
       </div>
       {/* 一个大的跳转文章卡片 */}
-      <TodayCard cRef={todayCardRef} siteInfo={siteInfo} />
+      <TodayCard cRef={todayCardRef} />
     </div>
   )
 }
@@ -323,10 +323,13 @@ function getTopPosts({ latestPosts, allNavPages }) {
  * 英雄区右侧，今日卡牌
  * @returns
  */
-function TodayCard({ cRef, siteInfo }) {
+function TodayCard({ cRef }) {
   const router = useRouter()
   const link = siteConfig('HEO_HERO_TITLE_LINK', null, CONFIG)
-  const { locale } = useGlobal()
+  const tips = siteConfig('HEO_HERO_TITLE_4', null, CONFIG)
+  const title = siteConfig('HEO_HERO_TITLE_5', null, CONFIG)
+  const cover =
+    siteConfig('HERO_RECOMMEND_COVER', null, CONFIG) || '/images/heo/hello.svg'
   // 获取遮罩控制配置
   const coverEnable = siteConfig('HEO_HERO_RECOMMEND_COVER_ENABLE', true, CONFIG)
   // 卡牌是否盖住下层，如果配置为false则默认不盖住
@@ -359,6 +362,7 @@ function TodayCard({ cRef, siteInfo }) {
    * @param {*} e
    */
   function handleCardClick(e) {
+    if (!link) return
     router.push(link)
   }
 
@@ -381,43 +385,43 @@ function TodayCard({ cRef, siteInfo }) {
             ? 'opacity-100 cursor-pointer'
             : 'opacity-0 transform scale-110 pointer-events-none'
         } shadow transition-all duration-200 today-card h-full bg-black rounded-2xl relative overflow-hidden flex items-end`}>
-        {/* 卡片文字信息 */}
-        <div
-          id='today-card-info'
-          className='flex justify-between w-full relative text-white p-10 items-end'>
-          <div className='flex flex-col'>
-            <div className='text-sm font-normal'>
-              {siteConfig('HEO_HERO_TITLE_4', null, CONFIG)}
-            </div>
-            <div className='text-3xl font-bold'>
-              {siteConfig('HEO_HERO_TITLE_5', null, CONFIG)}
-            </div>
-          </div>
-          {/* 查看更多的按钮 */}
-          <div
-            onClick={handleClickShowMore}
-            className={`${isCoverUp ? '' : 'hidden pointer-events-none'} z-10 group flex items-center px-3 h-10 justify-center  rounded-3xl
-            glassmorphism transition-colors duration-100 `}>
-            <PlusSmall
-              className={
-                'group-hover:rotate-180 duration-500 transition-all w-6 h-6 mr-2 bg-white rounded-full stroke-black'
-              }
-            />
-            <div id='more' className='select-none'>
-              {locale.COMMON.RECOMMEND_POSTS}
-            </div>
-          </div>
+        <div id='today-card-cover' className='today-card-cover absolute inset-0'>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            id='today-card-cover-image'
+            src={cover}
+            alt={title || 'hero recommend cover'}
+          />
         </div>
 
-        {/* 封面图 */}
-        <img
-          src={siteInfo?.pageCover}
-          alt='茉灵智库 - 资源与技术教程分享封面图'
-          id='today-card-cover'
-          className={`${
-            isCoverUp ? '' : ' pointer-events-none'
-          } hover:scale-110 duration-1000 object-cover cursor-pointer today-card-cover absolute w-full h-full top-0`}
-        />
+        <div
+          id='today-card-info'
+          className='absolute left-8 bottom-8 z-[2] max-w-[60%]'>
+          <div id='today-card-tips'>{tips}</div>
+          <div id='today-card-title'>{title}</div>
+        </div>
+
+        {/* 查看更多的按钮 */}
+        <div
+          onClick={handleClickShowMore}
+          id='today-card-more-button'
+          className={`${isCoverUp ? '' : 'hidden pointer-events-none'} absolute right-8 bottom-8 z-[5] flex items-center justify-center`}>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            aria-hidden='true'
+            role='img'
+            width='22'
+            height='22'
+            viewBox='0 0 24 24'>
+            <path
+              fill='currentColor'
+              d='M17 3.34a10 10 0 1 1-14.995 8.984L2 12l.005-.324A10 10 0 0 1 17 3.34M15 8H9l-.117.007A1 1 0 0 0 8 9l.007.117A1 1 0 0 0 9 10h3.584l-4.291 4.293l-.083.094a1 1 0 0 0 1.497 1.32L14 11.414V15l.007.117A1 1 0 0 0 16 15V9l-.007-.117l-.029-.149l-.035-.105l-.054-.113l-.071-.111a1 1 0 0 0-.097-.112l-.09-.08l-.096-.067l-.098-.052l-.11-.044l-.112-.03l-.126-.017z'
+            />
+          </svg>
+          <div id='more' className='select-none'>
+            更多推荐
+          </div>
+        </div>
       </div>
     </div>
   )

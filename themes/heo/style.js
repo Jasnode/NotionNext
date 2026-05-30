@@ -63,9 +63,128 @@ const Style = () => {
         white-space: nowrap;
       }
 
-      .today-card-cover {
-        -webkit-mask-image: linear-gradient(to top, transparent 5%, black 60%);
-        mask-image: linear-gradient(to top, transparent 5%, black 60%);
+      #theme-heo #card-body.today-card {
+        background: #ffffff;
+        border: 1px solid #e3e8f7;
+        border-radius: 12px;
+        box-shadow: none;
+      }
+
+      #theme-heo #card-body.today-card:hover #today-card-cover {
+        transform: scale(1.02);
+      }
+
+      #theme-heo #today-card-cover.today-card-cover {
+        z-index: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(
+            90deg,
+            rgba(224, 245, 240, 0.85) 0%,
+            rgba(226, 245, 242, 0.85) 5%,
+            rgba(228, 245, 244, 0.85) 10%,
+            rgba(230, 245, 246, 0.85) 15%,
+            rgba(232, 245, 248, 0.85) 20%,
+            rgba(234, 245, 250, 0.85) 25%,
+            rgba(236, 245, 252, 0.85) 30%,
+            rgba(238, 245, 254, 0.85) 35%,
+            rgba(240, 245, 255, 0.85) 40%,
+            rgba(242, 245, 255, 0.85) 45%,
+            rgba(244, 245, 255, 0.85) 50%,
+            rgba(246, 245, 255, 0.85) 55%,
+            rgba(248, 245, 255, 0.85) 60%,
+            rgba(250, 245, 255, 0.85) 65%,
+            rgba(252, 245, 255, 0.85) 70%,
+            rgba(254, 245, 255, 0.85) 75%,
+            rgba(255, 245, 255, 0.85) 80%,
+            rgba(255, 245, 253, 0.85) 85%,
+            rgba(255, 245, 251, 0.85) 90%,
+            rgba(255, 245, 249, 0.85) 95%,
+            rgba(255, 245, 247, 0.85) 100%
+          );
+        transition: transform 0.3s ease-in-out;
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
+
+      #theme-heo #today-card-cover-image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      #theme-heo #today-card-info {
+        color: rgba(0, 0, 0, 0.8);
+      }
+
+      #theme-heo #today-card-tips {
+        color: rgba(0, 0, 0, 0.6);
+        opacity: 0.8;
+        font-size: 12px;
+        font-weight: 400;
+      }
+
+      #theme-heo #today-card-title {
+        color: rgba(3, 145, 150, 0.82);
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 36px;
+      }
+
+      #theme-heo #today-card-more-button {
+        width: 125px;
+        height: 40px;
+        color: #d7537e;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #e3e8f7;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.05);
+        font-weight: 400;
+        transition: all 0.3s;
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        backdrop-filter: saturate(180%) blur(20px);
+      }
+
+      #theme-heo #today-card-more-button svg {
+        flex-shrink: 0;
+        margin-right: 8px;
+        font-size: 22px;
+      }
+
+      #theme-heo #today-card-more-button:hover {
+        color: rgba(0, 0, 0, 0.9);
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      #theme-heo .heo-nav-hover {
+        transition:
+          color 0.18s ease,
+          background 0.18s ease,
+          box-shadow 0.18s ease;
+      }
+
+      #theme-heo .heo-nav-hover:hover {
+        color: #1e73be;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.96), rgba(235, 244, 255, 0.88)),
+          radial-gradient(circle at 22% 20%, rgba(147, 197, 253, 0.35), transparent 58%);
+        box-shadow:
+          inset 0 0 0 1px rgba(147, 197, 253, 0.76),
+          inset 0 1px 1px rgba(255, 255, 255, 0.7),
+          0 8px 18px rgba(59, 130, 246, 0.12);
+        text-decoration: none;
+      }
+
+      html.dark #theme-heo .heo-nav-hover:hover {
+        color: #bfdbfe;
+        background:
+          linear-gradient(rgba(30, 41, 59, 0.92), rgba(30, 58, 138, 0.46)),
+          radial-gradient(circle at 22% 20%, rgba(96, 165, 250, 0.28), transparent 58%);
+        box-shadow:
+          inset 0 0 0 1px rgba(96, 165, 250, 0.52),
+          inset 0 1px 1px rgba(255, 255, 255, 0.08),
+          0 8px 18px rgba(37, 99, 235, 0.22);
       }
 
       // AI打字机，闪烁光标
@@ -308,13 +427,6 @@ const Style = () => {
       /* AI文章摘要字体大小 */
       .font-bold.ml-2 {
         font-size: 18px;
-      }
-
-      /* 卡片遮罩背景颜色 */
-      .bg-black {
-        box-shadow: 
-          0 -120px 140px -12px rgba(26, 34, 64, 0.95) inset,
-          0 -80px 100px -8px rgba(85, 60, 154, 0.6) inset;
       }
 
       /* 标签颜色 */
