@@ -3,7 +3,6 @@ import CopyRightDate from '@/components/CopyRightDate'
 import PoweredBy from '@/components/PoweredBy'
 import { siteConfig } from '@/lib/config'
 import SocialButton from './SocialButton'
-import LazyImage from '@/components/LazyImage'
 /**
  * 页脚
  * @returns
@@ -16,7 +15,7 @@ const Footer = () => {
       {/* 颜色过度区 */}
       <div
         id='color-transition'
-        className='h-20 bg-gradient-to-b from-[#f7f9fe] to-white  dark:bg-[#17191d] dark:from-inherit dark:to-inherit'
+        className='h-20 bg-gradient-to-b from-[#f7f9fe] to-white dark:from-[#17191d] dark:to-[#17191d]'
       />
 
       {/* 社交按钮 */}
@@ -31,9 +30,9 @@ const Footer = () => {
         {/* 装饰背景 */}
         <div className='absolute inset-0 pointer-events-none overflow-hidden'>
           <div className='dark:hidden'>
-            <div className='absolute top-0 left-1/4 w-40 h-40 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-20' />
-            <div className='absolute top-0 right-1/4 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl opacity-20' />
-            <div className='absolute bottom-0 left-1/2 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-2xl opacity-20' />
+            <div className='absolute top-0 left-1/4 w-40 h-40 bg-blue-300 rounded-full mix-blend-multiply filter blur-lg md:blur-2xl opacity-20' />
+            <div className='absolute top-0 right-1/4 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-lg md:blur-2xl opacity-20' />
+            <div className='absolute bottom-0 left-1/2 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-lg md:blur-2xl opacity-20' />
           </div>
           <div className='hidden dark:block'>
             <div className='absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent' />
@@ -53,10 +52,13 @@ const Footer = () => {
           className='relative z-10 flex flex-wrap items-center justify-center gap-y-2 gap-x-1 text-xs sm:text-sm'>
           {BEI_AN && (
             <div className='inline-flex items-center gap-1.5 mr-2'>
-              <LazyImage
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src='https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/icon120.5xb0hthnf2.webp'
-                className='w-5 h-5'
+                style={{ width: '20px', height: '20px' }}
                 alt='萌ICP备案图标'
+                loading='lazy'
+                decoding='async'
               />
               <a
                 href={BEI_AN_LINK}
