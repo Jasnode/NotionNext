@@ -63,6 +63,60 @@ const Style = () => {
         white-space: nowrap;
       }
 
+      #theme-heo #banner-cover {
+        color: #ffffff;
+        background:
+          radial-gradient(circle at 18% 18%, rgba(125, 211, 252, 0.38), transparent 32%),
+          radial-gradient(circle at 86% 12%, rgba(103, 232, 249, 0.2), transparent 36%),
+          linear-gradient(135deg, rgba(28, 88, 255, 0.92), rgba(0, 143, 186, 0.86));
+        -webkit-backdrop-filter: saturate(160%) blur(15px);
+        backdrop-filter: saturate(160%) blur(15px);
+      }
+
+      html.dark #theme-heo #banner-cover {
+        background:
+          radial-gradient(circle at 16% 18%, rgba(96, 165, 250, 0.34), transparent 34%),
+          radial-gradient(circle at 88% 16%, rgba(45, 212, 191, 0.18), transparent 38%),
+          linear-gradient(135deg, rgba(28, 55, 155, 0.92), rgba(6, 95, 130, 0.88));
+      }
+
+      #theme-heo #banner-cover-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      #theme-heo .banner-cover-leading-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        color: rgba(255, 255, 255, 0.96);
+        font-size: 64px;
+        line-height: 1;
+      }
+
+      #theme-heo #banner-cover-title {
+        display: flex;
+        align-items: center;
+        color: #ffffff;
+        font-size: clamp(42px, 4vw, 56px);
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: 0;
+        text-shadow: 0 10px 28px rgba(0, 38, 92, 0.22);
+      }
+
+      #theme-heo .banner-cover-inline-icon {
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+        margin-left: 12px;
+        color: rgba(255, 255, 255, 0.94);
+      }
+
       #theme-heo #card-body.today-card {
         background: #ffffff;
         border: 1px solid #e3e8f7;

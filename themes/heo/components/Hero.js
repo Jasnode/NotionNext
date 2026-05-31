@@ -78,7 +78,7 @@ function Banner(props) {
   }
 
   // 遮罩文字
-  const coverTitle = siteConfig('HEO_HERO_COVER_TITLE')
+  const coverTitle = siteConfig('HEO_HERO_COVER_TITLE', null, CONFIG)
 
   return (
     <div
@@ -104,14 +104,16 @@ function Banner(props) {
       {/* 遮罩 */}
       <div
         id='banner-cover'
-        style={{ backdropFilter: 'blur(15px)' }}
         className={
-          'z-20 rounded-xl overflow-hidden opacity-0 group-hover:opacity-100 duration-300 transition-all bg-[#052c65cc] dark:bg-[#dca846dd] dark:text-white cursor-pointer absolute w-full h-full top-0 flex justify-start items-center'
+          'z-20 rounded-xl overflow-hidden opacity-0 group-hover:opacity-100 duration-300 transition-all cursor-pointer absolute w-full h-full top-0 flex justify-start items-center'
         }>
-        <div className='ml-12 -translate-x-32 group-hover:translate-x-0 duration-300 transition-all ease-in'>
-          <div className='text-8xl text-white font-extrabold'>{coverTitle}</div>
-          <div className='-ml-3 text-gray-300'>
-            <ArrowSmallRight className={'w-24 h-24 stroke-2'} />
+        <div
+          id='banner-cover-content'
+          className='ml-12 -translate-x-24 group-hover:translate-x-0 duration-500 transition-all ease-out'>
+          <i className='fa-solid fa-paper-plane banner-cover-leading-icon' aria-hidden='true' />
+          <div id='banner-cover-title'>
+            <span>{coverTitle}</span>
+            <ArrowSmallRight className='banner-cover-inline-icon stroke-2' />
           </div>
         </div>
       </div>

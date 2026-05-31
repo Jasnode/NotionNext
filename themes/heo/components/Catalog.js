@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
  * @returns {JSX.Element}
  * @constructor
  */
-const Catalog = ({ toc }) => {
+const Catalog = ({ toc, onItemClick }) => {
   const { locale } = useGlobal()
 
   // 目录自动滚动
@@ -108,7 +108,7 @@ const Catalog = ({ toc }) => {
         {locale.COMMON.TABLE_OF_CONTENTS}
       </div>
       <div
-        className='overflow-y-auto max-h-36 lg:max-h-96 overscroll-none scroll-hidden'
+        className='overflow-y-auto max-h-[60vh] lg:max-h-96 overscroll-none scroll-hidden'
         ref={tRef}>
         <nav className='h-full'>
           {toc.map(tocItem => {
@@ -119,6 +119,7 @@ const Catalog = ({ toc }) => {
                 key={id}
                 data-toc-id={id}
                 href={`#${id}`}
+                onClick={onItemClick}
                 className={`notion-table-of-contents-item block my-1 rounded-2xl transition-all duration-300 border ${
                   selected
                     ? 'bg-[#ebf4ff] border-[#60a5fa] shadow-[0_8px_16px_rgba(59,130,246,0.1)] dark:bg-[#9a34123d] dark:border-[#f59e0b52] dark:shadow-[0_8px_16px_rgba(120,53,15,0.15)]'
