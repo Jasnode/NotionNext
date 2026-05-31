@@ -68,6 +68,22 @@ module.exports = {
         'gray-2': '#F3F4F6',
         'gray-7': '#CED4DA'
       },
+      textColor: {
+        black: '#363636',
+        gray: {
+          900: '#363636',
+          800: '#363636',
+          700: '#4a4a4a',
+          600: '#5f6368'
+        },
+        slate: {
+          950: '#363636',
+          900: '#363636',
+          800: '#363636',
+          700: '#4a4a4a',
+          600: '#5f6368'
+        }
+      },
       backgroundImage: {
         'rainbow-divider-dark': 'linear-gradient(90deg, #101414 0%, #101414 50%, transparent 50%, transparent 100%)'
       },

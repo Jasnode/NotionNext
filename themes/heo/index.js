@@ -89,7 +89,7 @@ const LayoutBase = props => {
   return (
     <div
       id='theme-heo'
-      className={`${siteConfig('FONT_STYLE')} bg-[#f7f9fe] dark:bg-[#17191d] h-full min-h-screen flex flex-col scroll-smooth`}>
+      className={`${siteConfig('FONT_STYLE')} text-black dark:text-gray-100 bg-[#f7f9fe] dark:bg-[#17191d] h-full min-h-screen flex flex-col scroll-smooth`}>
       <Style />
 
       {/* 顶部嵌入 导航栏，首页放hero，文章页放文章详情 */}

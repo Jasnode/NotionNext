@@ -93,7 +93,7 @@ function Banner(props) {
           <br />
           {siteConfig('HEO_HERO_TITLE_2', null, CONFIG)}
         </div>
-        <div className='text-xs text-gray-800  dark:text-gray-200'>
+        <div className='text-xs font-normal text-gray-600 dark:text-gray-200'>
           {siteConfig('HEO_HERO_TITLE_3', null, CONFIG)}
         </div>
       </div>
@@ -132,7 +132,7 @@ function TagsGroupBar() {
   }
   return (
     <div className='tags-group-all flex -rotate-[30deg] h-full'>
-      <div className='tags-group-wrapper flex flex-nowrap absolute top-16'>
+      <div className='tags-group-wrapper flex flex-nowrap absolute top-20 left-6'>
         {groupIcons?.map((g, index) => {
           return (
             <div key={index} className='tags-group-icon-pair ml-6 select-none'>

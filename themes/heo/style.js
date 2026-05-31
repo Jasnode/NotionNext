@@ -38,20 +38,211 @@ const Style = () => {
         background-color: #f7f9fe;
       }
 
+      /* 鼠标样式 */
+      body {
+        cursor: url('https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/Normal.9rjs0snhjl.svg'), default;
+      }
+      a, img, button, [role='button'] {
+        cursor: url('https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/Link.2rviiwb4pe.svg'), pointer;
+      }
+
+      /* 滚动条样式 */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: rgba(73, 177, 245, 0.2);
+        border-radius: 2em;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+      }
       ::-webkit-scrollbar-thumb {
-        background: rgba(60, 60, 67, 0.4);
-        border-radius: 8px;
+        background-color: rgb(59 130 246);
+        background-image: -webkit-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.4) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.4) 50%,
+          rgba(255, 255, 255, 0.4) 75%,
+          transparent 75%
+        );
+        border-radius: 2em;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
         cursor: pointer;
       }
-
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
+      ::-webkit-scrollbar-corner {
+        background-color: transparent;
       }
-
       .recent-top-post-group::-webkit-scrollbar,
       .scroll-hidden::-webkit-scrollbar {
         display: none;
+      }
+
+      /* 顶部加载进度条 */
+      .pace {
+        pointer-events: none;
+        user-select: none;
+        z-index: 2000;
+        position: fixed;
+        top: 10px;
+        left: 0;
+        right: 0;
+        height: 7px;
+        border-radius: 8px;
+        width: 5rem;
+        margin: auto;
+        background: rgba(241, 244, 250, 0.88);
+        border: 1px solid rgba(210, 220, 240, 0.85);
+        overflow: hidden;
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.8) inset,
+          0 6px 18px rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+      }
+      .pace-inactive .pace-progress {
+        opacity: 0;
+        transition: 0.25s ease-in;
+      }
+      .pace .pace-progress {
+        box-sizing: border-box;
+        transform: translate3d(0, 0, 0);
+        max-width: 200px;
+        position: absolute;
+        top: 0;
+        right: 100%;
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(
+          90deg,
+          #ff7a59,
+          #ff4d8d,
+          #3b82f6,
+          #22c55e
+        );
+        background-size: 220% 100%;
+        animation: paceGradient 1.6s ease infinite;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35) inset;
+      }
+      @keyframes paceGradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .pace.pace-inactive {
+        opacity: 0;
+        transition: 0.3s;
+        top: -8px;
+      }
+
+      /* 液态玻璃按钮特效 */
+      #theme-heo div.bg-indigo-400 {
+        position: relative;
+        border: none;
+        background: linear-gradient(90deg, #03a9f4, #f441a5, #c26dd0, #03a9f4);
+        background-size: 400%;
+        border-radius: 35px;
+        z-index: 1;
+        overflow: hidden;
+        transition:
+          transform 0.3s cubic-bezier(0.2, 0, 0.1, 1),
+          box-shadow 0.3s cubic-bezier(0.2, 0, 0.1, 1),
+          background-position 0.1s linear;
+        will-change: transform, background-position;
+        isolation: isolate;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        box-shadow:
+          0 8px 32px rgba(31, 38, 135, 0.2),
+          inset 0 4px 12px rgba(255, 255, 255, 0.6);
+      }
+      #theme-heo div.bg-indigo-400:hover {
+        animation: heoGradientFlow 8s linear infinite;
+        transform: translateY(-3px);
+        box-shadow:
+          0 12px 40px rgba(31, 38, 135, 0.35),
+          inset 0 4px 15px rgba(255, 255, 255, 0.8);
+      }
+      #theme-heo div.bg-indigo-400::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.5) 0%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.5) 100%
+        );
+        border-radius: 35px;
+        opacity: 0.6;
+        transition: opacity 0.4s ease;
+        filter: blur(12px);
+        pointer-events: none;
+      }
+      #theme-heo div.bg-indigo-400:active {
+        animation: heoGradientFlow 6s linear infinite;
+        transform: translateY(1px) scale(0.98);
+        transition:
+          transform 100ms cubic-bezier(0.3, 0, 0.5, 1),
+          box-shadow 100ms cubic-bezier(0.3, 0, 0.5, 1);
+        box-shadow:
+          0 2px 15px rgba(31, 38, 135, 0.25),
+          inset 0 0 25px rgba(255, 255, 255, 0.9);
+      }
+      #theme-heo div.bg-indigo-400:active::before {
+        opacity: 0.9;
+        filter: blur(20px);
+        transition: opacity 100ms ease-out;
+      }
+      @keyframes heoGradientFlow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 300% 50%; }
+      }
+
+      /* 搜索框特效 */
+      #theme-heo input.text-black {
+        border: 2px solid transparent;
+        padding-left: 0.8em;
+        outline: none;
+        overflow: hidden;
+        background-color: #f3f3f3;
+        border-radius: 10px;
+        transition:
+          border-color 0.3s ease-in-out,
+          box-shadow 0.3s ease-in-out,
+          background-color 0.3s ease-in-out;
+      }
+      #theme-heo input.text-black:hover,
+      #theme-heo input.text-black:focus {
+        border-color: #4a9dec;
+        box-shadow: 0 0 0 6px rgba(74, 157, 236, 0.2);
+      }
+
+      /* SVG 樱花图标旋转控制 */
+      @keyframes heoRotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      #theme-heo .rotate-icon {
+        animation: heoRotate 8s linear infinite;
+        transform-origin: center;
+      }
+
+      /* 移动端优化 */
+      @media (hover: none) {
+        #theme-heo div.bg-indigo-400 {
+          animation: heoGradientFlow 12s linear infinite;
+          backdrop-filter: blur(3px);
+          -webkit-backdrop-filter: blur(3px);
+        }
+        #theme-heo div.bg-indigo-400:active {
+          transform: scale(0.97);
+        }
       }
 
       /* 公告栏中的字体固定白色 */
@@ -460,6 +651,7 @@ const Style = () => {
       }
 
       @media (prefers-reduced-motion: reduce) {
+        #theme-heo div.bg-indigo-400,
         #loading-box,
         #loading-box * {
           animation: none !important;
