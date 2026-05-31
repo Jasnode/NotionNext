@@ -30,9 +30,9 @@ const Footer = () => {
         {/* 装饰背景 */}
         <div className='absolute inset-0 pointer-events-none overflow-hidden'>
           <div className='dark:hidden'>
-            <div className='absolute top-0 left-1/4 w-40 h-40 bg-blue-300 rounded-full mix-blend-multiply filter blur-lg md:blur-2xl opacity-20' />
-            <div className='absolute top-0 right-1/4 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-lg md:blur-2xl opacity-20' />
-            <div className='absolute bottom-0 left-1/2 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-lg md:blur-2xl opacity-20' />
+            <div className='absolute top-0 left-1/4 w-40 h-40 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-20' />
+            <div className='absolute top-0 right-1/4 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl opacity-20' />
+            <div className='absolute bottom-0 left-1/2 w-40 h-40 bg-pink-300 rounded-full mix-blend-multiply filter blur-2xl opacity-20' />
           </div>
           <div className='hidden dark:block'>
             <div className='absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-500/30 to-transparent' />
