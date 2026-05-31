@@ -41,7 +41,7 @@ const SocialButton = () => {
 
   return (
     <div className='w-full justify-center flex-wrap flex'>
-      <div className='space-x-8 text-3xl text-gray-600 dark:text-gray-300 '>
+      <div className='space-x-8 text-3xl text-[#4b5563] dark:text-gray-300 '>
           <a
             target='_blank'
             rel='noreferrer'
