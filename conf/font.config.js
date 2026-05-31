@@ -19,23 +19,27 @@ module.exports = {
   FONT_DISPLAY: process.env.NEXT_PUBLIC_FONT_DISPLAY || 'swap',
   FONT_PRELOAD: process.env.NEXT_PUBLIC_FONT_PRELOAD || true,
   FONT_SUBSET: process.env.NEXT_PUBLIC_FONT_SUBSET || 'chinese-simplified',
-  // 无衬线字体 例如'"LXGW WenKai"'
+  // 无衬线字体：Apple / Windows / HarmonyOS 优先使用系统字体，其他移动端优先使用 LXGW WenKai
   FONT_SANS: [
-    '"PingFang SC"', // 优先使用苹方字体
     '-apple-system',
     'BlinkMacSystemFont',
-    '"LXGW WenKai"',
+    '"PingFang SC"',
+    '"Hiragino Sans GB"',
+    '"Segoe UI"',
     '"Microsoft YaHei"',
+    '"Microsoft YaHei UI"',
+    '"HarmonyOS Sans"',
+    'HarmonyOS_Regular',
+    '"LXGW WenKai"',
+    '"Noto Sans SC"',
+    '"Source Han Sans SC"',
+    '"Helvetica Neue"',
+    'Helvetica',
+    'Arial',
     '"Apple Color Emoji"',
     '"Segoe UI Emoji"',
     '"Segoe UI Symbol"',
-    '"Segoe UI"',
-    '"Noto Sans SC"',
-    'HarmonyOS_Regular',
-    '"Helvetica Neue"',
-    'Helvetica',
-    '"Source Han Sans SC"',
-    'Arial',
+    '"Noto Color Emoji"',
     'sans-serif'
   ],
   // 衬线字体 例如'"LXGW WenKai"'
