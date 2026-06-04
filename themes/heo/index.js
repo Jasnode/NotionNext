@@ -34,6 +34,7 @@ import SideRight from './components/SideRight'
 import CONFIG from './config'
 import { Style } from './style'
 import AISummar from './components/AISummar'
+import InlinePodcastPlayer from './components/PostAudioPlayer'
 import Lenis from '@/components/Lenis'
 
 /**
@@ -395,6 +396,7 @@ const LayoutSlug = props => {
                 data-wow-delay='.2s'>
                 <WWAds orientation='horizontal' className='w-full' />
                 {post && <AISummar post={post} />}
+                {post && <InlinePodcastPlayer post={post} />}
                 {post && <NotionPage post={post} />}
                 <WWAds orientation='horizontal' className='w-full' />
               </section>

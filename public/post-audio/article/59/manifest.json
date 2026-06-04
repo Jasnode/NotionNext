@@ -1,0 +1,65 @@
+{
+  "version": 4,
+  "postId": "1dbfbd8f-1049-4490-911c-cf92ffbd2601",
+  "slug": "article/59",
+  "title": "Mac快捷键大全：提升效率的必备组合键与隐藏技巧",
+  "source": "http://localhost:3000/article/59",
+  "format": "mp3",
+  "voices": {
+    "model": "mimo-v2.5-tts",
+    "a": "冰糖",
+    "b": "白桦"
+  },
+  "generatedAt": "2026-06-04T00:53:35.468Z",
+  "podcast": {
+    "mimeType": "audio/mpeg",
+    "segments": [
+      {
+        "src": "/post-audio/article/59/podcast/podcast.mp3",
+        "mimeType": "audio/mpeg"
+      }
+    ],
+    "script": [
+      {
+        "speaker": "甲",
+        "text": "我跟你说，我最近刚从 Windows 转到 Mac，看着这快捷键列表，有点头大，感觉好多组合要重新记。"
+      },
+      {
+        "speaker": "乙",
+        "text": "其实你别被那一大堆吓到，核心思路没变，就是用修饰键组合。Mac 上那个 Command 键，基本上就是 Windows 键的亲戚，很多操作都得靠它。"
+      },
+      {
+        "speaker": "甲",
+        "text": "所以 Command 键是核心对吧？文章里也提到，如果用的是 Windows 键盘，就用 Windows 徽标键代替它。"
+      },
+      {
+        "speaker": "乙",
+        "text": "没错，而且你得记住，不同软件可能有自己的快捷键，这点文章特别提醒了，别以为一个组合键在所有地方都通用。"
+      },
+      {
+        "speaker": "甲",
+        "text": "等一下，这里有个点。文章里提到了聚焦搜索，就是 Command 加空格那个，这功能是不是就和 Windows 的搜索框一样？"
+      },
+      {
+        "speaker": "乙",
+        "text": "说白了就是，但你可以理解为它是 Mac 上的万能启动器。不光能找文件、开应用，算个数、查个词都行，用好了效率特别高，这是很多老用户离不开的功能。"
+      },
+      {
+        "speaker": "甲",
+        "text": "还有截图，我看有几个不同的组合。Command-Shift-3 是全屏截图，Command-Shift-4 能自己选区域，这比去菜单里找快多了。"
+      },
+      {
+        "speaker": "乙",
+        "text": "对，尤其是 Command-Shift-4，你按住后拖动鼠标选区，松手就截好了。这个坑一般人容易忽略，截个特定窗口还得去菜单找“从窗口截图”，直接拖出来选就行。"
+      },
+      {
+        "speaker": "甲",
+        "text": "文章最后也提到了，快捷键这么多，建议从常用的开始记，比如剪切复制粘贴，还有应用切换那些。"
+      },
+      {
+        "speaker": "乙",
+        "text": "是这么个理儿。说白了，不用一开始就全背下来，先把最顺手、最高频的用起来，比如刚才说的搜索和截图，慢慢你就会发现离不开这些组合了。"
+      }
+    ]
+  }
+}

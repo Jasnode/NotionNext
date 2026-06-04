@@ -8,14 +8,21 @@ const Style = () => {
   return (
     <style jsx global>{`
       :root {
-        --ai-bg: #f7f7f9;
-        --ai-title: #425AEF;
+        --ai-bg: #f0f4ff;
+        --ai-title: #2563eb;
         --ai-title-text: #fff;
-        --ai-card-bg: #fff;
-        --ai-card-border: #e3e8f7;
+        --ai-card-bg: #ffffff;
+        --ai-card-border: #dbeafe;
         --heo-surface-strong: #ffffff;
-        --heo-surface-dark: #070B14;
-        --heo-text: rgba(0, 0, 0, 0.88);
+        --heo-surface-dark: #0f172a;
+        --heo-text: #1e293b;
+        --podcast-accent: #2563eb;
+        --podcast-bg: #f0f7ff;
+        --podcast-border: #bfdbfe;
+        --podcast-progress-bg: rgba(37, 99, 235, 0.06);
+        --podcast-btn-bg: #f8fafc;
+        --podcast-btn-text: #2563eb;
+        --podcast-btn-border: rgba(0, 0, 0, 0.1);
       }
         
       .dark {
@@ -24,6 +31,13 @@ const Style = () => {
         --ai-title-text: #1b1c20;
         --ai-card-bg: #1d1e22;
         --ai-card-border: #3d3d3f;
+        --podcast-accent: #818cf8;
+        --podcast-bg: #2a2b33;
+        --podcast-border: #4a4b52;
+        --podcast-progress-bg: rgba(129, 140, 248, 0.1);
+        --podcast-btn-bg: #3f3f46;
+        --podcast-btn-text: #818cf8;
+        --podcast-btn-border: rgba(255, 255, 255, 0.08);
       }
 
       html.dark {
@@ -782,6 +796,226 @@ const Style = () => {
 
       .dark .notion-table-of-contents-item:hover {
         background-color: #9a34122e !important;
+      }
+
+      /* ========== 播客陪读播放器 ========== */
+
+      /* 文章头部胶囊 — 精确匹配参考站 */
+      .podcast-header-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 10px;
+        height: 32px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s ease, transform 0.15s ease;
+        white-space: nowrap;
+        user-select: none;
+        font-size: 15px;
+      }
+      .podcast-header-badge:hover {
+        background: rgba(255, 255, 255, 0.28);
+        transform: scale(1.05);
+      }
+      .podcast-header-badge:active {
+        transform: scale(0.95);
+      }
+      .podcast-header-badge i.fa-podcast {
+        font-size: 16px;
+        color: #fff;
+      }
+      .podcast-header-badge-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        color: #fff;
+        font-size: 10px;
+        flex-shrink: 0;
+      }
+
+      /* 均衡器条 — 匹配参考站 */
+      .podcast-eq {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        height: 14px;
+      }
+      .podcast-eq-bar {
+        display: block;
+        width: 3px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.35);
+        transition: height 0.15s ease;
+      }
+      .podcast-eq-bar:nth-child(1)  { height: 5px; }
+      .podcast-eq-bar:nth-child(2)  { height: 8px; }
+      .podcast-eq-bar:nth-child(3)  { height: 11px; }
+      .podcast-eq-bar:nth-child(4)  { height: 7px; }
+      .podcast-eq-bar:nth-child(5)  { height: 12px; }
+      .podcast-eq-bar:nth-child(6)  { height: 9px; }
+      .podcast-eq-bar:nth-child(7)  { height: 14px; }
+      .podcast-eq-bar:nth-child(8)  { height: 10px; }
+      .podcast-eq-bar:nth-child(9)  { height: 13px; }
+      .podcast-eq-bar:nth-child(10) { height: 8px; }
+      .podcast-eq-bar:nth-child(11) { height: 11px; }
+      .podcast-eq-bar:nth-child(12) { height: 7px; }
+      .podcast-eq-bar:nth-child(13) { height: 5px; }
+      .podcast-eq-bar.is-playing {
+        animation: podcastEqBounce 0.5s ease-in-out infinite alternate;
+      }
+      .podcast-eq-bar.is-playing:nth-child(1)  { animation-delay: 0s;    animation-duration: 0.45s; }
+      .podcast-eq-bar.is-playing:nth-child(2)  { animation-delay: 0.06s; animation-duration: 0.55s; }
+      .podcast-eq-bar.is-playing:nth-child(3)  { animation-delay: 0.12s; animation-duration: 0.4s;  }
+      .podcast-eq-bar.is-playing:nth-child(4)  { animation-delay: 0.03s; animation-duration: 0.6s;  }
+      .podcast-eq-bar.is-playing:nth-child(5)  { animation-delay: 0.09s; animation-duration: 0.5s;  }
+      .podcast-eq-bar.is-playing:nth-child(6)  { animation-delay: 0.15s; animation-duration: 0.42s; }
+      .podcast-eq-bar.is-playing:nth-child(7)  { animation-delay: 0.04s; animation-duration: 0.58s; }
+      .podcast-eq-bar.is-playing:nth-child(8)  { animation-delay: 0.11s; animation-duration: 0.47s; }
+      .podcast-eq-bar.is-playing:nth-child(9)  { animation-delay: 0.02s; animation-duration: 0.52s; }
+      .podcast-eq-bar.is-playing:nth-child(10) { animation-delay: 0.08s; animation-duration: 0.44s; }
+      .podcast-eq-bar.is-playing:nth-child(11) { animation-delay: 0.14s; animation-duration: 0.56s; }
+      .podcast-eq-bar.is-playing:nth-child(12) { animation-delay: 0.05s; animation-duration: 0.48s; }
+      .podcast-eq-bar.is-playing:nth-child(13) { animation-delay: 0.1s;  animation-duration: 0.53s; }
+      @keyframes podcastEqBounce {
+        0%   { height: 3px; }
+        100% { height: 14px; }
+      }
+
+      /* 移动端隐藏头部胶囊 */
+      @media (max-width: 768px) {
+        .podcast-header-badge {
+          display: none !important;
+        }
+      }
+
+      /* 文章摘要下方播放器 */
+      .podcast-player {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        margin: 8px 0 0;
+        border-radius: 18px;
+        background: var(--podcast-bg);
+        border: 0.8px solid var(--podcast-border);
+        overflow: hidden;
+        transition: border-color 0.2s ease;
+      }
+      .podcast-player:hover {
+        border-color: var(--podcast-border);
+      }
+      .podcast-player-progress {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        background: var(--podcast-progress-bg);
+        pointer-events: none;
+        transition: width 0.3s linear;
+      }
+      .podcast-player-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 0 1 auto;
+        min-width: 0;
+        color: var(--podcast-accent);
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 1;
+        white-space: nowrap;
+      }
+      .podcast-player-label i {
+        color: var(--podcast-accent);
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .podcast-player-label span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .podcast-player-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+        margin-left: auto;
+        z-index: 1;
+      }
+      .podcast-player-speed {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 16px;
+        height: 30px;
+        min-width: 52px;
+        border-radius: 15px;
+        background: var(--podcast-btn-bg);
+        color: var(--podcast-btn-text);
+        font-size: 12px;
+        font-weight: 600;
+        border: 1.5px solid var(--podcast-btn-border);
+        cursor: pointer;
+        transition: opacity 0.15s ease, transform 0.1s ease;
+        line-height: 1;
+        flex-shrink: 0;
+        letter-spacing: 0;
+      }
+      .podcast-player-speed:hover {
+        opacity: 0.85;
+        transform: scale(1.05);
+      }
+      .podcast-player-play {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0 14px;
+        height: 30px;
+        border-radius: 15px;
+        background: var(--podcast-accent);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.15s ease, transform 0.1s ease;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .podcast-player-play:hover {
+        opacity: 0.88;
+        transform: scale(1.04);
+      }
+      .podcast-player-play i {
+        font-size: 11px;
+      }
+      .podcast-player-loader {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: podcastSpin 0.6s linear infinite;
+      }
+      @keyframes podcastSpin {
+        to { transform: rotate(360deg); }
+      }
+
+      @media (max-width: 640px) {
+        .podcast-player {
+          padding: 10px 14px;
+          gap: 8px;
+        }
+        .podcast-player-label {
+          font-size: 13px;
+        }
       }
     `}</style>
   )
