@@ -3,7 +3,7 @@ import { convertInnerUrl } from '@/lib/db/notion/convertInnerUrl'
 import { isBrowser, loadExternalResource } from '@/lib/utils'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { GlobalStyle } from './GlobalStyle'
 import { initGoogleAdsense } from './GoogleAdsense'
 
@@ -12,8 +12,6 @@ import ExternalScript from './ExternalScript'
 import WebWhiz from './Webwhiz'
 import { useGlobal } from '@/lib/global'
 import IconFont from './IconFont'
-
-const useIsomorphicLayoutEffect = isBrowser ? useLayoutEffect : useEffect
 
 /**
  * 各种插件脚本
@@ -105,6 +103,7 @@ const ExternalPluginEnabled = props => {
     NOTION_CONFIG
   )
   const TIANLI_KEY = siteConfig('TianliGPT_KEY', null, NOTION_CONFIG)
+  const GLOBAL_JS = siteConfig('GLOBAL_JS', '', NOTION_CONFIG)
   const CLARITY_ID = siteConfig('CLARITY_ID', null, NOTION_CONFIG)
   const IMG_SHADOW = siteConfig('IMG_SHADOW', null, NOTION_CONFIG)
   const ANIMATE_CSS_URL = siteConfig('ANIMATE_CSS_URL', null, NOTION_CONFIG)
@@ -134,46 +133,57 @@ const ExternalPluginEnabled = props => {
   const UMAMI_HOST = siteConfig('UMAMI_HOST', null, NOTION_CONFIG)
   const UMAMI_ID = siteConfig('UMAMI_ID', null, NOTION_CONFIG)
 
-  useIsomorphicLayoutEffect(() => {
+  const externalCssList = useMemo(() => {
+    return Array.isArray(CUSTOM_EXTERNAL_CSS)
+      ? CUSTOM_EXTERNAL_CSS.filter(url => !!url)
+      : []
+  }, [CUSTOM_EXTERNAL_CSS])
+
+  const externalJsList = useMemo(() => {
+    return Array.isArray(CUSTOM_EXTERNAL_JS)
+      ? CUSTOM_EXTERNAL_JS.filter(url => !!url)
+      : []
+  }, [CUSTOM_EXTERNAL_JS])
+
+  useEffect(() => {
     if (DISABLE_PLUGIN || !isBrowser) {
       return
     }
 
-    // 自定义样式css和js引入
-    // 初始化AOS动画
-    // 静态导入本地自定义样式
-    // loadExternalResource('/css/custom.css', 'css')
-    // loadExternalResource('/js/custom.js', 'js')
-
-    // 自动添加图片阴影
-    if (IMG_SHADOW) {
-      loadExternalResource('/css/img-shadow.css', 'css')
-    }
-
-    if (ANIMATE_CSS_URL) {
-      loadExternalResource(ANIMATE_CSS_URL, 'css')
-    }
-
-    // 导入外部自定义脚本
-    if (CUSTOM_EXTERNAL_JS && CUSTOM_EXTERNAL_JS.length > 0) {
-      for (const url of CUSTOM_EXTERNAL_JS) {
-        loadExternalResource(url, 'js')
+    const scheduleTask = callback => {
+      if (window.requestIdleCallback) {
+        const taskId = window.requestIdleCallback(callback)
+        return () => window.cancelIdleCallback(taskId)
       }
+      const timeoutId = window.setTimeout(() => callback(), 0)
+      return () => window.clearTimeout(timeoutId)
     }
 
-    // 导入外部自定义样式
-    if (CUSTOM_EXTERNAL_CSS && CUSTOM_EXTERNAL_CSS.length > 0) {
-      for (const url of CUSTOM_EXTERNAL_CSS) {
-        loadExternalResource(url, 'css')
-      }
+    const cancelTasks = []
+    cancelTasks.push(
+      scheduleTask(() => {
+        if (IMG_SHADOW) {
+          loadExternalResource('/css/img-shadow.css', 'css')
+        }
+
+        if (ANIMATE_CSS_URL) {
+          loadExternalResource(ANIMATE_CSS_URL, 'css')
+        }
+
+        for (const url of externalJsList) {
+          loadExternalResource(url, 'js')
+        }
+
+        for (const url of externalCssList) {
+          loadExternalResource(url, 'css')
+        }
+      })
+    )
+
+    return () => {
+      cancelTasks.forEach(cancel => cancel?.())
     }
-  }, [
-    DISABLE_PLUGIN,
-    IMG_SHADOW,
-    ANIMATE_CSS_URL,
-    CUSTOM_EXTERNAL_JS,
-    CUSTOM_EXTERNAL_CSS
-  ])
+  }, [DISABLE_PLUGIN, ANIMATE_CSS_URL, IMG_SHADOW, externalCssList, externalJsList])
 
   const router = useRouter()
   const routePath = (router.asPath || '').split('?')[0].split('#')[0]
@@ -208,7 +218,20 @@ const ExternalPluginEnabled = props => {
     return () => {
       clearTimeout(urlTimer)
     }
-  }, [DISABLE_PLUGIN, routePath, props?.allNavPages, lang])
+  }, [DISABLE_PLUGIN, routePath, props?.allLinkPages, props?.allNavPages, lang])
+
+  useEffect(() => {
+    if (DISABLE_PLUGIN || !isBrowser || !GLOBAL_JS || GLOBAL_JS.trim() === '') {
+      return
+    }
+
+    try {
+      // eslint-disable-next-line no-eval
+      eval(GLOBAL_JS)
+    } catch (error) {
+      console.error('Failed to execute GLOBAL_JS:', error)
+    }
+  }, [DISABLE_PLUGIN, GLOBAL_JS])
 
   if (DISABLE_PLUGIN) {
     return null
