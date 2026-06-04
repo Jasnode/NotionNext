@@ -6,6 +6,7 @@ import { siteConfig } from '@/lib/config'
 import { formatDateFmt } from '@/lib/utils/formatDate'
 import SmartLink from '@/components/SmartLink'
 import WavesArea from './WavesArea'
+import { HeaderPodcastBadge } from './PostAudioPlayer'
 
 /**
  * 文章页头
@@ -135,6 +136,7 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
               <i className='fa-regular fa-pen-to-square'></i>
               {post.lastEditedDay}
             </span>
+            {post && <HeaderPodcastBadge post={post} />}
           </section>
         </div>
 

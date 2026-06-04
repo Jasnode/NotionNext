@@ -1,0 +1,97 @@
+{
+  "version": 4,
+  "postId": "8f9dfcdb-3a64-4362-b9b4-f470b751c0f0",
+  "slug": "article/28",
+  "title": "Notion实用指南：打造个人知识库与高效管理",
+  "source": "http://localhost:3000/article/28",
+  "format": "mp3",
+  "voices": {
+    "model": "mimo-v2.5-tts",
+    "a": "冰糖",
+    "b": "白桦"
+  },
+  "generatedAt": "2026-06-04T00:14:40.663Z",
+  "podcast": {
+    "mimeType": "audio/mpeg",
+    "segments": [
+      {
+        "src": "/post-audio/article/28/podcast/podcast.mp3",
+        "mimeType": "audio/mpeg"
+      }
+    ],
+    "script": [
+      {
+        "speaker": "甲",
+        "text": "我跟你说，我最近看到一个Notion的小工具，挺有意思的。"
+      },
+      {
+        "speaker": "乙",
+        "text": "哦？什么工具？我最近也在折腾Notion，正找点实用的东西呢。"
+      },
+      {
+        "speaker": "甲",
+        "text": "就是那个在Notion里画图的，叫Notion Draw。"
+      },
+      {
+        "speaker": "乙",
+        "text": "我知道这个，它其实是个简单的绘图应用，通过嵌入URL就能用。"
+      },
+      {
+        "speaker": "甲",
+        "text": "怎么用呢？听起来有点好奇。"
+      },
+      {
+        "speaker": "乙",
+        "text": "你只需在Notion页面创建嵌入块，输入URL，比如notion-draw.art/name，加上唯一名称，就能开始画了。"
+      },
+      {
+        "speaker": "甲",
+        "text": "自动保存？那挺方便的，不用操心备份。"
+      },
+      {
+        "speaker": "乙",
+        "text": "是的，但有个大坑，就是移动设备上显示空白，而且只保存在本机，跨电脑用不了。"
+      },
+      {
+        "speaker": "甲",
+        "text": "所以只能自己用，不能分享给别人？这不就是很多人卡住的地方吗？"
+      },
+      {
+        "speaker": "乙",
+        "text": "对，它只适合个人快速涂鸦，不适合共享或移动端操作。"
+      },
+      {
+        "speaker": "甲",
+        "text": "那除了画图，文章还提到在Notion里嵌入音乐播放器。"
+      },
+      {
+        "speaker": "乙",
+        "text": "没错，有好几种方法，比如用Aplayer、苹果音乐嵌入，或者DIY静态页面。"
+      },
+      {
+        "speaker": "甲",
+        "text": "苹果音乐嵌入听起来简单，但可能只适合苹果用户吧？"
+      },
+      {
+        "speaker": "乙",
+        "text": "是的，每种方法都有适用场景。DIY的话需要点技术，但更灵活。"
+      },
+      {
+        "speaker": "甲",
+        "text": "那DIY静态页面具体怎么弄？这不就是技术门槛高的地方吗？"
+      },
+      {
+        "speaker": "乙",
+        "text": "文章给了示例，比如网易云音乐的嵌入，但需要获取源码和设置。如果你不想折腾，可以用现成的工具，比如NotionPet服务。"
+      },
+      {
+        "speaker": "乙",
+        "text": "说白了，这篇最实用的就是Notion Draw和音乐嵌入，但各有各的限制。"
+      },
+      {
+        "speaker": "甲",
+        "text": "对，用的时候得注意这些坑，别一上来就期望太高，先从简单的试试。"
+      }
+    ]
+  }
+}
