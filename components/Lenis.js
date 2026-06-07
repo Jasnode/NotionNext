@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useRouter } from 'next/router'
+import Router from 'next/router'
 
 /**
  * 滚动阻尼特效
@@ -8,7 +8,6 @@ import { useRouter } from 'next/router'
  */
 const Lenis = () => {
   const lenisRef = useRef(null)
-  const router = useRouter()
 
   useEffect(() => {
     // 仅桌面且未开启“减少动态效果”时启用，移动/触屏设备保留原生滚动。
@@ -71,16 +70,16 @@ const Lenis = () => {
       }
     }
 
-    router.events.on('routeChangeStart', stopInertia)
+    Router.events.on('routeChangeStart', stopInertia)
     initLenis()
 
     return () => {
       isDisposed = true
-      router.events.off('routeChangeStart', stopInertia)
+      Router.events.off('routeChangeStart', stopInertia)
       lenisRef.current?.destroy()
       lenisRef.current = null
     }
-  }, [router.events])
+  }, [])
 
   return <></>
 }

@@ -1,5 +1,5 @@
 import throttle from 'lodash.throttle'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useRef } from 'react'
 
 /**
  * 回顶按钮
@@ -7,18 +7,18 @@ import { useEffect, useMemo } from 'react'
  */
 export const BackToTopButton = () => {
   // 滚动监听
-  const navBarScollListener = useMemo(
-    () =>
-      throttle(() => {
-        const scrollY = window.scrollY
-        // 显示或隐藏返回顶部按钮
-        const backToTop = document.querySelector('.back-to-top')
-        if (backToTop) {
-          backToTop.style.display = scrollY > 50 ? 'flex' : 'none'
-        }
-      }, 200),
-    []
-  )
+  const navBarScollListenerRef = useRef(null)
+  if (!navBarScollListenerRef.current) {
+    navBarScollListenerRef.current = throttle(() => {
+      const scrollY = window.scrollY
+      // 显示或隐藏返回顶部按钮
+      const backToTop = document.querySelector('.back-to-top')
+      if (backToTop) {
+        backToTop.style.display = scrollY > 50 ? 'flex' : 'none'
+      }
+    }, 200)
+  }
+  const navBarScollListener = navBarScollListenerRef.current
 
   useEffect(() => {
     window.addEventListener('scroll', navBarScollListener, { passive: true })

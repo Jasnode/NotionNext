@@ -29,8 +29,7 @@
   }
 }
 
-.wow.fadeIn,
-.fadeIn {
+.wow.fadeIn {
   -webkit-animation-name: wowFadeIn;
   animation-name: wowFadeIn;
 }
@@ -63,8 +62,7 @@
   }
 }
 
-.wow.fadeInDown,
-.fadeInDown {
+.wow.fadeInDown {
   -webkit-animation-name: wowFadeInDown;
   animation-name: wowFadeInDown;
 }
@@ -97,8 +95,7 @@
   }
 }
 
-.wow.fadeInLeft,
-.fadeInLeft {
+.wow.fadeInLeft {
   -webkit-animation-name: wowFadeInLeft;
   animation-name: wowFadeInLeft;
 }
@@ -131,8 +128,7 @@
   }
 }
 
-.wow.fadeInRight,
-.fadeInRight {
+.wow.fadeInRight {
   -webkit-animation-name: wowFadeInRight;
   animation-name: wowFadeInRight;
 }
@@ -165,8 +161,7 @@
   }
 }
 
-.wow.fadeInUp,
-.fadeInUp {
+.wow.fadeInUp {
   -webkit-animation-name: wowFadeInUp;
   animation-name: wowFadeInUp;
 }
