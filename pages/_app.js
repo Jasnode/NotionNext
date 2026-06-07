@@ -1,6 +1,7 @@
 // import '@/styles/animate.css' // @see https://animate.style/
 import '@/styles/globals.css'
 import '@/styles/utility-patterns.css'
+import 'lenis/dist/lenis.css'
 
 // core styles shared by all of react-notion-x (required)
 import 'react-notion-x/src/styles.css' // 原版的react-notion-x

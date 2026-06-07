@@ -8,7 +8,8 @@
  * Copyright (c) 2019 Daniel Eden
  */
 
-@-webkit-keyframes fadeIn {
+/* 命名空间隔离，避免被全局 animate.css v4 的同名 keyframes 覆盖。 */
+@-webkit-keyframes wowFadeIn {
   from {
     opacity: 0;
   }
@@ -18,7 +19,7 @@
   }
 }
 
-@keyframes fadeIn {
+@keyframes wowFadeIn {
   from {
     opacity: 0;
   }
@@ -28,26 +29,12 @@
   }
 }
 
-.fadeIn {
-  -webkit-animation-name: fadeIn;
-  animation-name: fadeIn;
+.wow.fadeIn {
+  -webkit-animation-name: wowFadeIn;
+  animation-name: wowFadeIn;
 }
 
-@-webkit-keyframes fadeInDown {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, -20px, 0);
-    transform: translate3d(0, -20px, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes fadeInDown {
+@-webkit-keyframes wowFadeInDown {
   from {
     opacity: 0;
     -webkit-transform: translate3d(0, -20px, 0);
@@ -61,12 +48,26 @@
   }
 }
 
-.fadeInDown {
-  -webkit-animation-name: fadeInDown;
-  animation-name: fadeInDown;
+@keyframes wowFadeInDown {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -20px, 0);
+    transform: translate3d(0, -20px, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-@-webkit-keyframes fadeInLeft {
+.wow.fadeInDown {
+  -webkit-animation-name: wowFadeInDown;
+  animation-name: wowFadeInDown;
+}
+
+@-webkit-keyframes wowFadeInLeft {
   from {
     opacity: 0;
     -webkit-transform: translate3d(-20px, 0, 0);
@@ -80,7 +81,7 @@
   }
 }
 
-@keyframes fadeInLeft {
+@keyframes wowFadeInLeft {
   from {
     opacity: 0;
     -webkit-transform: translate3d(-20px, 0, 0);
@@ -94,12 +95,12 @@
   }
 }
 
-.fadeInLeft {
-  -webkit-animation-name: fadeInLeft;
-  animation-name: fadeInLeft;
+.wow.fadeInLeft {
+  -webkit-animation-name: wowFadeInLeft;
+  animation-name: wowFadeInLeft;
 }
 
-@-webkit-keyframes fadeInRight {
+@-webkit-keyframes wowFadeInRight {
   from {
     opacity: 0;
     -webkit-transform: translate3d(20px, 0, 0);
@@ -113,7 +114,7 @@
   }
 }
 
-@keyframes fadeInRight {
+@keyframes wowFadeInRight {
   from {
     opacity: 0;
     -webkit-transform: translate3d(20px, 0, 0);
@@ -127,12 +128,12 @@
   }
 }
 
-.fadeInRight {
-  -webkit-animation-name: fadeInRight;
-  animation-name: fadeInRight;
+.wow.fadeInRight {
+  -webkit-animation-name: wowFadeInRight;
+  animation-name: wowFadeInRight;
 }
 
-@-webkit-keyframes fadeInUp {
+@-webkit-keyframes wowFadeInUp {
   from {
     opacity: 0;
     -webkit-transform: translate3d(0, 20px, 0);
@@ -146,7 +147,7 @@
   }
 }
 
-@keyframes fadeInUp {
+@keyframes wowFadeInUp {
   from {
     opacity: 0;
     -webkit-transform: translate3d(0, 20px, 0);
@@ -160,9 +161,9 @@
   }
 }
 
-.fadeInUp {
-  -webkit-animation-name: fadeInUp;
-  animation-name: fadeInUp;
+.wow.fadeInUp {
+  -webkit-animation-name: wowFadeInUp;
+  animation-name: wowFadeInUp;
 }
 
 .animated {
