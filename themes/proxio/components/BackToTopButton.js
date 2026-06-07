@@ -1,64 +1,36 @@
 import throttle from 'lodash.throttle'
-import { useCallback, useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 /**
  * 回顶按钮
  * @returns
  */
 export const BackToTopButton = () => {
-  useEffect(() => {
-    Math.easeInOutQuad = function (t, b, c, d) {
-      t /= d / 2
-      if (t < 1) return (c / 2) * t * t + b
-      t--
-      return (-c / 2) * (t * (t - 2) - 1) + b
-    }
+  // 滚动监听
+  const navBarScollListener = useMemo(
+    () =>
+      throttle(() => {
+        const scrollY = window.scrollY
+        // 显示或隐藏返回顶部按钮
+        const backToTop = document.querySelector('.back-to-top')
+        if (backToTop) {
+          backToTop.style.display = scrollY > 50 ? 'flex' : 'none'
+        }
+      }, 200),
+    []
+  )
 
+  useEffect(() => {
     window.addEventListener('scroll', navBarScollListener, { passive: true })
     return () => {
       window.removeEventListener('scroll', navBarScollListener)
+      navBarScollListener.cancel()
     }
-  }, [])
+  }, [navBarScollListener])
 
-  // 滚动监听
-  const throttleMs = 200
-  const navBarScollListener = useCallback(
-    throttle(() => {
-      const scrollY = window.scrollY
-      // 显示或隐藏返回顶部按钮
-      const backToTop = document.querySelector('.back-to-top')
-      if (backToTop) {
-        backToTop.style.display = scrollY > 50 ? 'flex' : 'none'
-      }
-    }, throttleMs)
-  )
-
-  // ====== scroll top js
-  function scrollTo(element, to = 0, duration = 500) {
-    const start = element.scrollTop
-    const change = to - start
-    const increment = 20
-    let currentTime = 0
-
-    const animateScroll = () => {
-      currentTime += increment
-
-      const val = Math.easeInOutQuad(currentTime, start, change, duration)
-
-      element.scrollTop = val
-
-      if (currentTime < duration) {
-        setTimeout(animateScroll, increment)
-      }
-    }
-
-    animateScroll()
-  }
-
+  // 使用原生 scrollTo，Lenis 激活时会自动接管动画
   function scrollTop() {
-    if (document) {
-      scrollTo(document.documentElement)
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (

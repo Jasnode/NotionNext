@@ -1,17 +1,17 @@
 import { useEffect, useRef } from 'react'
-import { loadExternalResource } from '@/lib/utils'
+import { useRouter } from 'next/router'
 
 /**
  * 滚动阻尼特效
- * @returns {JSX.Element}
+ *
+ * 使用 npm 包版 Lenis v1.3.x，同时保留原来的桌面滚动体感。
  */
 const Lenis = () => {
-  const lenisRef = useRef(null) // 用于存储 Lenis 实例
-  const rafIdRef = useRef(null) // 用于存储 requestAnimationFrame ID
-  const isDisposedRef = useRef(false) // 防止组件卸载后继续初始化
+  const lenisRef = useRef(null)
+  const router = useRouter()
 
   useEffect(() => {
-    // 仅桌面端启用 Lenis
+    // 仅桌面且未开启“减少动态效果”时启用，移动/触屏设备保留原生滚动。
     const isDesktopLike = window.matchMedia(
       '(min-width: 1024px) and (pointer: fine) and (hover: hover)'
     ).matches
@@ -22,79 +22,65 @@ const Lenis = () => {
     ).matches
     if (!allowMotion) return
 
-    isDisposedRef.current = false
-    const lenisScriptUrl = '/js/lenis.js'
+    let isDisposed = false
 
-    // 异步加载
-    async function loadLenis() {
+    async function initLenis() {
       try {
-        if (!window.Lenis) {
-          await loadExternalResource(lenisScriptUrl, 'js')
-        }
-        if (isDisposedRef.current) return
+        const { default: LenisLib } = await import('lenis')
+        if (isDisposed) return
 
-        // console.log('Lenis', window.Lenis)
-        if (!window.Lenis) {
-          console.error('Lenis not loaded')
-          return
-        }
-        const LenisLib = window.Lenis
-        if (isDisposedRef.current) return
+        const platform =
+          navigator.userAgentData?.platform || navigator.platform || ''
+        const isAppleLike =
+          /mac|iphone|ipad|ipod/i.test(platform) ||
+          /Mac OS X|iPad|iPhone|iPod/i.test(navigator.userAgent)
+        const wheelMultiplier = isAppleLike ? 0.4 : 0.86
 
-        // 创建 Lenis 实例
         const lenis = new LenisLib({
           duration: 1.1,
           easing: t => 1 - Math.pow(1 - t, 3),
-          direction: 'vertical', // vertical, horizontal
-          gestureDirection: 'vertical', // vertical, horizontal, both
-          smooth: true,
+
+          // v1 API 映射
+          autoRaf: true,
+          anchors: true,
+          stopInertiaOnNavigate: true,
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
           smoothWheel: true,
-          smoothTouch: false,
-          mouseMultiplier: 1,
-          infinite: false
+          wheelMultiplier,
+          syncTouch: false,
+          touchMultiplier: 2
         })
-        if (isDisposedRef.current) {
+
+        if (isDisposed) {
           lenis.destroy()
           return
         }
 
-        // 存储实例到 ref
         lenisRef.current = lenis
-
-        // 监听滚动事件
-        // lenis.on('scroll', ({ scroll, limit, velocity, direction, progress }) => {
-        // console.log({ scroll, limit, velocity, direction, progress })
-        // })
-
-        // 动画帧循环
-        const raf = (time) => {
-          if (isDisposedRef.current || !lenisRef.current) return
-          lenisRef.current.raf(time)
-          rafIdRef.current = requestAnimationFrame(raf)
-        }
-
-        rafIdRef.current = requestAnimationFrame(raf)
       } catch (error) {
-        console.error('Failed to load Lenis:', error)
+        console.error('Failed to initialize Lenis:', error)
       }
     }
 
-    loadLenis()
+    // Next.js 跨页导航前清掉上一页残留的滚动惯性。
+    const stopInertia = () => {
+      if (lenisRef.current) {
+        lenisRef.current.stop()
+        lenisRef.current.start()
+      }
+    }
+
+    router.events.on('routeChangeStart', stopInertia)
+    initLenis()
 
     return () => {
-      // 在组件卸载时清理资源
-      isDisposedRef.current = true
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current)
-        rafIdRef.current = null
-      }
-      if (lenisRef.current) {
-        lenisRef.current.destroy() // 销毁 Lenis 实例
-        lenisRef.current = null
-        // console.log('Lenis instance destroyed')
-      }
+      isDisposed = true
+      router.events.off('routeChangeStart', stopInertia)
+      lenisRef.current?.destroy()
+      lenisRef.current = null
     }
-  }, [])
+  }, [router.events])
 
   return <></>
 }
