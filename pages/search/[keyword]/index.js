@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { buildPostSearchResult } from '@/lib/utils/search'
 import { DynamicLayout } from '@/themes/theme'
+import { getPageBlockCacheKey } from '@/lib/db/notion/getPostBlocks'
 
 const Index = props => {
   const theme = siteConfig('THEME', BLOG.THEME, props.NOTION_CONFIG)
@@ -68,7 +69,7 @@ export function getStaticPaths() {
 async function filterByMemCache(allPosts, keyword) {
   const filterPosts = []
   for (const post of allPosts) {
-    const cacheKey = 'page_block_' + post.id
+    const cacheKey = getPageBlockCacheKey(post.id, post.lastEditedDate)
     const page = await getDataFromCache(cacheKey, true)
     const resultPost = buildPostSearchResult(post, page, keyword)
     if (resultPost) {
