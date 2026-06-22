@@ -2231,6 +2231,15 @@ div.code-toolbar:has(
   transform: scale(1.03);
 }
 
+@media (max-width: 767px) {
+  div.code-toolbar:has(
+      > pre.notion-code:is(.language-mermaid, [class*='language-mermaid'])
+    )
+    > .toolbar {
+    display: none !important;
+  }
+}
+
 /* mermaid 原文隐藏 */
 code.language-mermaid {
   display: none;
