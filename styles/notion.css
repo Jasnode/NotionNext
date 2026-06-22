@@ -2150,25 +2150,94 @@ tbody tr {
 }
 
 /* Mermaid 外层 pre：与 html.dark 对齐，避免 Tailwind dark: 跟系统偏好不同步 */
-pre.notion-code.language-mermaid,
-pre.notion-code[class*='language-mermaid'] {
+pre.notion-code:is(.language-mermaid, [class*='language-mermaid']),
+div.code-toolbar:has(> pre.notion-code:is(.language-mermaid, [class*='language-mermaid'])) {
   background-color: #f9fafb !important;
+  border-radius: 20px !important;
+  clip-path: inset(0 round 20px);
+  overflow: hidden;
+  text-shadow: none !important;
 }
-html.dark pre.notion-code.language-mermaid,
-html.dark pre.notion-code[class*='language-mermaid'] {
+
+html.dark pre.notion-code:is(.language-mermaid, [class*='language-mermaid']),
+html.dark
+  div.code-toolbar:has(
+    > pre.notion-code:is(.language-mermaid, [class*='language-mermaid'])
+  ) {
   /* 深色页内用浅灰衬底，衬托 Mermaid 默认的深灰/黑连线（不改 mermaid JS） */
   background-color: #e2e8f0 !important;
 }
 
-/* Mermaid：浅底图表区上 toolbar 易与背景糊在一起，浅/深色模式均在右上角加深色衬条（按钮为浅字） */
-html.light .code-toolbar:has(pre.language-mermaid) > .toolbar,
-html.light .code-toolbar:has(pre[class*='language-mermaid']) > .toolbar,
-html.dark .code-toolbar:has(pre.language-mermaid) > .toolbar,
-html.dark .code-toolbar:has(pre[class*='language-mermaid']) > .toolbar {
-  background-color: rgba(15, 15, 18, 0.98) !important;
-  border-bottom-left-radius: 12px;
-  padding: 6px 10px 8px 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+/* Mermaid：右上角工具按钮去掉外层遮罩，样式贴近导航栏选中态 */
+div.code-toolbar:has(
+    > pre.notion-code:is(.language-mermaid, [class*='language-mermaid'])
+  )
+  > .toolbar {
+  background-color: transparent !important;
+  border: 0;
+  box-shadow: none;
+  display: inline-flex;
+  gap: 6px;
+  opacity: 1 !important;
+  padding: 6px;
+}
+
+div.code-toolbar:has(
+    > pre.notion-code:is(.language-mermaid, [class*='language-mermaid'])
+  )
+  > .toolbar
+  .toolbar-item
+  > :is(a, button, span) {
+  align-items: center !important;
+  -webkit-backdrop-filter: saturate(180%) blur(18px) !important;
+  backdrop-filter: saturate(180%) blur(18px) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.34) !important;
+  border-radius: 999px !important;
+  box-shadow:
+    0 3px 10px rgba(79, 70, 229, 0.08),
+    0 1px 3px rgba(79, 70, 229, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+  box-sizing: border-box !important;
+  color: #4f46e5 !important;
+  display: inline-flex !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  height: 28px !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+  width: 72px !important;
+}
+
+div.code-toolbar:has(
+    > pre.notion-code:is(.language-mermaid, [class*='language-mermaid'])
+  )
+  > .toolbar
+  .toolbar-item
+  > :is(a, button):hover {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.1),
+      rgba(168, 85, 247, 0.08),
+      rgba(236, 72, 153, 0.06)
+    ),
+    rgba(255, 255, 255, 0.78) !important;
+  border-color: rgba(139, 92, 246, 0.25) !important;
+  color: #4338ca !important;
+  transform: scale(1.03);
+}
+
+@media (max-width: 767px) {
+  div.code-toolbar:has(
+      > pre.notion-code:is(.language-mermaid, [class*='language-mermaid'])
+    )
+    > .toolbar {
+    display: none !important;
+  }
 }
 
 /* mermaid 原文隐藏 */
@@ -2176,8 +2245,8 @@ code.language-mermaid {
   display: none;
 }
 
-.mermaid .invisible{
-  visibility: inherit;
+.mermaid .invisible {
+  visibility: hidden;
 }
 
 .code-toolbar {
@@ -2185,7 +2254,23 @@ code.language-mermaid {
 }
 
 .mermaid > svg {
+  display: block;
   margin: auto;
+  overflow: hidden;
+}
+
+pre.notion-code:is(.language-mermaid, [class*='language-mermaid']) .mermaid,
+pre.notion-code:is(.language-mermaid, [class*='language-mermaid']) .mermaid > svg {
+  border-radius: 16px;
+  clip-path: inset(0 round 16px);
+  overflow: hidden;
+}
+
+.mermaid,
+.mermaid text,
+.mermaid tspan,
+.mermaid span {
+  text-shadow: none !important;
 }
 
 .notion-equation-inline .katex-display {

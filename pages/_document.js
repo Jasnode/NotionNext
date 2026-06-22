@@ -2,6 +2,61 @@
 import BLOG from '@/blog.config'
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
+const getUrl = value => {
+  try {
+    return value ? new URL(value) : null
+  } catch {
+    return null
+  }
+}
+
+const getUrlOrigin = value => getUrl(value)?.origin || ''
+
+const getDnsPrefetchHref = value => {
+  const url = getUrl(value)
+  return url ? `//${url.host}` : ''
+}
+
+const getFontAwesomeWebfontBase = value => {
+  const url = getUrl(value)
+  if (!url) return ''
+
+  const marker = '/css/'
+  const markerIndex = url.pathname.lastIndexOf(marker)
+  if (markerIndex === -1) return ''
+
+  url.pathname = `${url.pathname.slice(0, markerIndex)}/webfonts/`
+  url.search = ''
+  url.hash = ''
+  return url.toString()
+}
+
+const getFontAwesomeFontFaceCss = value => {
+  const webfontBase = getFontAwesomeWebfontBase(value)
+  if (!webfontBase) return ''
+
+  return `@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;src:url("${webfontBase}fa-solid-900.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-regular-400.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-brands-400.woff2") format("woff2")}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-block;min-width:1em;text-align:center}`
+}
+
+const fontAwesomeLoadScript = BLOG.FONT_AWESOME
+  ? `
+(function() {
+  var link = document.getElementById('font-awesome-css');
+  if (!link) return;
+  var enable = function() { link.media = 'all'; };
+  if (link.sheet) {
+    enable();
+  } else {
+    link.addEventListener('load', enable, { once: true });
+  }
+})()
+`
+  : ''
+const fontAwesomeOrigin = getUrlOrigin(BLOG.FONT_AWESOME)
+const fontAwesomeDnsPrefetchHref = getDnsPrefetchHref(BLOG.FONT_AWESOME)
+const fontAwesomeFontFaceCss = getFontAwesomeFontFaceCss(BLOG.FONT_AWESOME)
+const shouldPreconnectUnsplash = BLOG.THEME === 'magzine'
+
 // 预先设置深色模式的脚本内容
 const darkModeScript = `
 (function() {
@@ -47,6 +102,22 @@ class MyDocument extends Document {
           <script dangerouslySetInnerHTML={{ __html: darkModeScript }} />
           <meta httpEquiv='x-dns-prefetch-control' content='on' />
           <meta name='applicable-device' content='pc,mobile' />
+          {fontAwesomeOrigin && (
+            <>
+              <link
+                rel='preconnect'
+                href={fontAwesomeOrigin}
+                crossOrigin='anonymous'
+              />
+              <link rel='dns-prefetch' href={fontAwesomeDnsPrefetchHref} />
+            </>
+          )}
+          {shouldPreconnectUnsplash && (
+            <>
+              <link rel='preconnect' href='https://images.unsplash.com' />
+              <link rel='dns-prefetch' href='//images.unsplash.com' />
+            </>
+          )}
           {/* 预加载字体 */}
           {BLOG.FONT_AWESOME && (
             <>
@@ -57,11 +128,31 @@ class MyDocument extends Document {
                 crossOrigin='anonymous'
               />
               <link
+                id='font-awesome-css'
                 rel='stylesheet'
                 href={BLOG.FONT_AWESOME}
+                media='print'
                 crossOrigin='anonymous'
                 referrerPolicy='no-referrer'
               />
+              {fontAwesomeFontFaceCss && (
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: fontAwesomeFontFaceCss
+                  }}
+                />
+              )}
+              <script
+                dangerouslySetInnerHTML={{ __html: fontAwesomeLoadScript }}
+              />
+              <noscript>
+                <link
+                  rel='stylesheet'
+                  href={BLOG.FONT_AWESOME}
+                  crossOrigin='anonymous'
+                  referrerPolicy='no-referrer'
+                />
+              </noscript>
             </>
           )}
         </Head>
