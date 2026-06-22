@@ -46,6 +46,8 @@ const Lenis = () => {
           orientation: 'vertical',
           gestureOrientation: 'vertical',
           smoothWheel: true,
+          // 让嵌套的可滚动容器（如文章目录）自行原生滚动，不被 Lenis 劫持
+          allowNestedScroll: true,
           wheelMultiplier,
           syncTouch: false,
           touchMultiplier: 2
