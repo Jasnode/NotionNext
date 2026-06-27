@@ -2,6 +2,10 @@
 import BLOG from '@/blog.config'
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
+const isLocalFontAwesome = BLOG.FONT_AWESOME?.startsWith(
+  '/vendor/fontawesome/'
+)
+
 const getUrl = value => {
   try {
     return value ? new URL(value) : null
@@ -35,7 +39,7 @@ const getFontAwesomeFontFaceCss = value => {
   const webfontBase = getFontAwesomeWebfontBase(value)
   if (!webfontBase) return ''
 
-  return `@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;src:url("${webfontBase}fa-solid-900.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-regular-400.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-brands-400.woff2") format("woff2")}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-block;min-width:1em;text-align:center}`
+  return `@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;src:url("${webfontBase}fa-solid-900.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-regular-400.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-brands-400.woff2") format("woff2")}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-flex;width:1.25em;min-width:1.25em;height:1em;align-items:center;justify-content:center;text-align:center;line-height:1}`
 }
 
 const fontAwesomeLoadScript = BLOG.FONT_AWESOME
@@ -52,9 +56,15 @@ const fontAwesomeLoadScript = BLOG.FONT_AWESOME
 })()
 `
   : ''
-const fontAwesomeOrigin = getUrlOrigin(BLOG.FONT_AWESOME)
-const fontAwesomeDnsPrefetchHref = getDnsPrefetchHref(BLOG.FONT_AWESOME)
-const fontAwesomeFontFaceCss = getFontAwesomeFontFaceCss(BLOG.FONT_AWESOME)
+const fontAwesomeOrigin = isLocalFontAwesome
+  ? ''
+  : getUrlOrigin(BLOG.FONT_AWESOME)
+const fontAwesomeDnsPrefetchHref = isLocalFontAwesome
+  ? ''
+  : getDnsPrefetchHref(BLOG.FONT_AWESOME)
+const fontAwesomeFontFaceCss = isLocalFontAwesome
+  ? ''
+  : getFontAwesomeFontFaceCss(BLOG.FONT_AWESOME)
 const shouldPreconnectUnsplash = BLOG.THEME === 'magzine'
 
 // 预先设置深色模式的脚本内容
@@ -121,38 +131,84 @@ class MyDocument extends Document {
           {/* 预加载字体 */}
           {BLOG.FONT_AWESOME && (
             <>
-              <link
-                rel='preload'
-                href={BLOG.FONT_AWESOME}
-                as='style'
-                crossOrigin='anonymous'
-              />
-              <link
-                id='font-awesome-css'
-                rel='stylesheet'
-                href={BLOG.FONT_AWESOME}
-                media='print'
-                crossOrigin='anonymous'
-                referrerPolicy='no-referrer'
-              />
-              {fontAwesomeFontFaceCss && (
-                <style
-                  dangerouslySetInnerHTML={{
-                    __html: fontAwesomeFontFaceCss
-                  }}
-                />
+              {isLocalFontAwesome && (
+                <>
+                  <link
+                    rel='preload'
+                    href='/vendor/fontawesome/webfonts/fa-solid-900.woff2'
+                    as='font'
+                    type='font/woff2'
+                    crossOrigin='anonymous'
+                  />
+                  <link
+                    rel='preload'
+                    href='/vendor/fontawesome/webfonts/fa-regular-400.woff2'
+                    as='font'
+                    type='font/woff2'
+                    crossOrigin='anonymous'
+                  />
+                  <link
+                    rel='preload'
+                    href='/vendor/fontawesome/webfonts/fa-brands-400.woff2'
+                    as='font'
+                    type='font/woff2'
+                    crossOrigin='anonymous'
+                  />
+                </>
               )}
-              <script
-                dangerouslySetInnerHTML={{ __html: fontAwesomeLoadScript }}
+              <style
+                dangerouslySetInnerHTML={{
+                  __html:
+                    '.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-flex;width:1.25em;min-width:1.25em;height:1em;align-items:center;justify-content:center;text-align:center;line-height:1}'
+                }}
               />
-              <noscript>
+              {isLocalFontAwesome ? (
                 <link
+                  id='font-awesome-css'
                   rel='stylesheet'
                   href={BLOG.FONT_AWESOME}
-                  crossOrigin='anonymous'
-                  referrerPolicy='no-referrer'
                 />
-              </noscript>
+              ) : (
+                <>
+                  <link
+                    rel='preload'
+                    href={BLOG.FONT_AWESOME}
+                    as='style'
+                    crossOrigin='anonymous'
+                  />
+                  <link
+                    id='font-awesome-css'
+                    rel='stylesheet'
+                    href={BLOG.FONT_AWESOME}
+                    media='print'
+                    crossOrigin='anonymous'
+                    referrerPolicy='no-referrer'
+                  />
+                  {fontAwesomeFontFaceCss && (
+                    <style
+                      dangerouslySetInnerHTML={{
+                        __html: fontAwesomeFontFaceCss
+                      }}
+                    />
+                  )}
+                  <script
+                    dangerouslySetInnerHTML={{ __html: fontAwesomeLoadScript }}
+                  />
+                  <noscript>
+                    <link
+                      rel='stylesheet'
+                      href={BLOG.FONT_AWESOME}
+                      crossOrigin='anonymous'
+                      referrerPolicy='no-referrer'
+                    />
+                  </noscript>
+                </>
+              )}
+              {isLocalFontAwesome && (
+                <noscript>
+                  <link rel='stylesheet' href={BLOG.FONT_AWESOME} />
+                </noscript>
+              )}
             </>
           )}
         </Head>
