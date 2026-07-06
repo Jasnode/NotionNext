@@ -217,11 +217,25 @@ const SEO = props => {
       />
 
       {/* DNS预取和预连接 */}
-      <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
+      {webFontUrl && (
+        <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
+      )}
       <link rel='dns-prefetch' href='https://www.google-analytics.com' />
       <link rel='dns-prefetch' href='https://www.googletagmanager.com' />
-      <link rel='preconnect' href='https://cdn.jsdmirror.com' crossOrigin='anonymous' />
-      <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
+      {webFontUrl && (
+        <link
+          rel='preconnect'
+          href='https://cdn.jsdmirror.com'
+          crossOrigin='anonymous'
+        />
+      )}
+      {webFontUrl && (
+        <link
+          rel='preconnect'
+          href='https://fonts.gstatic.com'
+          crossOrigin='anonymous'
+        />
+      )}
 
       {children}
     </Head>

@@ -2282,28 +2282,27 @@
     xdg-app-paths "5"
     zod "4.1.11"
 
-"@vercel/cli-exec@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.npmjs.org/@vercel/cli-exec/-/cli-exec-0.1.1.tgz#c00d76bdd8222435f943883eca5c2ad667a86ead"
-  integrity sha512-LMRMEai3Z+BODyxGcU9+KiWrS/UElNiOLKiNRfGNt2Vu3NTEmXgFeXG9wBfocAnTe5yJCX/DY6k3k7S/LkPp/g==
+"@vercel/cli-exec@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@vercel/cli-exec/-/cli-exec-1.0.0.tgz#a4d38ea2fae6d850c6b4af3a3e1ad2bda7d52bf9"
+  integrity sha512-kQF8LGie/Hbdq9/psJxLE7owRTcqMQMhgybU04gCeR7cbQAr5t8OrjefDNColJv1QSSucFt4pLwRiARVmlOnug==
   dependencies:
     execa "5.1.1"
 
-"@vercel/functions@^3.6.2":
-  version "3.7.0"
-  resolved "https://registry.npmjs.org/@vercel/functions/-/functions-3.7.0.tgz#c87e9d7b3b31a26c0ad50bc3d382aed8bb3c50bc"
-  integrity sha512-Dzcs1CHRP0aV/dFHUJ8BEMcKjbsPZZoKyyCSCbHRev+Qlj96q1pKKTXcc9m9p7U/kJz7+Dl+GgPHUFGMEKYUOQ==
+"@vercel/functions@^3.7.5":
+  version "3.7.5"
+  resolved "https://registry.npmjs.org/@vercel/functions/-/functions-3.7.5.tgz#5a505d2fe48b0c8eb8226c1a2e97007bde4ae467"
+  integrity sha512-ESf8BbeDebqRUyMi09JwRbQqpLn4g6fjcVVHPsHB56j2dSqRrSHO4h3X4aaxJf6iQQjzhAtDGI2xCWQ27JE8PA==
   dependencies:
-    "@vercel/oidc" "3.6.1"
-    ws "8.20.0"
+    "@vercel/oidc" "3.8.0"
 
-"@vercel/oidc@3.6.1":
-  version "3.6.1"
-  resolved "https://registry.npmjs.org/@vercel/oidc/-/oidc-3.6.1.tgz#b3562c3430b60c49993df760aa9ad7a64a4f3c6b"
-  integrity sha512-8ipTFoiX3WBRrvXLjSrmgAiwtMDQk3EgSxe8N7v2rXBz39NBIIyoGXeVbJRoBcP8WEuVnvjvIQsggbGU7ZKrMw==
+"@vercel/oidc@3.8.0":
+  version "3.8.0"
+  resolved "https://registry.npmjs.org/@vercel/oidc/-/oidc-3.8.0.tgz#0b9fca3ab12ef4df90fd724d1c247d3ed4c78155"
+  integrity sha512-r00laGW6Pv778RoR6M2NxX91ycSj+PBwVo+fOb9Bif+F0IyUKt25zrvBzfEzQpeAzbqOgPZyQibEWDdDFApd+A==
   dependencies:
     "@vercel/cli-config" "0.2.0"
-    "@vercel/cli-exec" "0.1.1"
+    "@vercel/cli-exec" "1.0.0"
     jose "^5.9.6"
 
 "@vitejs/plugin-vue@^5.2.1":
@@ -2865,10 +2864,10 @@ axios@>=0.21.1:
     form-data "^4.0.5"
     proxy-from-env "^2.1.0"
 
-axios@^1.17.0:
-  version "1.17.0"
-  resolved "https://registry.npmjs.org/axios/-/axios-1.17.0.tgz#ae5a1164a4f719942cd73c67e6a3f62d3ccb8f2b"
-  integrity sha512-J8SwNxprqqpbfenehxWYXE7CW+wM1BB4w3+N+g+/Wx40xM4rsLrfPmHHxSWIxJLYDgSY/HqlFPIYb2/S3rxafw==
+axios@^1.18.1:
+  version "1.18.1"
+  resolved "https://registry.npmjs.org/axios/-/axios-1.18.1.tgz#d63f9863bcd8938815c86f9e2abd380189d96dfe"
+  integrity sha512-3nTvFlvpn9Zu/RkHUqtc7/+al4UpRW5az71ap5zccp6e8RAYEzhMTecX8Dz1wWDYrPpUoB1HAQEGEAEvUr7S9g==
   dependencies:
     follow-redirects "^1.16.0"
     form-data "^4.0.5"
@@ -9581,11 +9580,6 @@ write-file-atomic@^4.0.2:
     imurmurhash "^0.1.4"
     signal-exit "^3.0.7"
 
-ws@8.20.0, ws@^8.19.0:
-  version "8.20.0"
-  resolved "https://registry.npmjs.org/ws/-/ws-8.20.0.tgz#4cd9532358eba60bc863aad1623dfb045a4d4af8"
-  integrity sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==
-
 ws@^7.0.0, ws@^7.3.1:
   version "7.5.10"
   resolved "https://registry.npmmirror.com/ws/-/ws-7.5.10.tgz"
@@ -9595,6 +9589,11 @@ ws@^8.11.0:
   version "8.18.3"
   resolved "https://registry.npmjs.org/ws/-/ws-8.18.3.tgz"
   integrity sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==
+
+ws@^8.19.0:
+  version "8.20.0"
+  resolved "https://registry.npmjs.org/ws/-/ws-8.20.0.tgz#4cd9532358eba60bc863aad1623dfb045a4d4af8"
+  integrity sha512-sAt8BhgNbzCtgGbt2OxmpuryO63ZoDk/sqaB/znQm94T4fCEsy/yV+7CdC1kJhOU9lboAEU7R3kquuycDoibVA==
 
 xdg-app-paths@5:
   version "5.5.1"
