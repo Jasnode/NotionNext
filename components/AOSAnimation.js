@@ -13,6 +13,10 @@ const refreshAOS = () => {
   }
 }
 
+const refreshAOSAfterPaint = () => {
+  window.requestAnimationFrame(refreshAOS)
+}
+
 /**
  * 加载滚动动画
  * 改从外部CDN读取
@@ -45,6 +49,7 @@ export default function AOSAnimation() {
           throttleDelay: 120,
           once: true
         })
+        refreshAOSAfterPaint()
       }
     })
   }
@@ -59,7 +64,7 @@ export default function AOSAnimation() {
 
   useEffect(() => {
     const handleRouteChangeComplete = () => {
-      window.requestAnimationFrame(refreshAOS)
+      refreshAOSAfterPaint()
     }
 
     router.events.on('routeChangeComplete', handleRouteChangeComplete)
