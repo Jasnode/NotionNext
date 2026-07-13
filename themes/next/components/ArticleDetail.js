@@ -39,7 +39,8 @@ export default function ArticleDetail(props) {
       <div
         itemScope
         itemType='https://schema.org/Movie'
-        className='overflow-y-hidden py-10 px-4 lg:pt-24 md:px-24  dark:border-gray-700 bg-white dark:bg-hexo-black-gray'>
+        className='overflow-y-hidden py-10 px-4 lg:pt-24 md:px-24  dark:border-gray-700 bg-white dark:bg-hexo-black-gray'
+      >
         {showArticleInfo && (
           <header {...aosProps}>
             {/* 头图 */}
@@ -72,7 +73,8 @@ export default function ArticleDetail(props) {
                     <SmartLink
                       href={`/archive#${formatDateFmt(post?.publishDate, 'yyyy-MM')}`}
                       passHref
-                      legacyBehavior>
+                      legacyBehavior
+                    >
                       <div className='pl-1 mr-2 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200 border-b dark:border-gray-500 border-dashed'>
                         <i className='far fa-calendar mr-1' />{' '}
                         {post?.publishDay}
@@ -111,7 +113,11 @@ export default function ArticleDetail(props) {
 
             {/* 版权声明 */}
             {post?.type === 'Post' && (
-              <ArticleCopyright author={siteConfig('AUTHOR')} url={url} />
+              <ArticleCopyright
+                author={siteConfig('AUTHOR')}
+                url={url}
+                {...props}
+              />
             )}
 
             {/* 推荐文章 */}
@@ -127,7 +133,10 @@ export default function ArticleDetail(props) {
               {post.category && (
                 <>
                   <div className='cursor-pointer my-auto text-md mr-2 hover:text-black dark:hover:text-white border-b dark:text-gray-500 border-dashed'>
-                    <SmartLink href={`/category/${post.category}`} legacyBehavior>
+                    <SmartLink
+                      href={`/category/${post.category}`}
+                      legacyBehavior
+                    >
                       <a>
                         <i className='mr-1 far fa-folder-open' />{' '}
                         {post.category}

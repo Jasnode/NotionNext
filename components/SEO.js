@@ -1,6 +1,7 @@
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
-import { loadExternalResource } from '@/lib/utils'
+import { createSiteUrl, normalizeSiteUrl } from '@/lib/sitemap-utils'
+import { isHttpLink, loadExternalResource } from '@/lib/utils'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -13,16 +14,21 @@ import { useEffect } from 'react'
 const SEO = props => {
   const { children, siteInfo, post, NOTION_CONFIG } = props
   const PATH = siteConfig('PATH')
-  const LINK = siteConfig('LINK')
+  const LINK = normalizeSiteUrl(
+    siteConfig('LINK', siteInfo?.link, NOTION_CONFIG)
+  )
   const SUB_PATH = siteConfig('SUB_PATH', '')
-  let url = PATH?.length ? `${LINK}/${SUB_PATH}` : LINK
+  let url = PATH?.length ? createSiteUrl(LINK, SUB_PATH) || LINK : LINK
   let image
   const router = useRouter()
   const meta = getSEOMeta(props, router, useGlobal()?.locale)
   const webFontUrl = siteConfig('FONT_URL')
+  const hasWebFontUrl = Array.isArray(webFontUrl)
+    ? webFontUrl.filter(Boolean).length > 0
+    : Boolean(webFontUrl)
 
   useEffect(() => {
-    if (!webFontUrl) return
+    if (!hasWebFontUrl) return
 
     const timeoutId = window.setTimeout(() => {
       // 使用WebFontLoader字体加载
@@ -42,7 +48,7 @@ const SEO = props => {
     }, 1500)
 
     return () => window.clearTimeout(timeoutId)
-  }, [webFontUrl])
+  }, [hasWebFontUrl, webFontUrl])
 
   // SEO关键词
   const KEYWORDS = siteConfig('KEYWORDS')
@@ -51,15 +57,18 @@ const SEO = props => {
     keywords = post?.tags?.join(',')
   }
   if (meta) {
-    url = `${url}/${meta.slug}`
-    image = meta.image || '/bg_image.jpg'
+    url = createSiteUrl(url, meta.slug) || url
+    image = getAbsoluteImageUrl(meta.image || '/bg_image.jpg', LINK)
   }
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
   const description = meta?.description || `${siteInfo?.description}`
-  const type = meta?.type || 'website'
-  const lang = 'zh_CN'
-  const category = meta?.category || KEYWORDS
+  const type = meta?.type === 'Post' ? 'article' : meta?.type || 'website'
+  const language = router?.locale || siteConfig('LANG', 'zh-CN', NOTION_CONFIG)
+  const lang = String(language).replace('-', '_')
+  const category = Array.isArray(meta?.category)
+    ? meta.category[0]
+    : meta?.category || KEYWORDS
   const favicon = siteConfig('BLOG_FAVICON')
   const BACKGROUND_DARK = siteConfig('BACKGROUND_DARK', '', NOTION_CONFIG)
 
@@ -98,9 +107,11 @@ const SEO = props => {
   )
 
   const FACEBOOK_PAGE = siteConfig('FACEBOOK_PAGE', null, NOTION_CONFIG)
+  const TWITTER_SITE = siteConfig('TWITTER_SITE', '@茉灵智库', NOTION_CONFIG)
+  const TWITTER_CREATOR = siteConfig('TWITTER_CREATOR', '', NOTION_CONFIG)
   const AUTHOR = siteConfig('AUTHOR')
 
-  const ORIGIN = siteConfig('LINK')?.replace(/\/+$/,'')
+  const ORIGIN = LINK
 
   const isThin = isThinPageRoute(router.route)
   const robots = isThin
@@ -119,7 +130,9 @@ const SEO = props => {
       <title>{title}</title>
       <meta name='theme-color' content={BACKGROUND_DARK} />
       <meta name='robots' content={robots} />
-      {robots.startsWith('index') && <link rel='canonical' href={canonicalUrl} />}
+      {robots.startsWith('index') && (
+        <link rel='canonical' href={canonicalUrl} />
+      )}
       <meta name='format-detection' content='telephone=no' />
       <meta name='mobile-web-app-capable' content='yes' />
       <meta name='apple-mobile-web-app-capable' content='yes' />
@@ -147,33 +160,51 @@ const SEO = props => {
       <meta name='generator' content='茉灵智库' />
 
       {/* 语言和地区 */}
-      <meta httpEquiv='content-language' content={siteConfig('LANG')} />
+      <meta httpEquiv='content-language' content={language} />
       <meta name='geo.region' content={siteConfig('GEO_REGION', 'CN')} />
       <meta name='geo.country' content={siteConfig('GEO_COUNTRY', 'CN')} />
       {/* Open Graph 元数据 */}
       <meta property='og:locale' content={lang} />
       <meta property='og:title' content={title} />
-      <meta property='og:description' content={description?.substring(0, 200)} />
+      <meta
+        property='og:description'
+        content={description?.substring(0, 200)}
+      />
       <meta property='og:url' content={canonicalUrl} />
       <meta property='og:image' content={toAbsolute(image, ORIGIN)} />
-      <meta property='og:image:secure_url' content={toAbsolute(image, ORIGIN)} />
+      <meta
+        property='og:image:secure_url'
+        content={toAbsolute(image, ORIGIN)}
+      />
       <meta property='og:image:width' content='1200' />
       <meta property='og:image:height' content='630' />
       <meta property='og:image:alt' content={title} />
       <meta property='og:site_name' content='茉灵智库' />
-      <meta property='og:type' content={meta?.type === 'Post' ? 'article' : (type || 'website')} />
+      <meta
+        property='og:type'
+        content={meta?.type === 'Post' ? 'article' : type || 'website'}
+      />
 
       {/* Twitter Card 元数据 */}
       <meta name='twitter:card' content='summary_large_image' />
-      <meta name='twitter:site' content='@茉灵智库' />
+      {TWITTER_SITE && <meta name='twitter:site' content={TWITTER_SITE} />}
+      {TWITTER_CREATOR && (
+        <meta name='twitter:creator' content={TWITTER_CREATOR} />
+      )}
       <meta name='twitter:title' content={title} />
-      <meta name='twitter:description' content={description?.substring(0, 200)} />
+      <meta
+        name='twitter:description'
+        content={description?.substring(0, 200)}
+      />
       <meta name='twitter:image' content={toAbsolute(image, ORIGIN)} />
       <meta name='twitter:image:alt' content={title} />
 
       {/* 微信分享优化 */}
       <meta property='weixin:title' content={title} />
-      <meta property='weixin:description' content={description?.substring(0, 160)} />
+      <meta
+        property='weixin:description'
+        content={description?.substring(0, 160)}
+      />
       <meta property='weixin:image' content={toAbsolute(image, ORIGIN)} />
 
       {COMMENT_WEBMENTION_ENABLE && (
@@ -198,13 +229,33 @@ const SEO = props => {
       {/* 文章特定元数据 */}
       {meta?.type === 'Post' && (
         <>
-          <meta property='article:published_time' content={meta.publishDay} />
-          <meta property='article:modified_time' content={meta.lastEditedDay} />
-          <meta property='og:updated_time' content={meta.lastEditedDay || meta.publishDay} />
+          {(meta.publishTime || meta.publishDay) && (
+            <meta
+              property='article:published_time'
+              content={meta.publishTime || meta.publishDay}
+            />
+          )}
+          {(meta.modifiedTime || meta.lastEditedDay) && (
+            <meta
+              property='article:modified_time'
+              content={meta.modifiedTime || meta.lastEditedDay}
+            />
+          )}
+          <meta
+            property='og:updated_time'
+            content={
+              meta.modifiedTime ||
+              meta.lastEditedDay ||
+              meta.publishTime ||
+              meta.publishDay
+            }
+          />
           <meta property='article:author' content={AUTHOR} />
           <meta property='article:section' content={category} />
           <meta property='article:tag' content={keywords} />
-          {FACEBOOK_PAGE && <meta property='article:publisher' content={FACEBOOK_PAGE} />}
+          {FACEBOOK_PAGE && (
+            <meta property='article:publisher' content={FACEBOOK_PAGE} />
+          )}
         </>
       )}
 
@@ -212,24 +263,26 @@ const SEO = props => {
       <script
         type='application/ld+json'
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(generateStructuredData(meta, siteInfo, url, image, AUTHOR))
+          __html: JSON.stringify(
+            generateStructuredData(meta, siteInfo, url, image, AUTHOR, LINK)
+          )
         }}
       />
 
       {/* DNS预取和预连接 */}
-      {webFontUrl && (
+      {hasWebFontUrl && (
         <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
       )}
       <link rel='dns-prefetch' href='https://www.google-analytics.com' />
       <link rel='dns-prefetch' href='https://www.googletagmanager.com' />
-      {webFontUrl && (
+      {hasWebFontUrl && (
         <link
           rel='preconnect'
           href='https://cdn.jsdmirror.com'
           crossOrigin='anonymous'
         />
       )}
-      {webFontUrl && (
+      {hasWebFontUrl && (
         <link
           rel='preconnect'
           href='https://fonts.gstatic.com'
@@ -247,7 +300,7 @@ const SEO = props => {
  */
 function toAbsolute(u, origin) {
   if (!u) return ''
-  if (!origin) origin = siteConfig('LINK')?.replace(/\/+$/,'')
+  if (!origin) origin = siteConfig('LINK')?.replace(/\/+$/, '')
   if (/^https?:\/\//i.test(u)) return u
   return `${origin}${u.startsWith('/') ? '' : '/'}${u}`
 }
@@ -258,7 +311,10 @@ function toAbsolute(u, origin) {
 function encodeCanonical(u) {
   try {
     const urlObj = new URL(u)
-    urlObj.pathname = urlObj.pathname.split('/').map(s => encodeURIComponent(decodeURIComponent(s))).join('/')
+    urlObj.pathname = urlObj.pathname
+      .split('/')
+      .map(s => encodeURIComponent(decodeURIComponent(s)))
+      .join('/')
     return urlObj.toString()
   } catch {
     return u
@@ -275,8 +331,15 @@ function absEncoded(u, origin) {
 /**
  * 生成结构化数据
  */
-const generateStructuredData = (meta, siteInfo, url, image, author) => {
-  const origin = siteConfig('LINK')?.replace(/\/+$/,'')
+const generateStructuredData = (
+  meta,
+  siteInfo,
+  url,
+  image,
+  author,
+  siteUrl
+) => {
+  const origin = normalizeSiteUrl(siteUrl || siteConfig('LINK'))
 
   const baseData = {
     '@context': 'https://schema.org',
@@ -300,7 +363,9 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
 
   // 文章页结构化数据
   if (meta?.type === 'Post') {
-    const images = Array.isArray(image) ? image.map(i => toAbsolute(i, origin)) : [toAbsolute(image, origin)]
+    const images = Array.isArray(image)
+      ? image.map(i => toAbsolute(i, origin))
+      : [toAbsolute(image, origin)]
     const postTitle = meta.postTitle || meta.title
     const pageUrl = absEncoded(url, origin)
     return [
@@ -314,12 +379,14 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
             name: 'Home',
             item: origin
           },
-          meta?.category ? {
-            '@type': 'ListItem',
-            position: 2,
-            name: meta.category,
-            item: `${origin}/category/${encodeURIComponent(meta.category)}`
-          } : null,
+          meta?.category
+            ? {
+                '@type': 'ListItem',
+                position: 2,
+                name: meta.category,
+                item: `${origin}/category/${encodeURIComponent(meta.category)}`
+              }
+            : null,
           {
             '@type': 'ListItem',
             position: meta?.category ? 3 : 2,
@@ -336,13 +403,20 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
         image: images,
         url: pageUrl,
         mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
-        datePublished: meta.publishDay,
-        dateModified: meta.lastEditedDay || meta.publishDay,
+        datePublished: meta.publishTime || meta.publishDay,
+        dateModified:
+          meta.modifiedTime ||
+          meta.lastEditedDay ||
+          meta.publishTime ||
+          meta.publishDay,
         author: { '@type': 'Person', name: author },
         publisher: {
           '@type': 'Organization',
           name: siteInfo?.title,
-          logo: { '@type': 'ImageObject', url: toAbsolute(siteInfo?.icon, origin) }
+          logo: {
+            '@type': 'ImageObject',
+            url: toAbsolute(siteInfo?.icon, origin)
+          }
         },
         keywords: Array.isArray(meta.tags) ? meta.tags.join(', ') : '',
         articleSection: meta.category || '',
@@ -394,6 +468,27 @@ const generateStructuredData = (meta, siteInfo, url, image, author) => {
   return baseData
 }
 
+const getAbsoluteImageUrl = (image, siteUrl) => {
+  if (typeof image !== 'string') return ''
+
+  const rawImage = image.trim()
+  if (!rawImage) return ''
+  if (isHttpLink(rawImage) || rawImage.startsWith('data:')) {
+    return rawImage
+  }
+
+  return createSiteUrl(siteUrl, rawImage) || rawImage
+}
+
+const getIsoTime = value => {
+  if (!value) return undefined
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return undefined
+
+  return date.toISOString()
+}
+
 const isThinPageRoute = route =>
   route === '/search' ||
   route === '/search/[keyword]' ||
@@ -430,7 +525,8 @@ const getSEOMeta = (props, router, locale) => {
   const searchPage = getSearchPage(props, router)
 
   // SEO title 后缀使用短品牌名，与 Notion TITLE（可能是长标题）解耦
-  const SITE_NAME = siteConfig('SEO_BRAND') || siteConfig('TITLE') || siteInfo?.title
+  const SITE_NAME =
+    siteConfig('SEO_BRAND') || siteConfig('TITLE') || siteInfo?.title
   switch (router.route) {
     case '/':
       return {
@@ -504,7 +600,9 @@ const getSEOMeta = (props, router, locale) => {
     case '/search/[keyword]/page/[page]':
       return {
         title: `${keyword || ''}${keyword ? ' | ' : ''}${locale.NAV.SEARCH} | ${SITE_NAME}`,
-        description: keyword ? `搜索「${keyword}」的结果 - ${SITE_NAME}` : `在${SITE_NAME}中搜索内容`,
+        description: keyword
+          ? `搜索「${keyword}」的结果 - ${SITE_NAME}`
+          : `在${SITE_NAME}中搜索内容`,
         image: `${siteInfo?.pageCover}`,
         slug:
           'search/' +
@@ -537,7 +635,10 @@ const getSEOMeta = (props, router, locale) => {
         type: 'website',
         pageType: 'category'
       }
-    default:
+    default: {
+      const normalizedCategory = Array.isArray(post?.category)
+        ? post.category[0]
+        : post?.category
       return {
         title: post
           ? `${post?.title} | ${SITE_NAME}`
@@ -547,12 +648,16 @@ const getSEOMeta = (props, router, locale) => {
         type: post?.type,
         slug: post?.slug,
         image: post?.pageCoverThumbnail || `${siteInfo?.pageCover}`,
-        category: post?.category || '',
+        category: normalizedCategory || '',
         tags: post?.tags,
         wordCount: post?.wordCount,
         publishDay: post?.publishDay,
-        lastEditedDay: post?.lastEditedDay
+        lastEditedDay: post?.lastEditedDay,
+        publishTime:
+          getIsoTime(post?.publishDate) || getIsoTime(post?.date?.start_date),
+        modifiedTime: getIsoTime(post?.lastEditedTime || post?.lastEditedDate)
       }
+    }
   }
 }
 
