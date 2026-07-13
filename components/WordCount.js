@@ -16,7 +16,7 @@ export default function WordCount({ wordCount, readTime }) {
       <span className='flex whitespace-nowrap items-center'>
         <i className='mr-1 fas fa-clock' />
         <span>{locale.COMMON.READ_TIME}</span>&nbsp;
-        <span id='readTime'>{readTime}</span>&nbsp;{locale.COMMON.MINUTE}
+        <span id='readTime'>{readTime}</span>{locale.COMMON.MINUTE}
       </span>
     </span>
   )
