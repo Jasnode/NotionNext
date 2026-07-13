@@ -39,7 +39,7 @@ const getFontAwesomeFontFaceCss = value => {
   const webfontBase = getFontAwesomeWebfontBase(value)
   if (!webfontBase) return ''
 
-  return `@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;src:url("${webfontBase}fa-solid-900.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-regular-400.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-brands-400.woff2") format("woff2")}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-flex;width:1.25em;min-width:1.25em;height:1em;align-items:center;justify-content:center;text-align:center;line-height:1}`
+  return `@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;src:url("${webfontBase}fa-solid-900.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-regular-400.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;src:url("${webfontBase}fa-brands-400.woff2") format("woff2")}.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-flex;width:1.25em;min-width:1.25em;align-items:center;justify-content:center;text-align:center;line-height:1}`
 }
 
 const fontAwesomeLoadScript = BLOG.FONT_AWESOME
@@ -159,7 +159,7 @@ class MyDocument extends Document {
               <style
                 dangerouslySetInnerHTML={{
                   __html:
-                    '.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-flex;width:1.25em;min-width:1.25em;height:1em;align-items:center;justify-content:center;text-align:center;line-height:1}'
+                    '.fa,.fas,.far,.fab,.fa-solid,.fa-regular,.fa-brands{display:inline-flex;width:1.25em;min-width:1.25em;align-items:center;justify-content:center;text-align:center;line-height:1}'
                 }}
               />
               {isLocalFontAwesome ? (
