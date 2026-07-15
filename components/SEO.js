@@ -331,7 +331,7 @@ function absEncoded(u, origin) {
 /**
  * 生成结构化数据
  */
-const generateStructuredData = (
+export const generateStructuredData = (
   meta,
   siteInfo,
   url,
