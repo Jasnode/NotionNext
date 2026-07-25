@@ -54,10 +54,10 @@ const Style = () => {
 
       /* 鼠标样式 */
       body {
-        cursor: url('https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/Normal.9rjs0snhjl.svg'), default;
+        cursor: url('https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/shubiao/Normal.svg'), default;
       }
       a, img, button, [role='button'] {
-        cursor: url('https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/Link.2rviiwb4pe.svg'), pointer;
+        cursor: url('https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/shubiao/Link.svg'), pointer;
       }
 
       /* 滚动条样式 */
