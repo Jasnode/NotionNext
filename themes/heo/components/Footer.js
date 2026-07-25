@@ -10,6 +10,8 @@ import SocialButton from './SocialButton'
 const Footer = () => {
   const BEI_AN = siteConfig('BEI_AN')
   const BEI_AN_LINK = siteConfig('BEI_AN_LINK')
+  const reserveMusicPlayerSpace =
+    siteConfig('MUSIC_PLAYER') && siteConfig('MUSIC_PLAYER_VISIBLE')
   return (
     <footer className='relative flex-shrink-0 bg-white dark:bg-[#17191d] justify-center text-center m-auto w-full leading-6  text-gray-600 dark:text-gray-100 text-sm'>
       {/* 颜色过度区 */}
@@ -26,7 +28,9 @@ const Footer = () => {
       {/* 底部页面信息 */}
       <div
         id='footer-bottom'
-        className='w-full min-h-[5rem] flex flex-col py-4 px-6 lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 bg-[#f1f3f7] dark:bg-[#21232A] border-t dark:border-t-[#3D3D3F] relative overflow-hidden'>
+        className={`w-full min-h-[5rem] flex flex-col py-4 px-6 lg:flex-row lg:items-center justify-between gap-2 lg:gap-3 bg-[#f1f3f7] dark:bg-[#21232A] border-t dark:border-t-[#3D3D3F] relative overflow-hidden ${
+          reserveMusicPlayerSpace ? 'pb-20' : ''
+        }`}>
         {/* 装饰背景 */}
         <div className='absolute inset-0 pointer-events-none overflow-hidden'>
           <div className='dark:hidden'>
