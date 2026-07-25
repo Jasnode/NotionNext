@@ -275,7 +275,7 @@ function ThemeConsole ({ meta, onClose }) {
       return JSON.parse(trimmed)
     } catch {
       return trimmed.split(/\r?\n/).reduce((acc, line) => {
-        const match = line.match(/^\s*([A-Z0-9_]+)\s*:\s*(.+?)\s*,?\s*$/)
+        const match = line.match(/^\s*([A-Z0-9_]+)\s*(?::|=)\s*(.+?)\s*,?\s*$/)
         if (!match) return acc
         let value = match[2].trim()
         if ((value.startsWith("'") && value.endsWith("'")) || (value.startsWith('"') && value.endsWith('"'))) {

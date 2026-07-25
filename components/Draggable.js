@@ -11,6 +11,7 @@ export const Draggable = ({ children, stick, handleClassName }) => {
   const rafRef = useRef(null)
   const currentObjRef = useRef(null)
   const offsetRef = useRef({ x: 0, y: 0 })
+  const previousOverflowRef = useRef(null)
   const [moving, setMoving] = useState(false)
 
   useEffect(() => {
@@ -33,6 +34,12 @@ export const Draggable = ({ children, stick, handleClassName }) => {
     document.addEventListener('mousedown', start)
     document.addEventListener('touchstart', start, { passive: false })
 
+    function restoreDocumentOverflow() {
+      if (previousOverflowRef.current === null) return
+      document.documentElement.style.overflow = previousOverflowRef.current
+      previousOverflowRef.current = null
+    }
+
     function start(event) {
       const drag = draggableRef.current
       if (!drag) return
@@ -51,6 +58,9 @@ export const Draggable = ({ children, stick, handleClassName }) => {
       if (currentObjRef.current) {
         if (event.type === 'touchstart') {
           event.preventDefault()
+          if (previousOverflowRef.current === null) {
+            previousOverflowRef.current = document.documentElement.style.overflow
+          }
           document.documentElement.style.overflow = 'hidden'
         }
 
@@ -64,6 +74,7 @@ export const Draggable = ({ children, stick, handleClassName }) => {
         document.addEventListener('touchmove', move, { passive: false })
         document.addEventListener('mouseup', stop)
         document.addEventListener('touchend', stop)
+        document.addEventListener('touchcancel', stop)
       }
     }
 
@@ -74,7 +85,7 @@ export const Draggable = ({ children, stick, handleClassName }) => {
 
     const stop = event => {
       event = e(event)
-      document.documentElement.style.overflow = 'auto'
+      restoreDocumentOverflow()
       cancelAnimationFrame(rafRef.current)
       setMoving(false)
       if (stick) {
@@ -85,6 +96,7 @@ export const Draggable = ({ children, stick, handleClassName }) => {
       document.removeEventListener('touchmove', move)
       document.removeEventListener('mouseup', stop)
       document.removeEventListener('touchend', stop)
+      document.removeEventListener('touchcancel', stop)
     }
 
     const updatePosition = event => {
@@ -142,7 +154,9 @@ export const Draggable = ({ children, stick, handleClassName }) => {
       document.removeEventListener('touchmove', move)
       document.removeEventListener('mouseup', stop)
       document.removeEventListener('touchend', stop)
+      document.removeEventListener('touchcancel', stop)
       cancelAnimationFrame(rafRef.current)
+      restoreDocumentOverflow()
     }
   }, [stick, handleClassName])
 

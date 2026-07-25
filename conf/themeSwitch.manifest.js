@@ -71,7 +71,8 @@ export const THEME_SWITCH_MANIFEST = {
   },
   heo: {
     name: 'Heo',
-    summary: '致敬张洪Heo,丰富的 模块化组件。'
+    summary: '致敬张洪Heo,丰富的 模块化组件。',
+    disableBasePalette: true
   },
   hexo: {
     name: 'Hexo',
@@ -532,7 +533,10 @@ export function getThemeSwitchMeta(themeId) {
     coverWebp = `/images/themes-preview/${id}.webp`
   }
 
-  const palette = withBaseThemePalette(id, Array.isArray(row.palette) ? row.palette : [])
+  const declaredPalette = Array.isArray(row.palette) ? row.palette : []
+  const palette = row.disableBasePalette
+    ? declaredPalette
+    : withBaseThemePalette(id, declaredPalette)
   const manualSettings = Array.isArray(row.settings)
     ? row.settings.map(item => normalizeSetting(item, id))
     : []
