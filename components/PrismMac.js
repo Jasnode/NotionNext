@@ -102,7 +102,6 @@ const PrismMac = () => {
               codeCollapseExpandDefault,
               codeCollapseMinLines
             )
-            renderCustomCode()
           } catch (err) {
             console.warn('[PrismMac] render failed:', err)
           }
@@ -148,43 +147,6 @@ const PrismMac = () => {
     codeCollapseExpandDefault,
     codeCollapseMinLines
   ])
-
-  useEffect(() => {
-    let frameId = null
-    const scheduleRenderCustomCode = () => {
-      if (frameId !== null) return
-      frameId = requestAnimationFrame(() => {
-        frameId = null
-        renderCustomCode()
-      })
-    }
-
-    scheduleRenderCustomCode()
-    const article = getNotionArticle()
-    if (!article) {
-      return () => {
-        if (frameId !== null) {
-          cancelAnimationFrame(frameId)
-        }
-      }
-    }
-
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        if (mutation.type === 'childList') {
-          scheduleRenderCustomCode()
-          break
-        }
-      }
-    });
-    observer.observe(article, { childList: true, subtree: true });
-    return () => {
-      observer.disconnect();
-      if (frameId !== null) {
-        cancelAnimationFrame(frameId)
-      }
-    };
-  }, [pathname]);
 
   return <></>
 }
@@ -265,11 +227,7 @@ const renderCollapseCode = (
   const codeBlocks = document.querySelectorAll('.code-toolbar')
   for (const codeBlock of codeBlocks) {
     try {
-      // 跳过已经折叠过的块，以及会被 renderCustomCode 处理的自定义块
-      if (
-        codeBlock.closest('.collapse-wrapper') ||
-        containsCustomCodeBlock(codeBlock)
-      ) {
+      if (codeBlock.closest('.collapse-wrapper')) {
         continue
       }
 
@@ -435,115 +393,6 @@ const renderMermaid = mermaidCDN => {
     }
   }
 }
-
-/**
- * 代码块类型为 Html, CSS, JS
- * 且第一行出现注释 <!-- custom -->, \* custom *\, // custom
- * (第二个对应 css 注释写法, 这里无法正常打出, notion 代码块中正常使用左斜杠 / 即可)
- * (空格不能少)
- * 则自动替换，将内容替换为实际代码执行
- */
-const containsCustomCodeBlock = (block) => {
-  const textContent = block.textContent || '';
-  return (
-    textContent.includes('<!-- custom -->') ||
-    textContent.includes('/* custom */') ||
-    textContent.includes('/* custom-link */') ||
-    textContent.includes('// custom')
-  );
-};
-
-const renderCustomCode = () => {
-  const toolbars = document.querySelectorAll('div.code-toolbar');
-
-  toolbars.forEach((toolbarEl) => {
-    if (toolbarEl.dataset.customRendered === '1') return
-    const codeElements = toolbarEl.querySelectorAll('code');
-    codeElements.forEach(codeElement => {
-      const match = codeElement.className.match(/language-([^\s]+)/);
-      const language = match?.[1] || '';
-      const firstChild = codeElement.firstChild;
-      if (firstChild) {
-        const firstComment = firstChild.textContent || '';
-        const isCustomLink = {
-          css: firstComment.includes('/* custom-link */'),
-          javascript: firstComment.includes('// custom-link')
-        }[language]; 
-        const isCustom = {
-          html: firstComment.includes('<!-- custom -->'),
-          css: firstComment.includes('/* custom */'),
-          javascript: firstComment.includes('// custom')
-        }[language];
-        let originalCode = codeElement.textContent;
-        const toolbarParent = codeElement.closest('div.code-toolbar').parentNode;
-
-        if (isCustomLink || isCustom) {
-          // 移除 custom 注释
-          originalCode = originalCode.replace(/(\/\/ custom-link)|(\/\* custom-link \*\/)|(<!-- custom -->)|(\/\* custom \*\/)|(\/\/ custom)/, '').trim();
-
-          switch (language) {
-            case 'html': {
-              const htmlContainer = document.createElement('div');
-              htmlContainer.innerHTML = originalCode;
-              Array.from(htmlContainer.childNodes).forEach(node => {
-                toolbarParent.insertBefore(node.cloneNode(true), toolbarEl);
-              });
-              break;
-            }
-            case 'css': {
-              if (isCustomLink) {
-                // 将原始代码按行分割，每行视为一个独立的CSS链接
-                const urls = originalCode.split('\n').filter(line => line.trim() !== '');
-                urls.forEach(url => {
-                  const linkElement = document.createElement('link');
-                  linkElement.rel = 'stylesheet';
-                  linkElement.href = url.trim();
-                  document.head.appendChild(linkElement);
-                });
-              } else {
-                const styleElement = document.createElement('style');
-                styleElement.textContent = originalCode;
-                document.head.appendChild(styleElement);
-              }
-              break;
-            }
-            case 'javascript': {
-              if (isCustomLink) {
-                const scriptContainer = document.createElement('div');
-                scriptContainer.innerHTML = originalCode;
-                Array.from(scriptContainer.querySelectorAll('script')).forEach(script => {
-                  const newScript = document.createElement('script');
-                  if (script.src) {
-                    newScript.src = script.src;
-                    if (script.defer) newScript.defer = true;
-                    if (script.async) newScript.async = true;
-                  } else {
-                    newScript.textContent = script.textContent;
-                  }
-
-                  const insertIntoHead = script.getAttribute('head') !== null;
-                  if (insertIntoHead) {
-                    document.head.appendChild(newScript);
-                  } else {
-                    document.body.appendChild(newScript);
-                  }
-                });
-              } else {
-                const scriptElement = document.createElement('script');
-                scriptElement.textContent = originalCode;
-                document.body.appendChild(scriptElement);
-              }
-              break;
-            }
-          }
-          // 移除原始代码块容器
-          toolbarParent.removeChild(toolbarEl);
-        }
-      }
-    });
-    toolbarEl.dataset.customRendered = '1';
-  });
-};
 
 function renderPrismMac(codeLineNumbers, codeMacBar) {
   const container = getNotionArticle()
