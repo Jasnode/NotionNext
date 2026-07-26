@@ -5,7 +5,7 @@ import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
 import SmartLink from '@/components/SmartLink'
 import { useRouter } from 'next/router'
-import { useImperativeHandle, useRef, useState } from 'react'
+import { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import CONFIG from '../config'
 
 /**
@@ -332,10 +332,66 @@ function TodayCard({ cRef }) {
   const title = siteConfig('HEO_HERO_TITLE_5', null, CONFIG)
   const cover =
     siteConfig('HERO_RECOMMEND_COVER', null, CONFIG) || '/images/heo/hello.svg'
+  const isAnimatedHelloCover =
+    typeof cover === 'string' &&
+    cover.split(/[?#]/)[0] === '/images/heo/hello.svg'
+  const [coverSrc, setCoverSrc] = useState(
+    isAnimatedHelloCover ? null : cover
+  )
   // 获取遮罩控制配置
   const coverEnable = siteConfig('HEO_HERO_RECOMMEND_COVER_ENABLE', true, CONFIG)
   // 卡牌是否盖住下层，如果配置为false则默认不盖住
   const [isCoverUp, setIsCoverUp] = useState(coverEnable)
+
+  // 避免 SVG 动画在加载遮罩后面提前播放。
+  useEffect(() => {
+    if (!isAnimatedHelloCover) {
+      setCoverSrc(cover)
+      return
+    }
+
+    let firstFrameId
+    let secondFrameId
+    let loadingObserver
+
+    const startAnimation = () => {
+      firstFrameId = requestAnimationFrame(() => {
+        secondFrameId = requestAnimationFrame(() => {
+          const separator = cover.includes('?') ? '&' : '?'
+          setCoverSrc(`${cover}${separator}play=${Date.now()}`)
+        })
+      })
+    }
+
+    const startAfterLoadingCover = () => {
+      if (!document.getElementById('loading-box')) {
+        startAnimation()
+        return
+      }
+
+      loadingObserver = new MutationObserver(() => {
+        if (!document.getElementById('loading-box')) {
+          loadingObserver.disconnect()
+          startAnimation()
+        }
+      })
+      loadingObserver.observe(document.body, { childList: true, subtree: true })
+    }
+
+    setCoverSrc(null)
+    if (document.readyState === 'complete') {
+      startAfterLoadingCover()
+    } else {
+      window.addEventListener('load', startAfterLoadingCover, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', startAfterLoadingCover)
+      loadingObserver?.disconnect()
+      if (firstFrameId) cancelAnimationFrame(firstFrameId)
+      if (secondFrameId) cancelAnimationFrame(secondFrameId)
+    }
+  }, [cover, isAnimatedHelloCover])
 
   /**
    * 外部可以调用此方法
@@ -388,12 +444,14 @@ function TodayCard({ cRef }) {
             : 'opacity-0 transform scale-110 pointer-events-none'
         } shadow transition-all duration-200 today-card h-full bg-black rounded-2xl relative overflow-hidden flex items-end`}>
         <div id='today-card-cover' className='today-card-cover absolute inset-0'>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            id='today-card-cover-image'
-            src={cover}
-            alt={title || 'hero recommend cover'}
-          />
+          {coverSrc && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              id='today-card-cover-image'
+              src={coverSrc}
+              alt={title || 'hero recommend cover'}
+            />
+          )}
         </div>
 
         <div
