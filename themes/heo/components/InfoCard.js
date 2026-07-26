@@ -56,6 +56,8 @@ export function InfoCard(props) {
   const icon1 = siteConfig('HEO_INFO_CARD_ICON1', null, CONFIG)
   const url2 = siteConfig('HEO_INFO_CARD_URL2', null, CONFIG)
   const icon2 = siteConfig('HEO_INFO_CARD_ICON2', null, CONFIG)
+  const orcidUrl = siteConfig('CONTACT_ORCID')
+  const orcidIcon = siteConfig('HEO_INFO_CARD_ICON_ORCID', 'fab fa-orcid', CONFIG)
   const avatarBlurEnabled = siteConfig(
     'HEO_INFO_CARD_AVATAR_BLUR',
     false,
@@ -95,7 +97,7 @@ export function InfoCard(props) {
 
       <div className='flex justify-between'>
         <div className='flex space-x-3 dark:hover:text-white'>
-          {/* 两个社交按钮 */}
+          {/* 社交按钮 */}
           {url1 && (
             <div className='w-10 text-center bg-indigo-400 p-2 rounded-full  transition-colors duration-200 dark:bg-yellow-500 dark:hover:bg-black hover:bg-white'>
               <SmartLink href={url1}>
@@ -110,8 +112,15 @@ export function InfoCard(props) {
               </SmartLink>
             </div>
           )}
+          {orcidUrl && (
+            <div className='bg-indigo-400 p-2 rounded-full w-10 items-center flex justify-center transition-colors duration-200 dark:bg-yellow-500 dark:hover:bg-black hover:bg-white'>
+              <SmartLink href={orcidUrl} title='ORCID' aria-label='ORCID'>
+                <i className={orcidIcon} />
+              </SmartLink>
+            </div>
+          )}
         </div>
-        {/* 第三个按钮 */}
+        {/* 更多按钮 */}
         <MoreButton />
       </div>
     </Card>

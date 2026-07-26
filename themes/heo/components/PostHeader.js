@@ -13,7 +13,7 @@ import { HeaderPodcastBadge } from './PostAudioPlayer'
  * @param {*} param0
  * @returns
  */
-export default function PostHeader({ post, siteInfo, isDarkMode }) {
+export default function PostHeader({ post, siteInfo, isDarkMode, lock }) {
   if (!post) {
     return <></>
   }
@@ -113,9 +113,11 @@ export default function PostHeader({ post, siteInfo, isDarkMode }) {
             className='mt-4 text-white text-sm font-light text-opacity-70 shadow-text-md leading-7
                       flex flex-wrap justify-center items-center gap-x-5 gap-y-2 text-center
                       md:justify-start md:text-left'>
-            <span className='inline-flex items-center gap-1 whitespace-nowrap'>
-              <WordCount wordCount={post.wordCount} readTime={post.readTime} />
-            </span>
+            {!lock && (
+              <span className='inline-flex items-center gap-1 whitespace-nowrap'>
+                <WordCount wordCount={post.wordCount} readTime={post.readTime} />
+              </span>
+            )}
             {ANALYTICS_BUSUANZI_ENABLE && (
               <span className='busuanzi_container_page_pv inline-flex items-center whitespace-nowrap'>
                 <i className='fa-solid fa-fire-flame-curved mr-1' />

@@ -62,6 +62,7 @@ const CONFIG = {
   HEO_INFO_CARD_ICON1: 'fa-regular fa-comment-dots',
   HEO_INFO_CARD_URL2: '/about',
   HEO_INFO_CARD_ICON2: 'fas fa-user',
+  HEO_INFO_CARD_ICON_ORCID: 'fab fa-orcid',
   HEO_INFO_CARD_URL3: 'https://go.88lin.eu.org/gzh/index.html',
   HEO_INFO_CARD_TEXT3: '公众号',
 
