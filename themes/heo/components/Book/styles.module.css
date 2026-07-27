@@ -3465,8 +3465,8 @@
     font-size: 0.68rem;
   }
 
-  .cardActions a,
-  .cardActions button {
+  .cardActions > div a,
+  .cardActions > div button {
     width: 38px;
     height: 38px;
   }
