@@ -224,6 +224,8 @@ const nextConfig = {
       locales: locales
     },
   images: {
+    // 静态导出和 Cloudflare Pages 没有 /_next/image 服务，直接输出原图地址
+    unoptimized: isExport() || process.env.CF_PAGES === '1',
     // 图片压缩和格式优化
     formats: ['image/avif', 'image/webp'],
     // 图片尺寸优化
