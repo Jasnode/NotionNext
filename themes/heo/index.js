@@ -34,6 +34,7 @@ import SideRight from './components/SideRight'
 import CONFIG from './config'
 import { Style } from './style'
 import AISummar from './components/AISummar'
+import BookShelf from './components/Book'
 import InlinePodcastPlayer from './components/PostAudioPlayer'
 import Lenis from '@/components/Lenis'
 
@@ -148,6 +149,8 @@ const LayoutIndex = props => {
     </div>
   )
 }
+
+const LayoutBook = ({ bookStats }) => <BookShelf bookStats={bookStats} />
 
 /**
  * 博客列表
@@ -596,6 +599,7 @@ export {
   Layout404,
   LayoutArchive,
   LayoutBase,
+  LayoutBook,
   LayoutCategoryIndex,
   LayoutIndex,
   LayoutPostList,
