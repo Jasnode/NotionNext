@@ -282,10 +282,7 @@ const AdEmbed = dynamic(
 )
 
 const Collection = dynamic(
-  () =>
-    import('@/components/FriendLinksCollection').then(
-      m => m.FriendLinksCollection
-    ),
+  () => import('@/components/NotionCollection'),
   {
     ssr: true
   }
