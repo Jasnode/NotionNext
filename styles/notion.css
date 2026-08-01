@@ -2338,6 +2338,13 @@ figure.notion-asset-wrapper.notion-asset-wrapper-video > div {
   padding: 0 16px;
 }
 
+/* The visibility wrapper sits inside react-notion-x's column flex layout. */
+.notion-gallery-visibility-wrapper {
+  align-self: stretch;
+  width: 100%;
+  min-width: 100%;
+}
+
 /* Respect Notion Gallery's "Show page icon" view setting. */
 .notion-gallery-hide-page-icons .notion-page-title-icon {
   display: none;

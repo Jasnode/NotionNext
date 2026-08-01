@@ -336,7 +336,7 @@ function TodayCard({ cRef }) {
   const isAnimatedHelloCover =
     typeof cover === 'string' &&
     cover.split(/[?#]/)[0] === '/images/heo/hello.svg'
-  const [isHelloPlaying, setIsHelloPlaying] = useState(true)
+  const [isHelloPlaying, setIsHelloPlaying] = useState(false)
   const coverContainerRef = useRef(null)
   // 获取遮罩控制配置
   const coverEnable = siteConfig('HEO_HERO_RECOMMEND_COVER_ENABLE', true, CONFIG)
@@ -349,6 +349,7 @@ function TodayCard({ cRef }) {
 
     let animationFrameId
     let hasStarted = false
+    let pageLoadHandler
 
     const startAnimation = () => {
       if (hasStarted) return
@@ -387,16 +388,24 @@ function TodayCard({ cRef }) {
       animationFrameId = requestAnimationFrame(startWhenCardIsRevealed)
     }
 
-    // 首屏直接播放；若 LoadingCover 随后挂载，则在 210ms 起笔前暂停。
-    animationFrameId = requestAnimationFrame(() => {
+    const startAfterPageReady = () => {
+      // 等首屏资源完成后再检查遮罩，避免服务端动画和水合后的动画重复播放。
       animationFrameId = requestAnimationFrame(() => {
-        if (!document.getElementById('loading-box')) return
-        setIsHelloPlaying(false)
         animationFrameId = requestAnimationFrame(startWhenCardIsRevealed)
       })
-    })
+    }
+
+    if (document.readyState === 'complete') {
+      startAfterPageReady()
+    } else {
+      pageLoadHandler = startAfterPageReady
+      window.addEventListener('load', pageLoadHandler, { once: true })
+    }
 
     return () => {
+      if (pageLoadHandler) {
+        window.removeEventListener('load', pageLoadHandler)
+      }
       if (animationFrameId) cancelAnimationFrame(animationFrameId)
     }
   }, [cover, isAnimatedHelloCover])
