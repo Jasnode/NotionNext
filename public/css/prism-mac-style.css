@@ -585,6 +585,12 @@ html.dark #theme-heo .collapse-side-panel-button:hover {
   white-space: pre;
 }
 
+@media (max-width: 767px) {
+  #theme-heo .code-toolbar > pre[class*='language-'] {
+    padding-top: 2.75rem !important;
+  }
+}
+
 @media (max-width: 1023px) {
   .collapse-side-panel-button,
   .code-side-panel-root {
