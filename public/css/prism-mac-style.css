@@ -55,8 +55,8 @@ pre[class*='language-'] {
   background: limegreen;
 }
 
-/* Long-code controls: match the restrained /book blue control palette. */
-#theme-heo .collapse-wrapper {
+/* Heo Prism controls: share one palette across code, Mermaid, and every language. */
+#theme-heo {
   --heo-code-brand: #2f7fe5;
   --heo-code-brand-deep: #215fa9;
   --heo-code-brand-soft: #e5f0ff;
@@ -67,11 +67,9 @@ pre[class*='language-'] {
   --heo-code-surface-muted: #f8fbff;
   --heo-code-ink: #191a2d;
   --heo-code-muted: #666980;
-  width: 100%;
-  padding: 0.65rem 0;
 }
 
-html.dark #theme-heo .collapse-wrapper {
+html.dark #theme-heo {
   --heo-code-brand: #72b4ff;
   --heo-code-brand-deep: #4f91d8;
   --heo-code-brand-soft: #233750;
@@ -82,6 +80,11 @@ html.dark #theme-heo .collapse-wrapper {
   --heo-code-surface-muted: #2d2c34;
   --heo-code-ink: #fffaf0;
   --heo-code-muted: #b8b3c2;
+}
+
+#theme-heo .collapse-wrapper {
+  width: 100%;
+  padding: 0.65rem 0;
 }
 
 #theme-heo .collapse-panel {
@@ -266,6 +269,9 @@ html.dark #theme-heo .collapse-code-language {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
+  width: auto !important;
+  height: 28px !important;
+  min-width: 0 !important;
   min-height: 28px;
   padding: 0 0.68rem !important;
   border: 0 !important;
@@ -278,6 +284,8 @@ html.dark #theme-heo .collapse-code-language {
   text-shadow: none !important;
   white-space: nowrap;
   box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
   cursor: pointer;
   transition: background-color 160ms ease, color 160ms ease;
 }
