@@ -4,7 +4,8 @@ import { useGlobal } from '@/lib/global'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { Fragment, useEffect, useId, useRef, useState } from 'react'
 
 import {
   EmailIcon,
@@ -54,6 +55,9 @@ import {
 } from 'react-share'
 
 const QrCode = dynamic(() => import('@/components/QrCode'), { ssr: false })
+const BASE_BUTTON_CLASS =
+  'cursor-pointer rounded-full mx-1 w-8 h-8 flex items-center justify-center text-white'
+const ICON_CLASS = 'text-sm leading-none'
 
 /**
  * @author https://github.com/txs
@@ -65,7 +69,7 @@ const ShareButtons = ({ post }) => {
   const [shareUrl, setShareUrl] = useState(siteConfig('LINK') + router.asPath)
   const title = post?.title || siteConfig('TITLE')
   const image = post?.pageCover
-  const tags = post.tags || []
+  const tags = post?.tags || []
   const hashTags = tags.map(tag => `#${tag}`).join(',')
   const body =
     post?.title + ' | ' + title + ' ' + shareUrl + ' ' + post?.summary
@@ -74,19 +78,59 @@ const ShareButtons = ({ post }) => {
   const titleWithSiteInfo = title + ' | ' + siteConfig('TITLE')
   const { locale } = useGlobal()
   const [qrCodeShow, setQrCodeShow] = useState(false)
+  const [qrCodePosition, setQrCodePosition] = useState(null)
+  const qrCloseTimer = useRef(null)
+  const qrButtonRef = useRef(null)
+  const qrPopoverRef = useRef(null)
+  const qrPopoverId = useId()
 
   const copyUrl = () => {
-    // 确保 shareUrl 是一个正确的字符串并进行解码
-    const decodedUrl = decodeURIComponent(shareUrl)
-    navigator?.clipboard?.writeText(decodedUrl)
+    let decodedUrl = shareUrl
+    try {
+      decodedUrl = decodeURIComponent(shareUrl)
+    } catch {
+      // Keep the original URL when a custom site URL contains malformed escapes.
+    }
+    if (typeof navigator !== 'undefined') {
+      navigator.clipboard?.writeText(decodedUrl)
+    }
     alert(locale.COMMON.URL_COPIED + ' \n' + decodedUrl)
   }
 
-  const openPopover = () => {
+  const clearQrCloseTimer = () => {
+    if (qrCloseTimer.current) {
+      window.clearTimeout(qrCloseTimer.current)
+      qrCloseTimer.current = null
+    }
+  }
+
+  const openPopover = event => {
+    clearQrCloseTimer()
+    const trigger = event?.currentTarget || qrButtonRef.current
+    if (!trigger) return
+
+    const rect = trigger.getBoundingClientRect()
+    const popupWidth = 128
+    const popupHeight = 152
+    const gap = 8
+    const left = Math.min(
+      Math.max(8, rect.left + rect.width / 2 - popupWidth / 2),
+      Math.max(8, window.innerWidth - popupWidth - 8)
+    )
+    const top =
+      rect.top >= popupHeight + gap
+        ? rect.top - popupHeight - gap
+        : rect.bottom + gap
+
+    setQrCodePosition({ left, top })
     setQrCodeShow(true)
   }
-  const closePopover = () => {
-    setQrCodeShow(false)
+  const scheduleQrClose = () => {
+    clearQrCloseTimer()
+    qrCloseTimer.current = window.setTimeout(() => {
+      setQrCodeShow(false)
+      qrCloseTimer.current = null
+    }, 400)
   }
   const openRedirectShare = base => {
     if (!shareUrl || typeof window === 'undefined') return
@@ -100,6 +144,47 @@ const ShareButtons = ({ post }) => {
     setShareUrl(window.location.href)
   }, [])
 
+  useEffect(() => {
+    return () => clearQrCloseTimer()
+  }, [])
+
+  useEffect(() => {
+    if (!qrCodeShow) return
+
+    const closePopover = () => {
+      if (qrCloseTimer.current) {
+        window.clearTimeout(qrCloseTimer.current)
+        qrCloseTimer.current = null
+      }
+      setQrCodeShow(false)
+    }
+    const handlePointerDown = event => {
+      if (
+        qrButtonRef.current?.contains(event.target) ||
+        qrPopoverRef.current?.contains(event.target)
+      ) {
+        return
+      }
+      closePopover()
+    }
+    const handleKeyDown = event => {
+      if (event.key === 'Escape') closePopover()
+    }
+    const handleViewportChange = () => closePopover()
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('resize', handleViewportChange)
+    window.addEventListener('scroll', handleViewportChange, true)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('resize', handleViewportChange)
+      window.removeEventListener('scroll', handleViewportChange, true)
+    }
+  }, [qrCodeShow])
+
   return (
     <>
       {services.map(singleService => {
@@ -110,7 +195,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 hashtag={hashTags}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <FacebookIcon size={32} round />
               </FacebookShareButton>
             )
@@ -120,7 +206,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 appId={siteConfig('FACEBOOK_APP_ID')}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <FacebookMessengerIcon size={32} round />
               </FacebookMessengerShareButton>
             )
@@ -129,7 +216,8 @@ const ShareButtons = ({ post }) => {
               <LineShareButton
                 key={singleService}
                 url={shareUrl}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <LineIcon size={32} round />
               </LineShareButton>
             )
@@ -141,7 +229,8 @@ const ShareButtons = ({ post }) => {
                 title={titleWithSiteInfo}
                 windowWidth={660}
                 windowHeight={460}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <RedditIcon size={32} round />
               </RedditShareButton>
             )
@@ -152,7 +241,8 @@ const ShareButtons = ({ post }) => {
                 url={shareUrl}
                 subject={titleWithSiteInfo}
                 body={body}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <EmailIcon size={32} round />
               </EmailShareButton>
             )
@@ -163,7 +253,8 @@ const ShareButtons = ({ post }) => {
                 url={shareUrl}
                 title={titleWithSiteInfo}
                 hashtags={tags}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <TwitterIcon size={32} round />
               </TwitterShareButton>
             )
@@ -173,7 +264,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 title={titleWithSiteInfo}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <TelegramIcon size={32} round />
               </TelegramShareButton>
             )
@@ -184,7 +276,8 @@ const ShareButtons = ({ post }) => {
                 url={shareUrl}
                 title={titleWithSiteInfo}
                 separator=':: '
-                className='mx-1'>
+                className='mx-1'
+              >
                 <WhatsappIcon size={32} round />
               </WhatsappShareButton>
             )
@@ -193,7 +286,8 @@ const ShareButtons = ({ post }) => {
               <LinkedinShareButton
                 key={singleService}
                 url={shareUrl}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <LinkedinIcon size={32} round />
               </LinkedinShareButton>
             )
@@ -203,7 +297,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 media={image}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <PinterestIcon size={32} round />
               </PinterestShareButton>
             )
@@ -213,7 +308,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 image={image}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <VKIcon size={32} round />
               </VKShareButton>
             )
@@ -223,7 +319,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 image={image}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <OKIcon size={32} round />
               </OKShareButton>
             )
@@ -234,7 +331,8 @@ const ShareButtons = ({ post }) => {
                 url={shareUrl}
                 title={titleWithSiteInfo}
                 tags={tags}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <TumblrIcon size={32} round />
               </TumblrShareButton>
             )
@@ -245,7 +343,8 @@ const ShareButtons = ({ post }) => {
                 url={shareUrl}
                 title={titleWithSiteInfo}
                 description={shareUrl}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <LivejournalIcon size={32} round />
               </LivejournalShareButton>
             )
@@ -255,7 +354,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 title={titleWithSiteInfo}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <MailruIcon size={32} round />
               </MailruShareButton>
             )
@@ -265,7 +365,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 title={titleWithSiteInfo}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <ViberIcon size={32} round />
               </ViberShareButton>
             )
@@ -276,7 +377,8 @@ const ShareButtons = ({ post }) => {
                 url={shareUrl}
                 quote={titleWithSiteInfo}
                 hashtag={hashTags}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <WorkplaceIcon size={32} round />
               </WorkplaceShareButton>
             )
@@ -287,7 +389,8 @@ const ShareButtons = ({ post }) => {
                 url={shareUrl}
                 title={titleWithSiteInfo}
                 image={image}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <WeiboIcon size={32} round />
               </WeiboShareButton>
             )
@@ -297,7 +400,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 title={titleWithSiteInfo}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <PocketIcon size={32} round />
               </PocketShareButton>
             )
@@ -307,7 +411,8 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 title={titleWithSiteInfo}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <InstapaperIcon size={32} round />
               </InstapaperShareButton>
             )
@@ -319,7 +424,8 @@ const ShareButtons = ({ post }) => {
                 title={titleWithSiteInfo}
                 windowWidth={660}
                 windowHeight={460}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <HatenaIcon size={32} round />
               </HatenaShareButton>
             )
@@ -329,64 +435,86 @@ const ShareButtons = ({ post }) => {
                 key={singleService}
                 url={shareUrl}
                 title={titleWithSiteInfo}
-                className='mx-1'>
+                className='mx-1'
+              >
                 <ThreadsIcon size={32} round />
               </ThreadsShareButton>
             )
           case 'qq':
             return (
-              <button
+              <a
+                aria-label={singleService}
                 key={singleService}
-                className='cursor-pointer bg-blue-600 text-white rounded-full mx-1'
-                title={singleService}>
-                <a
-                  target='_blank'
-                  rel='noreferrer'
-                  aria-label='Share by QQ'
-                  href={buildQQShareUrl({ shareUrl, title, body })}>
-                  <i className='fab fa-qq w-8' />
-                </a>
-              </button>
+                target='_blank'
+                rel='noreferrer'
+                className={`${BASE_BUTTON_CLASS} bg-blue-600`}
+                title={singleService}
+                href={buildQQShareUrl({ shareUrl, title, body })}
+              >
+                <i className={`fab fa-qq ${ICON_CLASS}`} />
+              </a>
             )
           case 'wechat':
             return (
-              <button
-                onMouseEnter={openPopover}
-                onMouseLeave={closePopover}
-                aria-label={singleService}
-                key={singleService}
-                className='cursor-pointer bg-green-600 text-white rounded-full mx-1'
-                title={singleService}>
-                <div id='wechat-button'>
-                  <i className='fab fa-weixin w-8' />
-                </div>
-                <div className='absolute'>
-                  <div
-                    id='pop'
-                    className={
-                      (qrCodeShow ? 'opacity-100 ' : ' invisible opacity-0') +
-                      ' z-40 absolute bottom-10 -left-10 bg-white shadow-xl transition-all duration-200 text-center'
-                    }>
-                    <div className='p-2 mt-1 w-28 h-28'>
-                      {qrCodeShow && <QrCode value={shareUrl} />}
-                    </div>
-                    <span className='text-black font-semibold p-1 rounded-t-lg text-sm mx-auto mb-1'>
-                      {locale.COMMON.SCAN_QR_CODE}
-                    </span>
-                  </div>
-                </div>
-              </button>
+              <Fragment key={singleService}>
+                <button
+                  ref={qrButtonRef}
+                  onPointerEnter={event => {
+                    if (event.pointerType === 'mouse') openPopover(event)
+                  }}
+                  onPointerLeave={event => {
+                    if (event.pointerType === 'mouse') scheduleQrClose()
+                  }}
+                  onFocus={openPopover}
+                  onBlur={scheduleQrClose}
+                  onClick={openPopover}
+                  aria-label={singleService}
+                  aria-controls={qrPopoverId}
+                  aria-expanded={qrCodeShow}
+                  aria-haspopup='dialog'
+                  className={`${BASE_BUTTON_CLASS} bg-green-600`}
+                  title={singleService}
+                >
+                  <i className={`fab fa-weixin ${ICON_CLASS}`} />
+                </button>
+                {qrCodeShow && qrCodePosition && typeof document !== 'undefined'
+                  ? createPortal(
+                      <div
+                        ref={qrPopoverRef}
+                        id={qrPopoverId}
+                        role='dialog'
+                        aria-label={locale.COMMON.SCAN_QR_CODE}
+                        className='share-qr-popover fixed z-50 bg-white shadow-xl text-center'
+                        onPointerEnter={clearQrCloseTimer}
+                        onPointerLeave={scheduleQrClose}
+                        style={{
+                          left: `${qrCodePosition.left}px`,
+                          top: `${qrCodePosition.top}px`,
+                          zIndex: 1000
+                        }}
+                      >
+                        <div className='p-2 mt-1 w-28 h-28 overflow-hidden'>
+                          <QrCode value={shareUrl} size={96} />
+                        </div>
+                        <span className='text-black font-semibold p-1 rounded-t-lg text-sm mx-auto mb-1'>
+                          {locale.COMMON.SCAN_QR_CODE}
+                        </span>
+                      </div>,
+                      document.body
+                    )
+                  : null}
+              </Fragment>
             )
           case 'link':
             return (
               <button
                 aria-label={singleService}
                 key={singleService}
-                className='cursor-pointer bg-yellow-500 text-white rounded-full mx-1'
-                title={singleService}>
-                <div alt={locale.COMMON.URL_COPIED} onClick={copyUrl}>
-                  <i className='fas fa-link w-8' />
-                </div>
+                onClick={copyUrl}
+                className={`${BASE_BUTTON_CLASS} bg-yellow-500`}
+                title={singleService}
+              >
+                <i className={`fas fa-link ${ICON_CLASS}`} />
               </button>
             )
           case 'csdn':
@@ -394,11 +522,16 @@ const ShareButtons = ({ post }) => {
               <button
                 aria-label={singleService}
                 key={singleService}
-                onClick={() => openRedirectShare('https://link.csdn.net/?target=')}
+                onClick={() =>
+                  openRedirectShare('https://link.csdn.net/?target=')
+                }
                 className='cursor-pointer rounded-full mx-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500'
-                title={singleService}>
-                <div className='w-8 h-8 rounded-full items-center justify-center'
-                  style={{backgroundColor: '#ff6a00'}}>
+                title={singleService}
+              >
+                <div
+                  className='w-8 h-8 rounded-full flex items-center justify-center'
+                  style={{ backgroundColor: '#ff6a00' }}
+                >
                   <Image
                     src='/svg/csdn.svg'
                     alt='CSDN'
@@ -406,7 +539,6 @@ const ShareButtons = ({ post }) => {
                     height={28}
                     className='w-5 h-5'
                     loading='lazy'
-                    style={{ transform: 'translateY(3px)' }}
                   />
                 </div>
               </button>
@@ -416,11 +548,16 @@ const ShareButtons = ({ post }) => {
               <button
                 aria-label={singleService}
                 key={singleService}
-                onClick={() => openRedirectShare('https://link.juejin.cn/?target=')}
+                onClick={() =>
+                  openRedirectShare('https://link.juejin.cn/?target=')
+                }
                 className='cursor-pointer rounded-full mx-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
-                title={singleService}>
-                <div className='w-8 h-8 rounded-full flex items-center justify-center'
-                     style={{ backgroundColor: '#5dade2' }}>
+                title={singleService}
+              >
+                <div
+                  className='w-8 h-8 rounded-full flex items-center justify-center'
+                  style={{ backgroundColor: '#5dade2' }}
+                >
                   <Image
                     src='/svg/juejin.svg'
                     alt='掘金'
