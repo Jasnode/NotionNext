@@ -143,14 +143,13 @@ const PrismMac = () => {
       )
       // 侧栏预览也依赖这份样式，即使用户关闭 Mac 顶栏和正文折叠。
       if (codeMacBar || codeCollapse || isCodeSidePanelSupported()) {
-        loadPrismMacStyleCSS()
-        Promise.resolve(prismThemeReady)
-          .catch(err => {
-            console.warn('[PrismMac] prism theme load failed:', err)
-          })
-          .finally(() => {
-            loadPrismMacStyleCSS()
-          })
+        // 主题 link 会同步插入 head；紧接着加载覆盖样式可避免等待远程主题完成。
+        loadPrismMacStyleCSS().catch(err => {
+          console.warn('[PrismMac] mac style load failed:', err)
+        })
+        Promise.resolve(prismThemeReady).catch(err => {
+          console.warn('[PrismMac] prism theme load failed:', err)
+        })
       }
     }
 

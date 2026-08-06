@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import PrismMac, {
   closeCodeSidePanel,
   isCodeSidePanelSupported,
@@ -381,6 +381,62 @@ describe('PrismMac code side panel', () => {
           ?.querySelector('.collapse-side-panel-button')
       ).toBeInTheDocument()
     })
+
+    unmount()
+  })
+
+  it('requests the Mac override stylesheet once without waiting for the theme', async () => {
+    let resolveTheme
+    loadExternalResource.mockImplementation(url => {
+      if (url === '/prism-theme.css') {
+        return new Promise(resolve => {
+          resolveTheme = resolve
+        })
+      }
+      return Promise.resolve(url)
+    })
+    siteConfig.mockImplementation((key, fallback) => {
+      const values = {
+        CODE_COLLAPSE: false,
+        CODE_COLLAPSE_MIN_LINES: 2,
+        CODE_LINE_NUMBERS: false,
+        CODE_MAC_BAR: false,
+        MERMAID_CDN: '/mermaid.js',
+        PRISM_JS_AUTO_LOADER: '/prism-autoloader.js',
+        PRISM_JS_PATH: '/prism-components/',
+        PRISM_THEME_PREFIX_PATH: '/prism-theme.css',
+        PRISM_THEME_SWITCH: false
+      }
+      return key in values ? values[key] : fallback
+    })
+
+    const wrapper = document.createElement('div')
+    wrapper.id = 'article-wrapper'
+    const article = document.createElement('article')
+    article.id = 'notion-article'
+    wrapper.appendChild(article)
+    document.body.appendChild(wrapper)
+    appendRawCodeBlock('one\ntwo\nthree', article)
+
+    const { unmount } = render(<PrismMac />)
+
+    await waitFor(() => {
+      expect(
+        loadExternalResource.mock.calls.filter(
+          ([url, type]) => url === '/css/prism-mac-style.css' && type === 'css'
+        )
+      ).toHaveLength(1)
+    })
+
+    await act(async () => {
+      resolveTheme('/prism-theme.css')
+      await Promise.resolve()
+    })
+    expect(
+      loadExternalResource.mock.calls.filter(
+        ([url, type]) => url === '/css/prism-mac-style.css' && type === 'css'
+      )
+    ).toHaveLength(1)
 
     unmount()
   })
