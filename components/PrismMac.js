@@ -128,6 +128,7 @@ const PrismMac = () => {
       })
       newCodeBlocksObserver.observe(article, {
         childList: true,
+        // Tabs and toggles can insert code several levels below the article.
         subtree: true
       })
     }

@@ -29,23 +29,17 @@ const getDomId = (...parts) => {
     .replace(/[^a-zA-Z0-9_-]/g, '')
 }
 
-const getRendererProps = ctx => ({
-  components: ctx.components,
-  mapPageUrl: ctx.mapPageUrl,
-  mapImageUrl: ctx.mapImageUrl,
-  searchNotion: ctx.searchNotion,
-  rootPageId: ctx.rootPageId,
-  rootDomain: ctx.rootDomain,
-  darkMode: ctx.darkMode,
-  previewImages: ctx.previewImages,
-  forceCustomImages: ctx.forceCustomImages,
-  showCollectionViewDropdown: ctx.showCollectionViewDropdown,
-  linkTableTitleProperties: ctx.linkTableTitleProperties,
-  isLinkCollectionToUrlProperty: ctx.isLinkCollectionToUrlProperty,
-  defaultPageIcon: ctx.defaultPageIcon ?? undefined,
-  defaultPageCover: ctx.defaultPageCover ?? undefined,
-  defaultPageCoverPosition: ctx.defaultPageCoverPosition
-})
+const getRendererProps = ctx => {
+  const rendererProps = { ...ctx }
+
+  // These values belong to the parent renderer and must not leak into a
+  // nested block render. All other context options can follow library updates.
+  delete rendererProps.recordMap
+  delete rendererProps.fullPage
+  delete rendererProps.zoom
+
+  return rendererProps
+}
 
 const NotionTabs = ({ block }) => {
   const ctx = useNotionContext()
@@ -172,10 +166,10 @@ const NotionTabs = ({ block }) => {
                 return (
                   <NotionRenderer
                     key={childId}
+                    {...rendererProps}
                     recordMap={recordMap}
                     blockId={childId}
                     fullPage={false}
-                    {...rendererProps}
                   />
                 )
               })}

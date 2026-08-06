@@ -78,12 +78,18 @@ const createContext = () => ({
   components: { Embed: 'EmbedComponent' },
   mapPageUrl: jest.fn(id => `/${id}`),
   mapImageUrl: jest.fn(url => url),
+  isShowingSearch: true,
+  onHideSearch: jest.fn(),
+  fullPage: true,
   darkMode: false,
   previewImages: true,
   forceCustomImages: false,
   showCollectionViewDropdown: false,
+  showTableOfContents: true,
+  minTableOfContentsItems: 2,
   linkTableTitleProperties: false,
-  isLinkCollectionToUrlProperty: false
+  isLinkCollectionToUrlProperty: false,
+  zoom: { shouldStayInParentContext: true }
 })
 
 describe('NotionTabs', () => {
@@ -108,9 +114,13 @@ describe('NotionTabs', () => {
       expect.objectContaining({
         recordMap,
         blockId: 'first-body',
-        fullPage: false
+        fullPage: false,
+        isShowingSearch: true,
+        showTableOfContents: true,
+        minTableOfContentsItems: 2
       })
     )
+    expect(NotionRenderer.mock.calls.at(-1)[0]).not.toHaveProperty('zoom')
 
     fireEvent.click(secondTab)
 
