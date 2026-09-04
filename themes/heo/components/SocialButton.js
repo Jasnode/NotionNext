@@ -23,7 +23,7 @@ const SocialButton = () => {
     process.env.NEXT_PUBLIC_CONTACT_DOUYIN || 'https://v.douyin.com/nDD4_ACPRiY'
   const CONTACT_XIAOHONGSHU =
     process.env.NEXT_PUBLIC_CONTACT_XIAOHONGSHU ||
-    'https://xhslink.cn/m/2XpLCC92KkJ'
+    'https://xhslink.cn/o/418LhmF376U'
   const CONTACT_WECHAT_QRCODE =
     process.env.NEXT_PUBLIC_CONTACT_WECHAT_QRCODE ||
     'https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/qrcode.1ovwa0ke25.png'
