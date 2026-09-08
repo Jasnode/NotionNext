@@ -10,6 +10,8 @@ import { handleEmailClick } from '@/lib/plugins/mailEncrypt'
 const SocialButton = () => {
   const CONTACT_GITHUB = siteConfig('CONTACT_GITHUB')
   const CONTACT_ORCID = siteConfig('CONTACT_ORCID')
+  const CONTACT_CSDN = siteConfig('CONTACT_CSDN')
+  const CONTACT_JUEJIN = siteConfig('CONTACT_JUEJIN')
   const CONTACT_TWITTER = siteConfig('CONTACT_TWITTER')
   const CONTACT_TELEGRAM = siteConfig('CONTACT_TELEGRAM')
   const CONTACT_LINKEDIN = siteConfig('CONTACT_LINKEDIN')
@@ -23,7 +25,7 @@ const SocialButton = () => {
     process.env.NEXT_PUBLIC_CONTACT_DOUYIN || 'https://v.douyin.com/nDD4_ACPRiY'
   const CONTACT_XIAOHONGSHU =
     process.env.NEXT_PUBLIC_CONTACT_XIAOHONGSHU ||
-    'https://xhslink.cn/m/2XpLCC92KkJ'
+    'https://xhslink.cn/o/418LhmF376U'
   const CONTACT_WECHAT_QRCODE =
     process.env.NEXT_PUBLIC_CONTACT_WECHAT_QRCODE ||
     'https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/qrcode.1ovwa0ke25.png'
@@ -167,6 +169,24 @@ const SocialButton = () => {
             title={'ORCID'}
             href={CONTACT_ORCID}>
             <i className='transform hover:scale-125 duration-150 fab fa-orcid dark:hover:text-indigo-400 hover:text-indigo-600' />
+          </a>
+        )}
+        {CONTACT_CSDN && (
+          <a
+            target='_blank'
+            rel='noreferrer'
+            title={'CSDN'}
+            href={CONTACT_CSDN}>
+            <i className={`${iconClass} fab fa-csdn`} />
+          </a>
+        )}
+        {CONTACT_JUEJIN && (
+          <a
+            target='_blank'
+            rel='noreferrer'
+            title={'稀土掘金'}
+            href={CONTACT_JUEJIN}>
+            <i className={`${iconClass} fab fa-juejin`} />
           </a>
         )}
         {CONTACT_TWITTER && (
