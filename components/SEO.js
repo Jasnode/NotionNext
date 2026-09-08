@@ -26,12 +26,12 @@ const SEO = props => {
   const webFontUrl = siteConfig('FONT_URL')
   const webFontUrls = useMemo(
     () =>
-      (Array.isArray(webFontUrl) ? webFontUrl : [webFontUrl]).filter(
-        value => typeof value === 'string' && value.trim()
-      ).map(value => value.trim()),
+      (Array.isArray(webFontUrl) ? webFontUrl : [webFontUrl])
+        .filter(value => typeof value === 'string' && value.trim())
+        .map(value => value.trim()),
     [webFontUrl]
   )
-  const hasWebFontUrl = webFontUrls.length > 0
+  const hasGoogleFontsUrl = containsGoogleFontsUrl(webFontUrls)
 
   useEffect(() => {
     if (webFontUrls.length === 0) return
@@ -308,11 +308,18 @@ const SEO = props => {
       />
 
       {/* DNS预取和预连接 */}
-      {hasWebFontUrl && (
-        <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
+      {hasGoogleFontsUrl && (
+        <link rel='dns-prefetch' href='//fonts.googleapis.com' />
       )}
       <link rel='dns-prefetch' href='https://www.google-analytics.com' />
       <link rel='dns-prefetch' href='https://www.googletagmanager.com' />
+      {hasGoogleFontsUrl && (
+        <link
+          rel='preconnect'
+          href='https://fonts.gstatic.com'
+          crossOrigin='anonymous'
+        />
+      )}
 
       {children}
     </Head>
@@ -490,6 +497,18 @@ export const generateStructuredData = (
   }
 
   return baseData
+}
+
+const containsGoogleFontsUrl = fontUrl => {
+  const urls = Array.isArray(fontUrl) ? fontUrl : [fontUrl]
+
+  return urls.filter(Boolean).some(url => {
+    try {
+      return new URL(url).hostname === 'fonts.googleapis.com'
+    } catch {
+      return false
+    }
+  })
 }
 
 const getAbsoluteImageUrl = (image, siteUrl) => {
