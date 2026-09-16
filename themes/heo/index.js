@@ -441,7 +441,9 @@ const LayoutSlug = props => {
                   <AdSlot />
                 </div>
                 {/* 评论互动 */}
-                <div className='duration-200 overflow-x-auto px-5'>
+                {/* overflow-x-clip 不能换成 auto：auto 会连带把 overflow-y 变成 auto，
+                    齐着评论区底边裁掉 Waline 表情面板 */}
+                <div className='duration-200 overflow-x-clip px-5'>
                   <div className='text-2xl dark:text-white'>
                     <i className='fas fa-comment mr-1' />
                     {locale.COMMON.COMMENTS}
