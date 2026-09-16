@@ -198,6 +198,163 @@ nav {
   margin: 0 0.18rem;
 }
 
+/* ---- Waline × Smoji 表情包（数据 lib/utils/smojiEmoji.js，行为 lib/utils/walineEmojiPanel.js）
+   waline 的 css 打包顺序在本文件之后，覆盖它的值都得加 !important。
+   尺寸全用 rem：.wl-card .wl-content 是 14px、面板是 16px，em 对不齐。 */
+:root {
+  --wl-emoji-inline: 2.25rem;     /* 正文小图，与面板格子同尺寸 36px */
+  --wl-emoji-inline-big: 5.5rem;  /* 正文大图（贴纸） */
+  --wl-emoji-grid: 2.25rem;       /* 面板格子小图 36px，对齐 zhheo */
+  --wl-emoji-grid-big: 5rem;      /* 面板格子大图 */
+  --wl-emoji-preview: 3rem;       /* 悬浮预览小图 */
+  --wl-emoji-preview-big: 7rem;   /* 悬浮预览大图，需明显大于格子 */
+  --wl-emoji-tab: 2rem;           /* 分类栏图标，与格子尺寸接近 */
+}
+
+/* 正文表情（waline 默认 1.25em 太小） */
+.wl-card .wl-content:not(.waline-recent-content) img.wl-emoji,
+.wl-card .wl-content:not(.waline-recent-content) img.vemoji,
+.wl-panel .wl-content img.wl-emoji,
+.wl-panel .wl-content img.vemoji {
+  height: var(--wl-emoji-inline) !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  vertical-align: middle !important;
+  margin: 0 0.2em !important;
+}
+
+/* 正文大图包，靠后定义覆盖上一条 */
+.wl-card .wl-content:not(.waline-recent-content) img.wl-emoji:is([src*='/smoji/yier-bubu/'], [src*='/smoji/xiaohuangtun/'], [src*='/smoji/yantuanzi/'], [src*='/smoji/mochadandan/'], [src*='/smoji/xiaoxiongchong/'], [src*='/smoji/popo/'], [src*='/smoji/xiaokumao/'], [src*='/smoji/eveonecat-static/']),
+.wl-panel .wl-content img.wl-emoji:is([src*='/smoji/yier-bubu/'], [src*='/smoji/xiaohuangtun/'], [src*='/smoji/yantuanzi/'], [src*='/smoji/mochadandan/'], [src*='/smoji/xiaoxiongchong/'], [src*='/smoji/popo/'], [src*='/smoji/xiaokumao/'], [src*='/smoji/eveonecat-static/']) {
+  height: var(--wl-emoji-inline-big) !important;
+  margin: 0.15em 0.25em !important;
+}
+
+/* 面板几何：左右缘对齐输入框卡片，由 JS 量 rect 写变量（offsetParent 是 .wl-footer，
+   差着 margin + 边框，em 算不准）。纵向 100% 正好在图标行下方，calc 留缝即可 */
+.wl-emoji-popup {
+  box-sizing: border-box !important;
+  inset-inline-start: auto !important;
+  left: var(--wl-popup-left, 1.25em) !important;
+  top: calc(100% + 0.5rem) !important;
+  width: var(--wl-popup-width, auto) !important;
+  max-width: none !important;
+  border-radius: var(--wl-popup-radius, 6px) !important;
+}
+.wl-emoji-popup.display {
+  animation: wl-emoji-popup-in 0.18s ease-out;
+}
+@keyframes wl-emoji-popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.375rem);
+  }
+}
+
+/* 网格。选择器必须带 .wl-tab-wrapper，否则会把分类栏图标一起放大 */
+.wl-emoji-popup .wl-tab-wrapper {
+  box-sizing: border-box !important;
+  /* auto-fill + 1fr：余量摊进每列而不是堆在两边，且最后一行仍左对齐 */
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(calc(var(--wl-emoji-grid) + 0.5rem), 1fr)
+  );
+  align-content: start;
+  max-height: min(18.75rem, 50vh) !important;
+  /* 矮视口（横屏、弹键盘）跟着收 */
+  max-height: min(18.75rem, 50dvh) !important;
+  overscroll-behavior: contain;
+  scrollbar-width: none !important;
+}
+/* 一次只显示一个包，用 :has 切列宽 */
+.wl-emoji-popup .wl-tab-wrapper:has(img:is([src*='/smoji/yier-bubu/'], [src*='/smoji/xiaohuangtun/'], [src*='/smoji/yantuanzi/'], [src*='/smoji/mochadandan/'], [src*='/smoji/xiaoxiongchong/'], [src*='/smoji/popo/'], [src*='/smoji/xiaokumao/'], [src*='/smoji/eveonecat-static/'])) {
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(calc(var(--wl-emoji-grid-big) + 0.5rem), 1fr)
+  );
+}
+.wl-emoji-popup .wl-tab-wrapper::-webkit-scrollbar,
+.wl-emoji-popup .wl-tabs::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+/* 格子高度写死：图片是 lazy 的，尺寸交给图片会在到货时重排；
+   且有非正方形表情，height:auto 会顶高那一行。宽度交给 grid 轨道 */
+.wl-emoji-popup .wl-tab-wrapper button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  height: var(--wl-emoji-grid) !important;
+  border-radius: 0.375rem !important;
+  transition: background-color 0.15s ease !important;
+}
+.wl-emoji-popup .wl-tab-wrapper .wl-emoji {
+  width: auto !important;
+  height: auto !important;
+  max-width: var(--wl-emoji-grid) !important;
+  max-height: var(--wl-emoji-grid) !important;
+}
+.wl-emoji-popup .wl-tab-wrapper button:has(img:is([src*='/smoji/yier-bubu/'], [src*='/smoji/xiaohuangtun/'], [src*='/smoji/yantuanzi/'], [src*='/smoji/mochadandan/'], [src*='/smoji/xiaoxiongchong/'], [src*='/smoji/popo/'], [src*='/smoji/xiaokumao/'], [src*='/smoji/eveonecat-static/'])) {
+  height: var(--wl-emoji-grid-big) !important;
+}
+.wl-emoji-popup .wl-tab-wrapper .wl-emoji:is([src*='/smoji/yier-bubu/'], [src*='/smoji/xiaohuangtun/'], [src*='/smoji/yantuanzi/'], [src*='/smoji/mochadandan/'], [src*='/smoji/xiaoxiongchong/'], [src*='/smoji/popo/'], [src*='/smoji/xiaokumao/'], [src*='/smoji/eveonecat-static/']) {
+  max-width: var(--wl-emoji-grid-big) !important;
+  max-height: var(--wl-emoji-grid-big) !important;
+}
+
+/* 分类栏 */
+.wl-emoji-popup .wl-tabs {
+  overscroll-behavior-x: contain;
+  scrollbar-width: none !important;
+}
+.wl-emoji-popup .wl-tabs .wl-emoji {
+  width: auto !important;
+  height: auto !important;
+  max-width: var(--wl-emoji-tab) !important;
+  max-height: var(--wl-emoji-tab) !important;
+}
+
+/* 悬浮预览：waline hover 时内联写 left/top/transform，这里整体接管。
+   left 留它的（= 格子中心 x），top 由 JS 给，transform 得照抄否则右偏半身位 */
+.wl-emoji-popup .wl-emoji-preview {
+  top: var(--wl-emoji-preview-top, -4em) !important;
+  bottom: auto !important;
+  right: auto !important;
+  transform: translate(-50%, -100%) !important;
+  max-width: var(--wl-emoji-preview) !important;
+  max-height: var(--wl-emoji-preview) !important;
+  /* 只能淡入：!important 在层叠里高于动画，动画改 transform 会被上面那行吃掉 */
+  animation: wl-emoji-fade-in 0.12s ease-out;
+}
+@keyframes wl-emoji-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.wl-emoji-popup .wl-emoji-preview:is([src*='/smoji/yier-bubu/'], [src*='/smoji/xiaohuangtun/'], [src*='/smoji/yantuanzi/'], [src*='/smoji/mochadandan/'], [src*='/smoji/xiaoxiongchong/'], [src*='/smoji/popo/'], [src*='/smoji/xiaokumao/'], [src*='/smoji/eveonecat-static/']) {
+  max-width: var(--wl-emoji-preview-big) !important;
+  max-height: var(--wl-emoji-preview-big) !important;
+  width: auto !important;
+  height: auto !important;
+}
+/* 触屏点格子也会派发 mouseover，预览弹出来盖住输入框又不消失 */
+@media (hover: none) {
+  .wl-emoji-popup .wl-emoji-preview {
+    display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wl-emoji-popup.display,
+  .wl-emoji-popup .wl-emoji-preview {
+    animation: none !important;
+  }
+}
+
 /* twikoo 评论区超链接样式 */
 .tk-main a {
   @apply text-blue-700;

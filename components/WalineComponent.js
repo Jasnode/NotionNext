@@ -4,6 +4,8 @@ import { useRouter } from 'next/router'
 import '@waline/client/style'
 import { siteConfig } from '@/lib/config'
 import { createWalineAnchorObserver } from '@/lib/utils/waline'
+import { attachWalineEmojiPanelBehavior } from '@/lib/utils/walineEmojiPanel'
+import SMOJI_EMOJIS from '@/lib/utils/smojiEmoji'
 
 const path = ''
 let waline = null
@@ -74,6 +76,7 @@ const WalineComponent = (props) => {
   }
   useEffect(() => {
     let anchorObserver = null
+    let detachEmojiPanel = null
 
     if (!waline) {
       waline = init({
@@ -89,12 +92,13 @@ const WalineComponent = (props) => {
           'https://cdn.jsdmirror.com/npm/@waline/emojis@1.4.0/qq',
           'https://cdn.jsdmirror.com/npm/@waline/emojis@1.4.0/bmoji',
           'https://cdn.jsdmirror.com/npm/@waline/emojis@1.4.0/bilibili',
-          'https://cdn.jsdmirror.com/npm/@waline/emojis@1.4.0/weibo',
-          'https://cdn.jsdmirror.com/npm/@waline/emojis@1.4.0/tieba',
-          'https://cdn.jsdmirror.com/npm/@waline/emojis@1.4.0/tw-food'
+          'https://cdn.jsdmirror.com/npm/@waline/emojis@1.4.0/tw-food',
+          ...SMOJI_EMOJIS
         ]
       })
     }
+    detachEmojiPanel = attachWalineEmojiPanelBehavior(containerRef.current)
+
     // 跳转评论
     router.events.on('routeChangeComplete', updateWaline)
     anchorObserver = createWalineAnchorObserver({
@@ -103,6 +107,7 @@ const WalineComponent = (props) => {
     })
 
     return () => {
+      detachEmojiPanel?.()
       anchorObserver?.disconnect()
       if (waline) {
         waline.destroy()
