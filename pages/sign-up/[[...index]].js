@@ -16,6 +16,11 @@ const SignUp = props => {
 export async function getStaticProps(req) {
   const { locale } = req
 
+  // Clerk 未配置时这个路由只会渲染空壳，返回真 404 而不是可抓取的空白 200
+  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+    return { notFound: true }
+  }
+
   const from = 'SignIn'
   const props = await fetchGlobalAllData({ from, locale })
 

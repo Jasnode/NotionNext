@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-import SEO, { generateStructuredData } from '@/components/SEO'
+import SEO, { generateStructuredData, serializeJsonLd } from '@/components/SEO'
 
 jest.mock('@/lib/config', () => ({
   siteConfig: jest.fn()
@@ -8,7 +8,11 @@ jest.mock('@/lib/config', () => ({
 jest.mock('@/lib/global', () => ({
   useGlobal: () => ({
     locale: {
-      NAV: { ARCHIVE: 'Archive', SEARCH: 'Search', PAGE_NOT_FOUND: 'Not Found' },
+      NAV: {
+        ARCHIVE: 'Archive',
+        SEARCH: 'Search',
+        PAGE_NOT_FOUND: 'Not Found'
+      },
       COMMON: { CATEGORY: 'Category', TAGS: 'Tags' }
     }
   })
@@ -74,11 +78,13 @@ describe('SEO structured data', () => {
       'Example Author',
       'https://example.com'
     )
-    const blogPosting = data.find(item => item['@type'] === 'BlogPosting')
+    const blogPosting = data['@graph'].find(
+      item => item['@type'] === 'BlogPosting'
+    )
 
     expect(blogPosting).toMatchObject({
-      '@context': 'https://schema.org',
       '@type': 'BlogPosting',
+      '@id': 'https://example.com/article/structured-data#article',
       headline: 'Structured data in NotionNext',
       url: 'https://example.com/article/structured-data',
       datePublished: '2026-07-01T00:00:00.000Z',
@@ -86,31 +92,173 @@ describe('SEO structured data', () => {
       keywords: 'notion, seo',
       articleSection: 'Engineering',
       mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': 'https://example.com/article/structured-data'
+        '@id': 'https://example.com/article/structured-data#webpage'
       }
     })
-    expect(blogPosting.publisher.logo.url).toBe(
-      'https://example.com/logo.png'
-    )
+    expect(blogPosting.publisher).toEqual({
+      '@id': 'https://example.com/#organization'
+    })
+    expect(
+      data['@graph'].find(item => item['@type'] === 'Organization').logo.url
+    ).toBe('https://example.com/logo.png')
+    expect(
+      data['@graph'].find(item => item['@type'] === 'BreadcrumbList')
+        .itemListElement
+    ).toHaveLength(3)
   })
 
-  it('generates WebSite data for non-article pages', () => {
+  it('connects non-article pages to the site entities', () => {
     const data = generateStructuredData(
-      { type: 'Page' },
+      { type: 'Page', title: 'About' },
       siteInfo,
       'https://example.com/about',
       'https://example.com/cover.png',
       'Example Author',
+      'https://example.com',
+      { language: 'en-US', siteName: 'Example Blog' }
+    )
+    const website = data['@graph'].find(item => item['@type'] === 'WebSite')
+    const webPage = data['@graph'].find(item => item['@type'] === 'WebPage')
+
+    expect(data['@context']).toBe('https://schema.org')
+    expect(website).toMatchObject({
+      '@id': 'https://example.com/#website',
+      name: 'Example Blog',
+      url: 'https://example.com',
+      inLanguage: 'en-US'
+    })
+    expect(webPage).toMatchObject({
+      '@id': 'https://example.com/about#webpage',
+      name: 'About',
+      url: 'https://example.com/about',
+      isPartOf: { '@id': 'https://example.com/#website' }
+    })
+  })
+
+  it('omits the breadcrumb on the home page', () => {
+    const data = generateStructuredData(
+      { type: 'website', title: 'Example Blog', slug: '' },
+      siteInfo,
+      'https://example.com',
+      '',
+      'Example Author',
       'https://example.com'
     )
 
-    expect(data).toMatchObject({
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: 'Example Blog',
-      url: 'https://example.com'
+    expect(
+      data['@graph'].find(item => item['@type'] === 'BreadcrumbList')
+    ).toBeUndefined()
+    expect(
+      data['@graph'].find(item => item['@type'] === 'WebPage').breadcrumb
+    ).toBeUndefined()
+  })
+
+  it('uses clean breadcrumb names on collection pages', () => {
+    const data = generateStructuredData(
+      {
+        type: 'website',
+        pageType: 'category',
+        title: '技术教程第2页 | Category | Example Blog',
+        breadcrumbName: '技术教程第2页'
+      },
+      siteInfo,
+      'https://example.com/category/tech/page/2',
+      '',
+      'Example Author',
+      'https://example.com'
+    )
+    const breadcrumb = data['@graph'].find(
+      item => item['@type'] === 'BreadcrumbList'
+    )
+
+    expect(breadcrumb.itemListElement).toEqual([
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://example.com'
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '技术教程第2页',
+        item: 'https://example.com/category/tech/page/2'
+      }
+    ])
+  })
+
+  it('points the author entity at the about page', () => {
+    const data = generateStructuredData(
+      { type: 'Page', title: 'About' },
+      siteInfo,
+      'https://example.com/about',
+      '',
+      'Example Author',
+      'https://example.com'
+    )
+
+    expect(
+      data['@graph'].find(item => item['@type'] === 'Person')
+    ).toMatchObject({
+      '@id': 'https://example.com/#author',
+      name: 'Example Author',
+      url: 'https://example.com/about'
     })
+  })
+
+  it('marks password-protected posts as not freely accessible', () => {
+    const buildPost = isLocked =>
+      generateStructuredData(
+        {
+          type: 'Post',
+          title: 'Gated post',
+          isLocked
+        },
+        siteInfo,
+        'https://example.com/article/gated',
+        '',
+        'Example Author',
+        'https://example.com'
+      )['@graph'].find(item => item['@type'] === 'BlogPosting')
+
+    expect(buildPost(false).isAccessibleForFree).toBe(true)
+    expect(buildPost(true).isAccessibleForFree).toBe(false)
+  })
+
+  it('serializes script-closing text without creating an executable tag', () => {
+    const serialized = serializeJsonLd({
+      headline: '</script><script>alert(1)</script>'
+    })
+
+    expect(serialized).not.toContain('</script>')
+    expect(JSON.parse(serialized)).toEqual({
+      headline: '</script><script>alert(1)</script>'
+    })
+  })
+
+  it('adds configured social profiles as sameAs entity links', () => {
+    siteConfig.mockImplementation((key, defaultVal) => {
+      if (key === 'CONTACT_GITHUB') return 'https://github.com/example'
+      if (key === 'CONTACT_WEHCHAT_PUBLIC') {
+        return 'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Example=='
+      }
+      return defaultVal
+    })
+    const data = generateStructuredData(
+      { type: 'Page', title: 'About' },
+      siteInfo,
+      'https://example.com/about',
+      '',
+      'Example Author',
+      'https://example.com'
+    )
+
+    expect(
+      data['@graph'].find(item => item['@type'] === 'Person').sameAs
+    ).toEqual([
+      'https://github.com/example',
+      'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=Example=='
+    ])
   })
 })
 

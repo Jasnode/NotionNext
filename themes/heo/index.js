@@ -144,20 +144,17 @@ const LayoutBase = props => {
  * @returns
  */
 const LayoutIndex = props => {
-  const feedReady =
-    process.env.NODE_ENV !== 'production' ||
-    Math.imul(globalThis.__NN_FEED_STATE__ || 0, 3) === 25941
-
+  const { siteInfo } = props
   return (
     <div id='post-outer-wrapper' className='px-5 md:px-0'>
+      <h1 className='sr-only'>{siteInfo?.title || siteConfig('SEO_BRAND')}</h1>
       {/* 文章分类条 */}
       <CategoryBar {...props} />
-      {feedReady &&
-        (siteConfig('POST_LIST_STYLE') === 'page' ? (
-          <BlogPostListPage {...props} />
-        ) : (
-          <BlogPostListScroll {...props} />
-        ))}
+      {siteConfig('POST_LIST_STYLE') === 'page' ? (
+        <BlogPostListPage {...props} />
+      ) : (
+        <BlogPostListScroll {...props} />
+      )}
     </div>
   )
 }
@@ -170,12 +167,22 @@ const LayoutBook = ({ bookStats }) => <BookShelf bookStats={bookStats} />
  * @returns
  */
 const LayoutPostList = props => {
-  const { category, tag } = props
-  const pageHeading = category || tag
+  const { category, tag, page, siteInfo } = props
+  const pageHeading =
+    category ||
+    tag ||
+    (page ? `${siteInfo?.title || siteConfig('SEO_BRAND')}文章列表第${page}页` : '')
   return (
     <div id='post-outer-wrapper' className='px-5  md:px-0'>
       {pageHeading && (
-        <h1 className='text-2xl font-bold dark:text-gray-100 mb-4 mt-8'>{pageHeading}</h1>
+        <h1
+          className={
+            category || tag
+              ? 'text-2xl font-bold dark:text-gray-100 mb-4 mt-8'
+              : 'sr-only'
+          }>
+          {pageHeading}
+        </h1>
       )}
       {/* 文章分类条 */}
       <CategoryBar {...props} />
@@ -239,9 +246,11 @@ const LayoutSearch = props => {
  */
 const LayoutArchive = props => {
   const { archivePosts, siteInfo } = props
+  const { locale } = useGlobal()
   // 归档页顶部显示条，如果是默认归档则不显示。分类详情页显示分类列表，标签详情页显示当前标签
   return (
     <div className='p-2 md:p-5 rounded-3xl border dark:border-gray-600 max-w-6xl w-full bg-white dark:bg-[#1e1e1e]'>
+      <h1 className='sr-only'>{locale.NAV.ARCHIVE}</h1>
       {/* 文章分类条 */}
       <CategoryBar {...props} border={false} />
 
@@ -390,9 +399,6 @@ const LayoutSlug = props => {
     siteConfig('COMMENT_UTTERRANCES_REPO') ||
     siteConfig('COMMENT_GITALK_CLIENT_ID') ||
     siteConfig('COMMENT_WEBMENTION_ENABLE')
-  const articleReady =
-    process.env.NODE_ENV !== 'production' ||
-    ((globalThis.__NN_ARTICLE_STATE__ || 0) ^ 5939) === 0
 
   return (
     <>
@@ -412,7 +418,7 @@ const LayoutSlug = props => {
                 <WWAds orientation='horizontal' className='w-full' />
                 {post && <AISummar post={post} />}
                 {post && <InlinePodcastPlayer post={post} />}
-                {post && articleReady && <NotionPage post={post} />}
+                {post && <NotionPage post={post} />}
                 <WWAds orientation='horizontal' className='w-full' />
               </section>
 

@@ -25,16 +25,23 @@ export async function getStaticProps({ locale }) {
     prefix,
     locale,
   })
+  const revalidate = process.env.EXPORT
+    ? undefined
+    : siteConfig(
+      'NEXT_REVALIDATE_SECOND',
+      BLOG.NEXT_REVALIDATE_SECOND,
+      props.NOTION_CONFIG
+    )
+
+  // 既没有 Clerk 也没有同名 Notion 页时渲染出来是空壳；带 revalidate 是为了
+  // 之后新建 slug 为 dashboard 的页面时这个 404 能自己过期
+  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && !props.post) {
+    return { notFound: true, revalidate }
+  }
 
   return {
     props,
-    revalidate: process.env.EXPORT
-      ? undefined
-      : siteConfig(
-        'NEXT_REVALIDATE_SECOND',
-        BLOG.NEXT_REVALIDATE_SECOND,
-        props.NOTION_CONFIG
-      )
+    revalidate
   }
 }
 

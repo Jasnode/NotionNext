@@ -60,8 +60,10 @@ output/
 /public/sitemap.xml
 /public/rss/*
 /public/llms.txt
+/public/llms-full.txt
 /sitemap.xml
 /llms.txt
+/llms-full.txt
 
 # yarn
 package-lock.json
