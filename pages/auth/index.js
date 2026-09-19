@@ -1,4 +1,4 @@
-// pages/sitemap.xml.js
+// pages/auth/index.js
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import axios from 'axios'
 import { useRouter } from 'next/router'

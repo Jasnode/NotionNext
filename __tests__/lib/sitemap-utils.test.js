@@ -1,6 +1,7 @@
 import {
   buildSitemapLoc,
   createSiteUrl,
+  getLatestSitemapDate,
   normalizeSitemapBaseUrl,
   normalizeSitemapLocale,
   normalizeSiteUrl,
@@ -121,15 +122,29 @@ describe('sitemap-utils', () => {
 
   describe('toSitemapDateString', () => {
     it('formats valid date to YYYY-MM-DD', () => {
-      expect(toSitemapDateString('2026-02-21T12:34:56.000Z')).toBe(
-        '2026-02-21'
-      )
+      expect(toSitemapDateString('2026-02-21T12:34:56.000Z')).toBe('2026-02-21')
     })
 
     it('falls back when date is invalid', () => {
-      expect(toSitemapDateString('not-a-date', '2026-01-01')).toBe(
-        '2026-01-01'
-      )
+      expect(toSitemapDateString('not-a-date', '2026-01-01')).toBe('2026-01-01')
+    })
+  })
+
+  describe('getLatestSitemapDate', () => {
+    it('uses the newest real content update date', () => {
+      expect(
+        getLatestSitemapDate([
+          { publishDay: '2026-01-01', lastEditedDay: '2026-02-02' },
+          { publishDay: '2026-03-03' },
+          { publishDay: 'invalid-date' }
+        ])
+      ).toBe('2026-03-03')
+    })
+
+    it('uses the explicit fallback when no valid content date exists', () => {
+      expect(
+        getLatestSitemapDate([{ publishDay: 'invalid-date' }], '2026-01-01')
+      ).toBe('2026-01-01')
     })
   })
 })

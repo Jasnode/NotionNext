@@ -80,14 +80,41 @@ describe('generateSitemapXml', () => {
     const xml = writeSpy.mock.calls[0][1]
     expect(xml).toContain('<loc>https://example.com/hello-world</loc>')
     expect(xml).toContain('<lastmod>2026-03-01</lastmod>')
+    expect(xml).toMatch(
+      /<loc>https:\/\/example\.com<\/loc>\s*<lastmod>2026-03-01<\/lastmod>/
+    )
     expect(xml).toContain('<loc>https://example.com/invalid-date-post</loc>')
     expect(xml).not.toContain('<loc>https://example.com/draft-post</loc>')
     expect(xml).not.toContain('https://external.com/landing')
     expect(xml).not.toContain('<loc>https://example.com/#section</loc>')
     expect(xml).not.toContain('<loc>https://example.com/search</loc>')
     expect(xml).not.toContain('<loc>https://example.com/rss/feed.xml</loc>')
-    expect(xml).not.toContain('https://example.com/https://external.com/landing')
+    expect(xml).not.toContain(
+      'https://example.com/https://external.com/landing'
+    )
     expect(xml).not.toContain('Invalid Date')
-    expect((xml.match(/<loc>https:\/\/example\.com\/hello-world<\/loc>/g) || []).length).toBe(1)
+    expect(
+      (xml.match(/<loc>https:\/\/example\.com\/hello-world<\/loc>/g) || [])
+        .length
+    ).toBe(1)
+  })
+
+  it('prefers the dated entry when a duplicate loc has no lastmod', () => {
+    generateSitemapXml({
+      NOTION_CONFIG: { LINK: 'https://example.com' },
+      allPages: [
+        { slug: 'mixed-date-post', status: 'Published' },
+        {
+          slug: 'mixed-date-post',
+          status: 'Published',
+          publishDay: '2026-02-25'
+        }
+      ]
+    })
+
+    const xml = writeSpy.mock.calls[0][1]
+    expect(xml).toMatch(
+      /<loc>https:\/\/example\.com\/mixed-date-post<\/loc>\s*<lastmod>2026-02-25<\/lastmod>/
+    )
   })
 })

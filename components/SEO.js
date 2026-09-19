@@ -84,6 +84,7 @@ const SEO = props => {
   }
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
+  const SITE_NAME = getSiteName(siteInfo, NOTION_CONFIG)
   const description = meta?.description || `${siteInfo?.description}`
   const type = meta?.type === 'Post' ? 'article' : meta?.type || 'website'
   const language = router?.locale || siteConfig('LANG', 'zh-CN', NOTION_CONFIG)
@@ -133,13 +134,17 @@ const SEO = props => {
   )
 
   const FACEBOOK_PAGE = siteConfig('FACEBOOK_PAGE', null, NOTION_CONFIG)
-  const TWITTER_SITE = siteConfig('TWITTER_SITE', '@茉灵智库', NOTION_CONFIG)
+  const TWITTER_SITE = siteConfig('TWITTER_SITE', '', NOTION_CONFIG)
   const TWITTER_CREATOR = siteConfig('TWITTER_CREATOR', '', NOTION_CONFIG)
   const AUTHOR = siteConfig('AUTHOR')
+  const ENABLE_RSS = siteConfig('ENABLE_RSS', true, NOTION_CONFIG)
 
   const ORIGIN = LINK
 
-  const isThin = isThinPageRoute(router.route)
+  const isThin =
+    router.isFallback ||
+    isThinPageRoute(router.route) ||
+    Boolean(meta?.isEmptyShell)
   const robots = isThin
     ? 'noindex, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
     : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
@@ -159,7 +164,9 @@ const SEO = props => {
       <title>{title}</title>
       <meta
         name='theme-color'
-        content={pwaEnabled && pwaConfig ? pwaConfig.themeColor : BACKGROUND_DARK}
+        content={
+          pwaEnabled && pwaConfig ? pwaConfig.themeColor : BACKGROUND_DARK
+        }
       />
       <meta name='robots' content={robots} />
       {robots.startsWith('index') && (
@@ -175,6 +182,14 @@ const SEO = props => {
           <link rel='manifest' href='/manifest.json' />
           <meta name='application-name' content={pwaConfig?.name} />
         </>
+      )}
+      {ENABLE_RSS && (
+        <link
+          rel='alternate'
+          type='application/rss+xml'
+          title={`${SITE_NAME} RSS`}
+          href={toAbsolute('/rss/feed.xml', ORIGIN)}
+        />
       )}
 
       {/* 搜索引擎验证 */}
@@ -217,7 +232,7 @@ const SEO = props => {
       <meta property='og:image:width' content='1200' />
       <meta property='og:image:height' content='630' />
       <meta property='og:image:alt' content={title} />
-      <meta property='og:site_name' content='茉灵智库' />
+      <meta property='og:site_name' content={SITE_NAME} />
       <meta
         property='og:type'
         content={meta?.type === 'Post' ? 'article' : type || 'website'}
@@ -301,8 +316,12 @@ const SEO = props => {
       <script
         type='application/ld+json'
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateStructuredData(meta, siteInfo, url, image, AUTHOR, LINK)
+          __html: serializeJsonLd(
+            generateStructuredData(meta, siteInfo, url, image, AUTHOR, LINK, {
+              language,
+              notionConfig: NOTION_CONFIG,
+              siteName: SITE_NAME
+            })
           )
         }}
       />
@@ -368,136 +387,193 @@ export const generateStructuredData = (
   url,
   image,
   author,
-  siteUrl
+  siteUrl,
+  options = {}
 ) => {
   const origin = normalizeSiteUrl(siteUrl || siteConfig('LINK'))
-
-  const baseData = {
-    '@context': 'https://schema.org',
+  const pageUrl = absEncoded(url || origin, origin)
+  const language = options.language || siteConfig('LANG', 'zh-CN')
+  const siteName = options.siteName || siteInfo?.title || author
+  const pageName = meta?.postTitle || meta?.title || siteInfo?.title || siteName
+  const description = (meta?.description || siteInfo?.description)?.substring(
+    0,
+    160
+  )
+  const imageUrl = toAbsolute(
+    Array.isArray(image) ? image.find(Boolean) : image,
+    origin
+  )
+  const logoUrl = toAbsolute(siteInfo?.icon, origin)
+  const organizationId = `${origin}/#organization`
+  const authorId = `${origin}/#author`
+  const websiteId = `${origin}/#website`
+  const webPageId = `${pageUrl}#webpage`
+  const breadcrumbId = `${pageUrl}#breadcrumb`
+  const sameAs = getSameAsLinks(options.notionConfig)
+  const organization = {
+    '@type': 'Organization',
+    '@id': organizationId,
+    name: siteName,
+    url: origin,
+    ...(logoUrl
+      ? {
+          logo: {
+            '@type': 'ImageObject',
+            '@id': `${origin}/#logo`,
+            url: logoUrl
+          }
+        }
+      : {}),
+    ...(sameAs.length ? { sameAs } : {})
+  }
+  const person = {
+    '@type': 'Person',
+    '@id': authorId,
+    name: author || siteName,
+    url: `${origin}/about`,
+    ...(sameAs.length ? { sameAs } : {})
+  }
+  const website = {
     '@type': 'WebSite',
-    name: siteInfo?.title,
+    '@id': websiteId,
+    name: siteName,
     description: siteInfo?.description?.substring(0, 160),
     url: origin,
-    inLanguage: 'zh-CN',
+    inLanguage: language,
+    author: { '@id': authorId },
+    publisher: { '@id': organizationId },
     potentialAction: {
       '@type': 'SearchAction',
       target: `${origin}/search?s={search_term_string}`,
       'query-input': 'required name=search_term_string'
-    },
-    author: { '@type': 'Person', name: author },
-    publisher: {
-      '@type': 'Organization',
-      name: siteInfo?.title,
-      logo: { '@type': 'ImageObject', url: toAbsolute(siteInfo?.icon, origin) }
     }
   }
-
-  // 文章页结构化数据
-  if (meta?.type === 'Post') {
-    const images = Array.isArray(image)
-      ? image.map(i => toAbsolute(i, origin))
-      : [toAbsolute(image, origin)]
-    const postTitle = meta.postTitle || meta.title
-    const pageUrl = absEncoded(url, origin)
-    return [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          {
-            '@type': 'ListItem',
-            position: 1,
-            name: 'Home',
-            item: origin
-          },
-          meta?.category
-            ? {
-                '@type': 'ListItem',
-                position: 2,
-                name: meta.category,
-                item: `${origin}/category/${encodeURIComponent(meta.category)}`
-              }
-            : null,
-          {
-            '@type': 'ListItem',
-            position: meta?.category ? 3 : 2,
-            name: postTitle,
-            item: pageUrl
-          }
-        ].filter(Boolean)
-      },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        headline: postTitle?.substring(0, 110),
-        description: meta.description?.substring(0, 160),
-        image: images,
-        url: pageUrl,
-        mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
-        datePublished: meta.publishTime || meta.publishDay,
-        dateModified:
-          meta.modifiedTime ||
-          meta.lastEditedDay ||
-          meta.publishTime ||
-          meta.publishDay,
-        author: { '@type': 'Person', name: author },
-        publisher: {
-          '@type': 'Organization',
-          name: siteInfo?.title,
-          logo: {
+  const isCollection = ['category', 'tag', 'archive', 'post-list'].includes(
+    meta?.pageType
+  )
+  const webPage = {
+    '@type': isCollection ? 'CollectionPage' : 'WebPage',
+    '@id': webPageId,
+    name: pageName,
+    description,
+    url: pageUrl,
+    inLanguage: language,
+    isPartOf: { '@id': websiteId },
+    about: { '@id': organizationId },
+    ...(imageUrl
+      ? {
+          primaryImageOfPage: {
             '@type': 'ImageObject',
-            url: toAbsolute(siteInfo?.icon, origin)
+            url: imageUrl
           }
-        },
-        keywords: Array.isArray(meta.tags) ? meta.tags.join(', ') : '',
-        articleSection: meta.category || '',
-        wordCount: meta.wordCount,
-        isAccessibleForFree: true,
-        inLanguage: 'zh-CN'
-      }
-    ]
-  }
-
-  // 分类/标签页使用 CollectionPage
-  if (meta?.pageType === 'category' || meta?.pageType === 'tag') {
-    const pageUrl = absEncoded(url, origin)
-    return [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          {
-            '@type': 'ListItem',
-            position: 1,
-            name: 'Home',
-            item: origin
-          },
-          {
-            '@type': 'ListItem',
-            position: 2,
-            name: meta.title,
-            item: pageUrl
-          }
-        ]
-      },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'CollectionPage',
-        name: meta.title,
-        description: meta.description?.substring(0, 160),
-        url: pageUrl,
-        inLanguage: 'zh-CN',
-        isPartOf: {
-          '@type': 'WebSite',
-          name: siteInfo?.title,
-          url: origin
         }
-      }
-    ]
+      : {})
+  }
+  const graph = [organization, person, website, webPage]
+
+  // encodeCanonical 会给根路径补上尾斜杠，比较前先和 origin 对齐，否则首页也会拿到面包屑
+  if (normalizeSiteUrl(pageUrl) !== origin) {
+    const breadcrumb = {
+      '@type': 'BreadcrumbList',
+      '@id': breadcrumbId,
+      itemListElement: buildBreadcrumbItems(meta, pageName, pageUrl, origin)
+    }
+    webPage.breadcrumb = { '@id': breadcrumbId }
+    graph.push(breadcrumb)
   }
 
-  return baseData
+  if (meta?.type === 'Post') {
+    const images = (Array.isArray(image) ? image : [image])
+      .map(item => toAbsolute(item, origin))
+      .filter(Boolean)
+    const datePublished = meta.publishTime || getIsoTime(meta.publishDay)
+    const dateModified =
+      meta.modifiedTime || getIsoTime(meta.lastEditedDay) || datePublished
+    const wordCount = Number(meta.wordCount)
+    graph.push({
+      '@type': 'BlogPosting',
+      '@id': `${pageUrl}#article`,
+      headline: pageName?.substring(0, 110),
+      description,
+      ...(images.length ? { image: images } : {}),
+      url: pageUrl,
+      mainEntityOfPage: { '@id': webPageId },
+      datePublished,
+      dateModified,
+      author: { '@id': authorId },
+      publisher: { '@id': organizationId },
+      ...(Array.isArray(meta.tags) && meta.tags.length
+        ? { keywords: meta.tags.join(', ') }
+        : {}),
+      ...(meta.category ? { articleSection: meta.category } : {}),
+      ...(Number.isFinite(wordCount) && wordCount > 0 ? { wordCount } : {}),
+      // 加密文章正文对爬虫不可见，声明 true 会与实际可访问性不符
+      isAccessibleForFree: !meta.isLocked,
+      inLanguage: language
+    })
+  }
+
+  return { '@context': 'https://schema.org', '@graph': graph }
 }
+
+const buildBreadcrumbItems = (meta, pageName, pageUrl, origin) => [
+  {
+    '@type': 'ListItem',
+    position: 1,
+    name: 'Home',
+    item: origin
+  },
+  ...(meta?.type === 'Post' && meta?.category
+    ? [
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: meta.category,
+          item: `${origin}/category/${encodeURIComponent(meta.category)}`
+        }
+      ]
+    : []),
+  {
+    '@type': 'ListItem',
+    position: meta?.type === 'Post' && meta?.category ? 3 : 2,
+    name: meta?.breadcrumbName || pageName,
+    item: pageUrl
+  }
+]
+
+const SOCIAL_PROFILE_KEYS = [
+  'CONTACT_GITHUB',
+  'CONTACT_TWITTER',
+  'CONTACT_LINKEDIN',
+  'CONTACT_ORCID',
+  'CONTACT_CSDN',
+  'CONTACT_JUEJIN',
+  'CONTACT_BILIBILI',
+  'CONTACT_YOUTUBE',
+  'CONTACT_XIAOHONGSHU',
+  'CONTACT_WEIBO',
+  'CONTACT_INSTAGRAM',
+  'CONTACT_TELEGRAM',
+  'CONTACT_ZHISHIXINGQIU',
+  'CONTACT_WEHCHAT_PUBLIC'
+]
+
+const getSameAsLinks = notionConfig =>
+  SOCIAL_PROFILE_KEYS.map(key => siteConfig(key, '', notionConfig))
+    .filter(value => typeof value === 'string' && /^https?:\/\//i.test(value))
+    .filter((value, index, values) => values.indexOf(value) === index)
+
+/**
+ * 站点品牌名；组件与 getSEOMeta 共用，避免两处回退顺序不一致
+ */
+const getSiteName = (siteInfo, notionConfig) =>
+  siteConfig('SEO_BRAND', null, notionConfig) ||
+  siteConfig('TITLE', null, notionConfig) ||
+  siteInfo?.title ||
+  ''
+
+export const serializeJsonLd = data =>
+  JSON.stringify(data).replace(/</g, '\\u003c')
 
 const containsGoogleFontsUrl = fontUrl => {
   const urls = Array.isArray(fontUrl) ? fontUrl : [fontUrl]
@@ -536,7 +612,10 @@ const isThinPageRoute = route =>
   route === '/search' ||
   route === '/search/[keyword]' ||
   route === '/search/[keyword]/page/[page]' ||
-  route === '/404'
+  route === '/404' ||
+  route === '/500' ||
+  route === '/auth' ||
+  route === '/auth/result'
 
 const getSingleValue = value => {
   if (Array.isArray(value)) return value[0]
@@ -563,13 +642,12 @@ const getSearchPage = (props = {}, router = {}) =>
  * @param {*} router
  */
 const getSEOMeta = (props, router, locale) => {
-  const { post, siteInfo, tag, category, page } = props
+  const { post, siteInfo, tag, category, page, NOTION_CONFIG } = props
   const keyword = getSearchKeyword(props, router)
   const searchPage = getSearchPage(props, router)
 
   // SEO title 后缀使用短品牌名，与 Notion TITLE（可能是长标题）解耦
-  const SITE_NAME =
-    siteConfig('SEO_BRAND') || siteConfig('TITLE') || siteInfo?.title
+  const SITE_NAME = getSiteName(siteInfo, NOTION_CONFIG)
   switch (router.route) {
     case '/':
       return {
@@ -585,15 +663,19 @@ const getSEOMeta = (props, router, locale) => {
         description: `${SITE_NAME}的文章归档，按时间浏览所有已发布文章`,
         image: `${siteInfo?.pageCover}`,
         slug: 'archive',
-        type: 'website'
+        type: 'website',
+        pageType: 'archive',
+        breadcrumbName: locale.NAV.ARCHIVE
       }
     case '/page/[page]':
       return {
-        title: `${page} | Page | ${SITE_NAME}`,
-        description: `${SITE_NAME}第${page}页文章列表`,
+        title: `文章列表第${page}页 | ${SITE_NAME}`,
+        description: `${SITE_NAME}的文章列表第${page}页，浏览更多已发布内容`,
         image: `${siteInfo?.pageCover}`,
         slug: 'page/' + page,
-        type: 'website'
+        type: 'website',
+        pageType: 'post-list',
+        breadcrumbName: `第${page}页`
       }
     case '/category/[category]':
       return {
@@ -602,16 +684,18 @@ const getSEOMeta = (props, router, locale) => {
         slug: 'category/' + category,
         image: `${siteInfo?.pageCover}`,
         type: 'website',
-        pageType: 'category'
+        pageType: 'category',
+        breadcrumbName: category
       }
     case '/category/[category]/page/[page]':
       return {
-        title: `${category} | ${locale.COMMON.CATEGORY} | ${SITE_NAME}`,
+        title: `${category}第${page}页 | ${locale.COMMON.CATEGORY} | ${SITE_NAME}`,
         description: `「${category}」分类第${page}页 - ${SITE_NAME}`,
         slug: `category/${category}/page/${page}`,
         image: `${siteInfo?.pageCover}`,
         type: 'website',
-        pageType: 'category'
+        pageType: 'category',
+        breadcrumbName: `${category}第${page}页`
       }
     case '/tag/[tag]':
       return {
@@ -620,16 +704,18 @@ const getSEOMeta = (props, router, locale) => {
         image: `${siteInfo?.pageCover}`,
         slug: 'tag/' + tag,
         type: 'website',
-        pageType: 'tag'
+        pageType: 'tag',
+        breadcrumbName: tag
       }
     case '/tag/[tag]/page/[page]':
       return {
-        title: `${tag} | ${locale.COMMON.TAGS} | ${SITE_NAME}`,
+        title: `${tag}第${page}页 | ${locale.COMMON.TAGS} | ${SITE_NAME}`,
         description: `标签「${tag}」第${page}页 - ${SITE_NAME}`,
         image: `${siteInfo?.pageCover}`,
         slug: `tag/${tag}/page/${page}`,
         type: 'website',
-        pageType: 'tag'
+        pageType: 'tag',
+        breadcrumbName: `${tag}第${page}页`
       }
     case '/search':
       return {
@@ -637,7 +723,8 @@ const getSEOMeta = (props, router, locale) => {
         description: `在${SITE_NAME}中搜索内容`,
         image: `${siteInfo?.pageCover}`,
         slug: 'search',
-        type: 'website'
+        type: 'website',
+        breadcrumbName: locale.NAV.SEARCH
       }
     case '/search/[keyword]':
     case '/search/[keyword]/page/[page]':
@@ -653,7 +740,10 @@ const getSEOMeta = (props, router, locale) => {
           (router.route === '/search/[keyword]/page/[page]' && searchPage
             ? `/page/${searchPage}`
             : ''),
-        type: 'website'
+        type: 'website',
+        breadcrumbName: keyword
+          ? `${locale.NAV.SEARCH}: ${keyword}`
+          : locale.NAV.SEARCH
       }
     case '/404':
       return {
@@ -667,7 +757,8 @@ const getSEOMeta = (props, router, locale) => {
         image: `${siteInfo?.pageCover}`,
         slug: 'tag',
         type: 'website',
-        pageType: 'tag'
+        pageType: 'tag',
+        breadcrumbName: locale.COMMON.TAGS
       }
     case '/category':
       return {
@@ -676,24 +767,27 @@ const getSEOMeta = (props, router, locale) => {
         image: `${siteInfo?.pageCover}`,
         slug: 'category',
         type: 'website',
-        pageType: 'category'
+        pageType: 'category',
+        breadcrumbName: locale.COMMON.CATEGORY
       }
     default: {
       const normalizedCategory = Array.isArray(post?.category)
         ? post.category[0]
         : post?.category
       return {
-        title: post
-          ? `${post?.title} | ${SITE_NAME}`
-          : `${SITE_NAME} | loading`,
+        title: post ? `${post?.title} | ${SITE_NAME}` : SITE_NAME,
         postTitle: post?.title,
         description: post?.summary,
         type: post?.type,
         slug: post?.slug,
+        // 落到 default 分支又没有 post 的路由（未配置 Clerk 的 /sign-in、
+        // 无同名 Notion 页的 /dashboard）渲染出来是空壳，不能进索引
+        isEmptyShell: !post,
         image: post?.pageCoverThumbnail || `${siteInfo?.pageCover}`,
         category: normalizedCategory || '',
         tags: post?.tags,
         wordCount: post?.wordCount,
+        isLocked: Boolean(post?.password),
         publishDay: post?.publishDay,
         lastEditedDay: post?.lastEditedDay,
         publishTime:
