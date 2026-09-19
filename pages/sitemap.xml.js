@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import {
   buildSitemapLoc,
+  getLatestSitemapDate,
   normalizeSitemapBaseUrl,
   normalizeSitemapLocale,
   toSitemapDateString
@@ -48,6 +49,11 @@ function generateLocalesSitemap(link, allPages, locale) {
   const normalizedLink = normalizeSitemapBaseUrl(link)
   const normalizedLocale = normalizeSitemapLocale(locale)
   const dateNow = toSitemapDateString(new Date())
+  const publishedPages =
+    allPages
+      ?.filter(p => p.status === BLOG.NOTION_PROPERTY_NAME.status_publish)
+      ?.filter(p => isValidSitemapSlug(p.slug)) ?? []
+  const latestContentDate = getLatestSitemapDate(publishedPages, dateNow)
 
   const defaultFields = [
     {
@@ -55,7 +61,7 @@ function generateLocalesSitemap(link, allPages, locale) {
         baseUrl: normalizedLink,
         locale: normalizedLocale
       }),
-      lastmod: dateNow,
+      lastmod: latestContentDate,
       changefreq: 'daily',
       priority: '0.7'
     },
@@ -65,7 +71,7 @@ function generateLocalesSitemap(link, allPages, locale) {
         locale: normalizedLocale,
         slug: 'archive'
       }),
-      lastmod: dateNow,
+      lastmod: latestContentDate,
       changefreq: 'daily',
       priority: '0.7'
     },
@@ -75,7 +81,7 @@ function generateLocalesSitemap(link, allPages, locale) {
         locale: normalizedLocale,
         slug: 'category'
       }),
-      lastmod: dateNow,
+      lastmod: latestContentDate,
       changefreq: 'daily',
       priority: '0.7'
     },
@@ -85,16 +91,14 @@ function generateLocalesSitemap(link, allPages, locale) {
         locale: normalizedLocale,
         slug: 'tag'
       }),
-      lastmod: dateNow,
+      lastmod: latestContentDate,
       changefreq: 'daily',
       priority: '0.7'
     }
   ].filter(field => Boolean(field?.loc))
 
   const postFields =
-    allPages
-      ?.filter(p => p.status === BLOG.NOTION_PROPERTY_NAME.status_publish)
-      ?.filter(p => isValidSitemapSlug(p.slug))
+    publishedPages
       ?.map(post => {
         const loc = buildSitemapLoc({
           baseUrl: normalizedLink,
@@ -103,12 +107,13 @@ function generateLocalesSitemap(link, allPages, locale) {
         })
         if (!loc) return null
 
+        const lastmod = toSitemapDateString(
+          post?.lastEditedDay || post?.publishDay,
+          ''
+        )
         return {
           loc,
-          lastmod: toSitemapDateString(
-            post?.lastEditedDay || post?.publishDay,
-            dateNow
-          ),
+          ...(lastmod ? { lastmod } : {}),
           changefreq: 'weekly',
           priority: '0.7'
         }
@@ -124,9 +129,10 @@ function getUniqueFields(fields) {
   fields.forEach(field => {
     const existingField = uniqueFieldsMap.get(field.loc)
 
+    // lastmod 可能缺省，走字符串比较，避免 Invalid Date 让比较恒为 false
     if (
       !existingField ||
-      new Date(field.lastmod) > new Date(existingField.lastmod)
+      (field.lastmod || '') > (existingField.lastmod || '')
     ) {
       uniqueFieldsMap.set(field.loc, field)
     }
@@ -135,4 +141,6 @@ function getUniqueFields(fields) {
   return Array.from(uniqueFieldsMap.values())
 }
 
-export default () => {}
+const SitemapPage = () => null
+
+export default SitemapPage
