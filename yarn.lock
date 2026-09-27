@@ -7,52 +7,33 @@
   resolved "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.4.4.tgz"
   integrity sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==
 
-"@ai-sdk/gateway@4.0.16":
-  version "4.0.16"
-  resolved "https://registry.npmjs.org/@ai-sdk/gateway/-/gateway-4.0.16.tgz#7dd1f450fa5e2b0785b69842638b4df2445f9885"
-  integrity sha512-9iYxdOLquoOFk5e+02P9qfBIA+EJU0FNJvyjGxi4iXJabt2+GlbaCg7TX0sTtxOsBVkdabkatqWM6+kvp53tBg==
-  dependencies:
-    "@ai-sdk/provider" "4.0.3"
-    "@ai-sdk/provider-utils" "5.0.7"
-    "@vercel/oidc" "3.2.0"
-
-"@ai-sdk/gateway@4.0.90":
-  version "4.0.90"
-  resolved "https://registry.npmjs.org/@ai-sdk/gateway/-/gateway-4.0.90.tgz#1899c065662db3c8dbde87bdeafc5db3d7c25fd7"
-  integrity sha512-mtmiicpMapQU8K0ynNXCRcO55GVyBv6kjbwsD15RMxJKZUUPR99HfQ7/BsdRLdjSQcL7YcCauMLbguw6J+JFjQ==
+"@ai-sdk/gateway@4.0.96":
+  version "4.0.96"
+  resolved "https://registry.npmjs.org/@ai-sdk/gateway/-/gateway-4.0.96.tgz#9c5b5090da0e2fb6bd8a68d6a17b14b44b08e0df"
+  integrity sha512-1aniRTzEf9T7uRHdKnBQ36WgEVQswK6wDgkPVsNMl+sPy7otcmrBa2HEurdFBS51s1q3/UXlh8nNcguwU79Hkg==
   dependencies:
     "@ai-sdk/provider" "4.0.18"
-    "@ai-sdk/provider-utils" "5.0.46"
+    "@ai-sdk/provider-utils" "5.0.49"
     "@vercel/oidc" "3.2.0"
 
 "@ai-sdk/google@^4.0.75":
-  version "4.0.78"
-  resolved "https://registry.npmjs.org/@ai-sdk/google/-/google-4.0.78.tgz#501607df97e44a7bee02d40637961f24f0c672ed"
-  integrity sha512-5J+N8DkLBrL67SH4CByJgBuzdbyC4aUniM+kdCHeLjyIYh9YkvD3sEvx+F39V5qlNIWgvnRWL1jskDnizFAnhw==
+  version "4.0.82"
+  resolved "https://registry.npmjs.org/@ai-sdk/google/-/google-4.0.82.tgz#0f2849ea63e9d6a66b5fdd18d349d35ce98712ad"
+  integrity sha512-2zPYyBSyIcywLtOEJRxlrtXjBjz4KxEU19Qqg/Dk8I9BrsB08+ghG2jv155dtuDZj8qZMrh6LO8J+Wt5O4xVhg==
   dependencies:
     "@ai-sdk/provider" "4.0.18"
-    "@ai-sdk/provider-utils" "5.0.46"
+    "@ai-sdk/provider-utils" "5.0.49"
 
-"@ai-sdk/provider-utils@5.0.46":
-  version "5.0.46"
-  resolved "https://registry.npmjs.org/@ai-sdk/provider-utils/-/provider-utils-5.0.46.tgz#e893aab93d242bf0c5ecc5fc1b80a4a4e07fffb5"
-  integrity sha512-XYpiJbd3jW12HC4yzqNmUuPbZ7ooKXVxQjnXCC3O/VzzV2OvRWD6lDFUYYPLs/ZJgTcWWUkmHL/vIyvnxyplVA==
+"@ai-sdk/provider-utils@5.0.49":
+  version "5.0.49"
+  resolved "https://registry.npmjs.org/@ai-sdk/provider-utils/-/provider-utils-5.0.49.tgz#8c60cfd3079265415b615d43fa4a3533d40fb6d3"
+  integrity sha512-T+/H8DCvqJoCqLhltVatS7ffA779Iyk/ZZrgNXkrgv51E0n2Cd6eIdCmtwhCGIKqtbTtwCvTmQdAMv5Z8rOGHQ==
   dependencies:
     "@ai-sdk/provider" "4.0.18"
     "@standard-schema/spec" "^1.1.0"
     "@workflow/serde" "4.1.0"
     eventsource-parser "^3.0.8"
     undici "^7.29.0"
-
-"@ai-sdk/provider-utils@5.0.7":
-  version "5.0.7"
-  resolved "https://registry.npmjs.org/@ai-sdk/provider-utils/-/provider-utils-5.0.7.tgz#e1bb4c785bc8eaf34aa4c08255375bd64b0d18bb"
-  integrity sha512-OSm5/5kdrHa11WIOo5LYgDKnxYWp5aB/wx5EXRHi0jpUGduMDeB6oht9U6p+UNNWIP3F/EqPpV8d7vdP/iRnqg==
-  dependencies:
-    "@ai-sdk/provider" "4.0.3"
-    "@standard-schema/spec" "^1.1.0"
-    "@workflow/serde" "4.1.0"
-    eventsource-parser "^3.0.8"
 
 "@ai-sdk/provider@4.0.18":
   version "4.0.18"
@@ -61,20 +42,13 @@
   dependencies:
     json-schema "^0.4.0"
 
-"@ai-sdk/provider@4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@ai-sdk/provider/-/provider-4.0.3.tgz#308624f81547a73556a67dc2465bf6f1d67fb77f"
-  integrity sha512-e0CpNWJUY7OxAFAnCZkw+ri9QOHWwTs1tXP42782KFGCU07qt8NiXCrCVowyCB5dP2r5/Uls+g2oPd8kOJn9dw==
-  dependencies:
-    json-schema "^0.4.0"
-
 "@ai-sdk/vue@^4.0.106":
-  version "4.0.112"
-  resolved "https://registry.npmjs.org/@ai-sdk/vue/-/vue-4.0.112.tgz#5ed11875db1de8e6f91d3cb50eb2f8d514009594"
-  integrity sha512-Pp7s5VruMrRwsO0Fdo3Qi3ADQ1UnHw+w+06ki90W8bhrwzyoUR7sr3vZuyiNj63UOXMwUGeJ9sAaS8JSMYeh7w==
+  version "4.0.118"
+  resolved "https://registry.npmjs.org/@ai-sdk/vue/-/vue-4.0.118.tgz#ac73b7386787fa43c36e51640ac83b2f83b9173d"
+  integrity sha512-WRYAYf+BFMSmLwcX/I77g36GRd2g/DWlk7wkxVBsl7kEASdMSmUbQARfIvBV2e8lVPp24cgdJo+NHv7gMFfeMw==
   dependencies:
-    "@ai-sdk/provider-utils" "5.0.46"
-    ai "7.0.112"
+    "@ai-sdk/provider-utils" "5.0.49"
+    ai "7.0.118"
     swrv "^1.2.0"
 
 "@algolia/abtesting@1.18.1":
@@ -2806,23 +2780,14 @@ agent-base@^7.1.0, agent-base@^7.1.2:
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-7.1.4.tgz#e3cd76d4c548ee895d3c3fd8dc1f6c5b9032e7a8"
   integrity sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==
 
-ai@7.0.112:
-  version "7.0.112"
-  resolved "https://registry.npmjs.org/ai/-/ai-7.0.112.tgz#b023a468784a90d9d9d95078770d4962ea72db1b"
-  integrity sha512-JDIaxfynFQoV/MPh8AUeHIpuFAUjA2uPBXd6Aa8oZBHtiQ58gJ+Q3NHsQUgavIHsA734oCIr3y9QWkhlgCEA0g==
+ai@7.0.118, ai@^7.0.19:
+  version "7.0.118"
+  resolved "https://registry.npmjs.org/ai/-/ai-7.0.118.tgz#f46df3db2a981a82cb43c9765eaa483d27fa3999"
+  integrity sha512-ZjkbbOffH09yQAjeZ5yGXd8ePTQlFIyKH5aW0s0LOMmvaR1TSoeg5wVURwLvFry/IzzaLndmw9glTKwWRoog3Q==
   dependencies:
-    "@ai-sdk/gateway" "4.0.90"
+    "@ai-sdk/gateway" "4.0.96"
     "@ai-sdk/provider" "4.0.18"
-    "@ai-sdk/provider-utils" "5.0.46"
-
-ai@^7.0.19:
-  version "7.0.22"
-  resolved "https://registry.npmjs.org/ai/-/ai-7.0.22.tgz#f4abdf5c56d5565c623ebbb2960ebcfe2931835b"
-  integrity sha512-iAXYwQtR18qN7GXwNmGVAQM4uSJOh2+nZ5RP9NtDXfH5d4tlYyYzAM133O3U+eVcyWrvNRzecN9yW58xpCdfMg==
-  dependencies:
-    "@ai-sdk/gateway" "4.0.16"
-    "@ai-sdk/provider" "4.0.3"
-    "@ai-sdk/provider-utils" "5.0.7"
+    "@ai-sdk/provider-utils" "5.0.49"
 
 ajv@^6.12.4:
   version "6.12.6"
@@ -4764,9 +4729,9 @@ events-universal@^1.0.0:
     bare-events "^2.7.0"
 
 eventsource-parser@^3.0.8:
-  version "3.1.0"
-  resolved "https://registry.npmjs.org/eventsource-parser/-/eventsource-parser-3.1.0.tgz#4e198eb91cd333d0a8ddcc036502b3618a25f449"
-  integrity sha512-kJezFj9YFAMLeORyi7aCLxLbD5/qWMQnoMVlVPyHIll7lgRJCc3JVln9Vgl9nwQi0YkMnhdGTMNn7CkRRAptMg==
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/eventsource-parser/-/eventsource-parser-3.1.1.tgz#b96cbb7dace4f3774f58a9e3b1ae9a4a524872e2"
+  integrity sha512-EKN1vKAMcZ8MlYMpaNuxN6R9yakzH6uajHcHVTqWJzvu5pWw9DyhbP35HH8MVBQ+dZjAfDxk+A8NiR9KWaXiyQ==
 
 execa@5.1.1, execa@^5.0.0:
   version "5.1.1"
@@ -8828,9 +8793,9 @@ swr@^2.2.0:
     use-sync-external-store "^1.2.0"
 
 swrv@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/swrv/-/swrv-1.2.0.tgz#5b848d08fdba213212c163fb5488a3eb962ae1b5"
-  integrity sha512-lH/g4UcNyj+7lzK4eRGT4C68Q4EhQ6JtM9otPRIASfhhzfLWtbZPHcMuhuba7S9YVYuxkMUGImwMyGpfbkH07A==
+  version "1.3.0"
+  resolved "https://registry.npmjs.org/swrv/-/swrv-1.3.0.tgz#b362fb473830d78adbf7f5e24dfca1069d2c5261"
+  integrity sha512-6uyQ79QemgpJzdwVNkxZdypTmKC80uHdjSZGAGo0HnizL2AzQJUZXQFR3KZq8yru32IC7HngiBA7o2FtL/Lozw==
 
 symbol-tree@^3.2.4:
   version "3.2.4"
@@ -9199,9 +9164,9 @@ undici-types@~7.10.0:
   integrity sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag==
 
 undici@^7.29.0:
-  version "7.29.1"
-  resolved "https://registry.npmjs.org/undici/-/undici-7.29.1.tgz#7741c6fc8b3e1a48e30323833642bfbe841443ad"
-  integrity sha512-RYONW2MeafgYlkVOKYKkA/Ag7BmXqgIWCa8t1m0JcxrQg9pI9lEqRhAOruOBCbAohOa/gkCF+iPi9hrgvTzu6Q==
+  version "7.30.0"
+  resolved "https://registry.npmjs.org/undici/-/undici-7.30.0.tgz#64a947266eb7e21dbeac8b99f8720feef308bbe0"
+  integrity sha512-dkrQXeHSaoamnItlYbmzG0wFYrM0ZwDxCIg0A7aKjTyyhh9svRzCNFEzV+Vm05/yehjCzjDZ31KXfGEjYSztDQ==
 
 unionize@^3.1.0:
   version "3.1.0"
