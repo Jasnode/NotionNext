@@ -1,67 +1,90 @@
-## 利用GitHub Actions每天定时给百度推送链接，提高收录率 ##
+## 每周检查线上站点地图，只把新增或内容发生变化的 URL 推送给搜索引擎 ##
 
 name: pushUrl
 
-# 两种触发方式：一、push代码，二、每天国际标准时间23点（北京时间+8即早上7点）运行
+# 触发方式说明：
+#   1. 每周定时一次：本博客文章存储在 Notion 并动态渲染，发布文章不需要 Git 提交，
+#      因此这里刻意**不带 push 触发**（旧版带 push，导致每次合并上游都会空跑一次）。
+#      变更检测的依据是线上站点实际呈现的内容，而非 Git 历史。
+#   2. workflow_dispatch：手动触发，可选 dry_run 预览或 force 全量重推。
 on:
-  push:
   schedule:
-    - cron: '0 23 */5 * *' # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/events-that-trigger-workflows#scheduled-events-schedule
+    # 每周一 UTC 03:37（北京时间 11:37）。避开整点，减少 GitHub cron 排队延迟。
+    - cron: '37 3 * * 1'
   workflow_dispatch:
     inputs:
-      unconditional-invoking:
-        description: 'push url unconditionally'
+      dry_run:
+        description: '仅预览将推送的 URL，不实际发送'
         type: boolean
-        required: true
-        default: true
+        default: false
+      force:
+        description: '忽略历史状态，全量重推（违反最佳实践，仅在通道失效后重建基线时使用）'
+        type: boolean
+        default: false
 
-# on:
-# schedule:
-#   - cron: '*/5 * * * *' # 每5分钟一次，测试用
+permissions:
+  contents: read
+
+concurrency:
+  group: pushurl-production
+  cancel-in-progress: false
 
 jobs:
   bot:
-    runs-on: ubuntu-latest # 运行环境为最新版的Ubuntu
+    # 防止 fork 副本或非默认分支误用生产环境的推送配额。
+    # 仓库链路：tangly1024/NotionNext → 88lin/HeoLume（开发）→ Jasnode/NotionNext（上线部署）。
+    # 三个名字都放行，避免改名或跨 fork 后守卫失效导致任务静默跳过。
+    if: >-
+      (github.repository == 'Jasnode/NotionNext' ||
+       github.repository == '88lin/HeoLume' ||
+       github.repository == '88lin/NotionNext') &&
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      STATE_DIR: ${{ runner.temp }}/pushurl-state
     steps:
-      - name: 'Checkout codes' # 步骤一，获取仓库代码
-        uses: actions/checkout@v7
-      # - name: 'Run baiduPush' # 步骤二，执行sh命令文件
-      #   run: npm install && npm run baiduPush # 运行目录是仓库根目录
-      - name: Set up Python 3.8
+      - name: Checkout codes
+        uses: actions/checkout@v6
+
+      - name: Set up Python
         uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: '3.12'
 
-      - name: Install requests
-        run: pip install requests
+      # 恢复上一次成功推送的页面指纹，用于计算增量。
+      # 注意：cache 有被回收的可能，一旦丢失会退化为一次全量推送并记录在日志里，
+      # 不会造成错误数据。actions/cache 使用独立的 runtime token，不受上面 permissions 影响。
+      - name: Restore previous submission fingerprints
+        id: cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/pushurl-state
+          key: pushurl-state-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            pushurl-state-v1-
 
-      - name: Push
+      - name: Push changed URLs
+        id: push
         env:
           URL: ${{ secrets.URL }}
           BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}
           BING_API_KEY: ${{ secrets.BING_API_KEY }}
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
-          if [ -n "$URL" ]; then
-            if [ -n "$BAIDU_TOKEN" ]; then
-              python pushUrl.py --url $URL --baidu_token $BAIDU_TOKEN
-            else
-              echo "请前往 Github Action Secrets 配置 BAIDU_TOKEN:"
-              echo "详情参见: 'https://www.ghlcode.cn/fe032806-5362-4d82-b746-a0b26ce8b9d9'"
-            fi
-            if [ -n "$BING_API_KEY" ]; then
-              python pushUrl.py --url $URL --bing_api_key $BING_API_KEY
-            else
-              echo "请前往 Github Action Secrets 配置 BING_API_KEY:"
-              echo "详情参见: 'https://www.ghlcode.cn/fe032806-5362-4d82-b746-a0b26ce8b9d9'"
-            fi
-            if [ -n "$INDEXNOW_KEY" ]; then
-              python pushUrl.py --url $URL --indexnow_key $INDEXNOW_KEY
-            else
-              echo "请前往 Github Action Secrets 配置 INDEXNOW_KEY:"
-              echo "详情参见: 'https://www.indexnow.org'"
-            fi
-          else
-            echo "请前往 Github Action Secrets 配置 URL:"
-            echo "详情参见: 'https://www.ghlcode.cn/fe032806-5362-4d82-b746-a0b26ce8b9d9'"
+          extra_flags=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            extra_flags="--dry_run"
           fi
+          if [ "${{ inputs.force }}" = "true" ]; then
+            extra_flags="$extra_flags --force"
+          fi
+          python pushUrl.py --url "$URL" --state_dir "$STATE_DIR" $extra_flags
+
+      # 仅在确实完成推送时才写回缓存，避免无变更时产生无意义的缓存条目
+      - name: Save submission fingerprints
+        if: steps.push.outputs.pushed == 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ runner.temp }}/pushurl-state
+          key: ${{ steps.cache.outputs.cache-primary-key }}
