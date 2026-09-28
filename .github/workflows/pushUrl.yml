@@ -66,9 +66,13 @@ jobs:
       - name: Push changed URLs
         id: push
         env:
-          URL: ${{ secrets.URL }}
-          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-          # 以下两项暂时留空即可自动停用：
+          # 站点地址与 IndexNow key 都不是机密：key 文件已随仓库部署在
+          # public/183aae36d3d545428d2f5e84eb5acd12.txt，线上可直接访问，
+          # IndexNow 正是靠这个可访问性来校验站点归属。
+          # 这里直接给默认值，未配置 secrets 也能立即工作；要覆盖再配同名 secret 即可。
+          URL: ${{ secrets.URL || 'https://blog.88lin.eu.org' }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY || '183aae36d3d545428d2f5e84eb5acd12' }}
+          # 以下两项留空即自动停用：
           #   百度——站点暂时无法在百度站长平台添加，待可用后补配 token
           #   Bing Webmaster API——IndexNow 已能覆盖必应，通常不必再配
           BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}

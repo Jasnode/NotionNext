@@ -323,11 +323,13 @@ def main():
     if not enabled:
         summary(
             "没有任何渠道凭证，本次不推送。\n\n"
-            "当前推荐使用 IndexNow（覆盖 Bing / Yandex / Seznam / Naver）。\n"
-            "请到仓库 Settings → Secrets and variables → Actions 配置:\n"
-            "- INDEXNOW_KEY\n"
-            "  同时需要在站点根目录放置 https://blog.88lin.eu.org/<key>.txt，文件内容即该 key 本身。\n\n"
-            "以下为暂时未启用的渠道：\n"
+            "IndexNow 的 key 文件应位于 public/<key>.txt，随站点一同部署；\n"
+            "部署后需能通过 https://<域名>/<key>.txt 直接访问且内容为 key 本身，\n"
+            "否则 IndexNow 会返回 403。\n\n"
+            "请到仓库 Settings → Secrets and variables → Actions 配置（也可写在 workflow 的 env 默认值里）：\n"
+            "- INDEXNOW_KEY：IndexNow key，覆盖 Bing / Yandex / Seznam / Naver\n"
+            "- URL：站点地址\n\n"
+            "暂时未启用的渠道：\n"
             "- BAIDU_TOKEN：百度暂时无法添加站点，待添加后再配置\n"
             "- BING_API_KEY：备选，IndexNow 已可覆盖必应，通常无需配置"
         )
