@@ -72,11 +72,12 @@ jobs:
           # 这里直接给默认值，未配置 secrets 也能立即工作；要覆盖再配同名 secret 即可。
           URL: ${{ secrets.URL || 'https://blog.88lin.eu.org' }}
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY || '183aae36d3d545428d2f5e84eb5acd12' }}
-          # 以下两项留空即自动停用：
-          #   百度——站点暂时无法在百度站长平台添加，待可用后补配 token
-          #   Bing Webmaster API——IndexNow 已能覆盖必应，通常不必再配
-          BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}
-          BING_API_KEY: ${{ secrets.BING_API_KEY }}
+          # 以下两项不再启用，故不传：
+          #   百度——站点暂时无法在百度站长平台添加，待可用后再放开
+          #   Bing Webmaster API——IndexNow 已覆盖必应，且该接口每日配额仅 35 条，
+          #     而本站有 65 个页面，首次全量必然超额并持续失败，属重复消耗。
+          #     若确需启用，把下面这行放开即可（脚本已能识别配额不足并给出提示）。
+          # BING_API_KEY: ${{ secrets.BING_API_KEY }}
           # runner 上下文只能用于 step 级别，不能写在 job 级别的 env 里
           STATE_DIR: ${{ runner.temp }}/pushurl-state
         run: |

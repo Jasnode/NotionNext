@@ -196,9 +196,12 @@ def build_state(urls, robots):
 # -------------------------------------------------------------- 推送渠道
 
 def push_indexnow(site, urls, api_key):
-    """IndexNow 推送，覆盖 Bing / Yandex / Seznam / Naver / Yep。Google 不参与。"""
+    """IndexNow 推送，覆盖 Bing / Yandex / Seznam / Naver / Yep。Google 不参与。
+
+    返回 (是否成功, 实际被接受的 URL 列表)。一次可提交上万条，本站无配额压力。
+    """
     if not urls:
-        return True
+        return True, []
     payload = {
         "host": urlsplit(site).netloc,
         "key": api_key,
@@ -216,24 +219,28 @@ def push_indexnow(site, urls, api_key):
             status = response.status
             log(f"IndexNow HTTP {status}：已接收 {len(urls)} 条。"
                 + ("（202 表示待所有权校验，稍后会重推）" if status == 202 else ""))
-            return status in (200, 202)
+            return (status in (200, 202)), urls
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf-8", "replace") if error.fp else ""
         log(f"IndexNow 推送失败 HTTP {error.code}: {detail}")
-        return False
+        return False, []
     except Exception as error:
         log(f"IndexNow 推送异常: {error}")
-        return False
+        return False, []
 
 
 def push_baidu(site, urls, token):
-    """百度主动推送。分批提交，避免超过单次条数与配额限制。"""
+    """百度主动推送。分批提交以避免超出单次条数与配额限制。
+
+    返回 (是否成功, 实际推送成功的 URL 列表)。配额耗尽时已推送的批次仍视为有效，
+    剩余的留待后续运行继续，既不重复也不遗漏。
+    """
     if not urls:
-        return True
+        return True, []
     endpoint = "http://data.zz.baidu.com/urls?site={0}&token={1}".format(
         site.rstrip("/") + "/", token
     )
-    ok = True
+    pushed = []
     for start in range(0, len(urls), BAIDU_BATCH):
         batch = urls[start:start + BAIDU_BATCH]
         request = urllib.request.Request(
@@ -246,45 +253,73 @@ def push_baidu(site, urls, token):
             with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
                 result = json.loads(response.read().decode("utf-8", "replace"))
                 if "success" in result:
+                    pushed.extend(batch)
                     log(f"百度推送成功 {len(batch)} 条，剩余配额 {result.get('remain', '未知')}")
                 else:
                     log(f"百度推送失败: {result}")
-                    ok = False
-                    break  # 配额耗尽或 token 失效时，继续重试没有意义
+                    break  # 配额耗尽或 token 失效，继续重试没有意义
         except urllib.error.HTTPError as error:
             detail = error.read().decode("utf-8", "replace") if error.fp else ""
             log(f"百度推送失败 HTTP {error.code}: {detail}")
-            ok = False
             break
         except Exception as error:
             log(f"百度推送异常: {error}")
-            ok = False
             break
-    return ok
+
+    if not pushed:
+        return False, []
+    if len(pushed) < len(urls):
+        log(f"百度配额限制：本次推送 {len(pushed)}/{len(urls)} 条，剩余将在后续运行继续。")
+    return True, pushed
 
 
 def push_bing(site, urls, api_key):
-    """Bing Webmaster Tools 批量提交接口。"""
+    """Bing Webmaster Tools 批量提交接口。
+
+    该接口有严格的每日配额（实测本站仅 35 条/天），而站点有 65 个页面，
+    全量提交必然超额失败。因此失败时解析剩余配额并缩量重试，
+    本次推不完的留待后续运行继续。返回 (是否成功, 实际推送成功的 URL 列表)。
+    """
     if not urls:
-        return True
+        return True, []
     endpoint = "https://ssl.bing.com/webmaster/api.svc/json/SubmitUrlbatch?apikey={0}".format(api_key)
-    request = urllib.request.Request(
-        endpoint,
-        data=json.dumps({"siteUrl": site.rstrip("/") + "/", "urlList": urls}).encode("utf-8"),
-        headers={"Content-Type": "application/json; charset=utf-8"},
-        method="POST",
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
-            log(f"Bing 推送成功 {len(urls)} 条。")
-            return True
-    except urllib.error.HTTPError as error:
-        detail = error.read().decode("utf-8", "replace") if error.fp else ""
-        log(f"Bing 推送失败 HTTP {error.code}: {detail}")
-        return False
-    except Exception as error:
-        log(f"Bing 推送异常: {error}")
-        return False
+
+    def submit(batch):
+        request = urllib.request.Request(
+            endpoint,
+            data=json.dumps({"siteUrl": site.rstrip("/") + "/", "urlList": batch}).encode("utf-8"),
+            headers={"Content-Type": "application/json; charset=utf-8"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+                log(f"Bing 推送成功 {len(batch)} 条。")
+                return True, batch, ""
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode("utf-8", "replace") if error.fp else ""
+            return False, [], f"HTTP {error.code}: {detail}"
+        except Exception as error:
+            return False, [], str(error)
+
+    ok, pushed, message = submit(urls)
+    if ok:
+        return True, pushed
+
+    log(f"Bing 推送失败 {message}")
+
+    # 配额不足时按剩余额度缩量重试
+    match = re.search(r"Quota remaining for today:\s*(\d+)", message or "")
+    if match:
+        quota = int(match.group(1))
+        if 0 < quota < len(urls):
+            log(f"Bing 今日剩余配额仅 {quota} 条，改为推送其中 {quota} 条，其余留待后续运行。")
+            ok2, pushed2, message2 = submit(urls[:quota])
+            if ok2:
+                return True, pushed2
+            log(f"Bing 缩量推送仍失败 {message2}")
+        else:
+            log("Bing 今日配额已用尽，本次跳过，待配额重置后再试。")
+    return False, []
 
 
 # -------------------------------------------------------------- 主流程
@@ -371,43 +406,77 @@ def main():
     if excluded:
         summary("以下 URL 被排除：" + "\n".join(f"- {url}（{reason}）" for url, reason in sorted(excluded)))
 
+    # 状态按渠道分别记录。
+    # 这一点很关键：若共用一份状态，则任一渠道失败就会回滚全部，导致成功的渠道
+    # 下次被重复推送（曾因此把 IndexNow 已成功推送的 65 条反复重推）。
+    # 分渠道记录后，失败的渠道下次自动重试，成功的渠道不会受影响。
     state_file = Path(args.state_dir) / "state.json"
     previous = {}
     if state_file.exists() and not args.force:
         try:
-            previous = json.loads(state_file.read_text(encoding="utf-8"))
+            loaded = json.loads(state_file.read_text(encoding="utf-8"))
+            # 兼容早期无渠道分层的旧格式：视为所有渠道共用同一份
+            if loaded and all(isinstance(v, dict) for v in loaded.values()):
+                previous = loaded
+            elif loaded:
+                previous = {name: loaded for name in enabled}
         except Exception as error:
             log(f"历史状态读取失败，本次按全量处理: {error}")
 
-    bootstrap = not previous
-    changed = sorted(url for url, digest in current.items() if previous.get(url) != digest)
+    per_channel = {}
+    for name in enabled:
+        prev = previous.get(name, {})
+        if args.force:
+            per_channel[name] = sorted(current)
+        else:
+            per_channel[name] = sorted(url for url, marker in current.items() if prev.get(url) != marker)
 
-    if not changed:
+    if not any(per_channel.values()):
         summary("没有新增或变更的页面，本次不推送任何 URL（这正是期望行为：不重复推送未变更内容）。")
         return 0
 
-    if bootstrap:
-        summary(f"首次运行，未找到历史状态，将以 {len(changed)} 条 URL 建立基线。此后的运行只推增量。")
-    else:
-        summary(f"检测到 {len(changed)} 条新增或变更的页面。")
+    for name, urls in per_channel.items():
+        if urls:
+            reason = "首次运行，将建立基线" if not previous.get(name) else "检测到变更"
+            summary(f"{name}：{reason}，待推送 {len(urls)} 条。")
 
     if args.dry_run:
-        summary("dry_run 模式，将推送：\n" + "\n".join(f"- {url}" for url in changed))
+        for name, urls in per_channel.items():
+            if urls:
+                summary(f"dry_run：{name} 将推送\n" + "\n".join(f"- {url}" for url in urls))
         return 0
 
     results = {}
     for name, push in enabled.items():
-        results[name] = push(site, changed, channels[name][0])
-    failed = [name for name, ok in results.items() if not ok]
+        urls = per_channel[name]
+        if not urls:
+            results[name] = (True, [])  # 该渠道无需推送，不算失败
+            continue
+        results[name] = push(site, urls, channels[name][0])
+
+    # 只把「实际被接受」的 URL 记入状态，避免部分成功时漏推或重复推
+    for name, (ok, pushed) in results.items():
+        if ok and pushed:
+            merged = dict(previous.get(name, {}))
+            merged.update({url: current[url] for url in pushed})
+            previous[name] = merged
+
+    failed = [name for name, (ok, _) in results.items() if not ok]
+    succeeded = [name for name, (ok, pushed) in results.items() if ok and pushed]
 
     if failed:
-        # 不保存状态，让下一次运行自动重试失败的渠道。
-        summary(f"以下渠道推送失败，本次不保存状态，下次将自动重试：{', '.join(failed)}")
-        return 1
+        summary(
+            f"以下渠道推送失败，将在下次运行时重试（不影响已成功渠道的状态）：{', '.join(failed)}"
+        )
 
-    state_file.parent.mkdir(parents=True, exist_ok=True)
-    state_file.write_text(json.dumps(current, indent=2) + "\n", encoding="utf-8")
-    summary(f"全部渠道推送成功，共 {len(changed)} 条。已更新状态记录。")
+    if succeeded:
+        state_file.parent.mkdir(parents=True, exist_ok=True)
+        state_file.write_text(json.dumps(previous, indent=2) + "\n", encoding="utf-8")
+        summary(f"已更新状态记录：{', '.join(succeeded)}")
+
+    if failed:
+        return 1
+    summary("全部渠道推送完成。")
 
     # 通知 workflow 写回缓存；未推送成功时不写，避免产生无意义的缓存条目。
     output = os.environ.get("GITHUB_OUTPUT")
