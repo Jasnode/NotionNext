@@ -50,10 +50,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      # 恢复上一次成功推送的页面指纹，用于计算增量。
-      # 注意：cache 有被回收的可能，一旦丢失会退化为一次全量推送并记录在日志里，
-      # 不会造成错误数据。actions/cache 使用独立的 runtime token，不受上面 permissions 影响。
-      - name: Restore previous submission fingerprints
+      # 恢复上一次成功推送的记录，用于计算增量。
+      # 记录内容是各 URL 的 sitemap lastmod，不是页面正文，因此体积很小。
+      # 注意：cache 可能被回收，一旦丢失会退化为一次全量推送，日志里会明确标注，不会产生错误数据。
+      # actions/cache 使用独立的 runtime token，不受上面 permissions 影响。
+      - name: Restore previous submission record
         id: cache
         uses: actions/cache/restore@v6
         with:
@@ -85,7 +86,7 @@ jobs:
           python pushUrl.py --url "$URL" --state_dir "$STATE_DIR" $extra_flags
 
       # 仅在确实完成推送时才写回缓存，避免无变更时产生无意义的缓存条目
-      - name: Save submission fingerprints
+      - name: Save submission record
         if: steps.push.outputs.pushed == 'true'
         uses: actions/cache/save@v6
         with:

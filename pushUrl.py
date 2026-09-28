@@ -13,11 +13,20 @@
 本版改为：抓取线上 sitemap，计算每个页面的内容指纹，与上次成功推送的状态比对，
 **只推送新增或内容确实发生变化的 URL**。三个渠道共用同一份变更列表，一次调用完成。
 
-为何以「线上 sitemap」而非本地文件为输入
-----------------------------------------
-本博客的文章存储在 Notion，站点动态渲染，并不通过 Git 提交发布。因此以 Git 变更
-为依据是错的，必须以站点实际对外呈现的内容为准；这样也天然避免了把尚未发布的
-地址推送给搜索引擎。
+为什么用 sitemap 的 lastmod，而不是抓取页面算指纹
+------------------------------------------------
+本站由 Notion 驱动，NotionNext 会把每篇文章在 Notion 里的修改时间写进 sitemap 的
+<lastmod>。实测二者完全一致（例如 /article/notion 的 lastmod 与页面
+article:modified_time 同为 2026-05-30），因此「读一次 sitemap」即可准确判断哪些页面变了：
+
+  旧做法：抓取 65 个页面全文算 SHA-256，约 16MB / 13 秒，每周一次纯属浪费
+  新做法：只请求 sitemap.xml（约 9KB），无页面抓取
+
+只有当某条 URL 缺少 lastmod 时（本站目前 65 条都有），才退化为对该 URL 抓取内容
+计算指纹，作为兜底。这样既轻量，也不会漏掉无法用时间判断的页面。
+
+风险提示：lastmod 的准确性依赖 NotionNext 的生成逻辑。若将来发现时间没跟着文章
+更新，可用 --deep 强制走全量内容指纹做交叉核对。
 
 用法
 ----
@@ -99,7 +108,7 @@ def fetch(url, method="GET", data=None, headers=None):
 
 
 def load_sitemap(site):
-    """读取站点 sitemap.xml，返回 URL 列表。"""
+    """读取站点 sitemap.xml，返回 [(url, lastmod)]；lastmod 缺失时为 None。"""
     sitemap_url = site.rstrip("/") + "/sitemap.xml"
     status, body, _ = fetch(sitemap_url)
     if status != 200:
@@ -109,17 +118,21 @@ def load_sitemap(site):
     if root.tag != SITEMAP_NS + "urlset":
         raise RuntimeError("解析到的不是 URL 集合，可能是 sitemap 索引文件")
 
-    urls = []
+    entries = []
     for node in root.findall(SITEMAP_NS + "url"):
         loc = node.find(SITEMAP_NS + "loc")
-        if loc is not None and loc.text:
-            url = loc.text.strip()
-            if urlsplit(url).netloc == urlsplit(site).netloc:
-                urls.append(url)
+        if loc is None or not loc.text:
+            continue
+        url = loc.text.strip()
+        if urlsplit(url).netloc != urlsplit(site).netloc:
+            continue
+        lastmod_node = node.find(SITEMAP_NS + "lastmod")
+        lastmod = lastmod_node.text.strip() if lastmod_node is not None and lastmod_node.text else None
+        entries.append((url, lastmod))
 
-    if not urls:
+    if not entries:
         raise RuntimeError("sitemap.xml 中没有可用 URL")
-    return sorted(set(urls))
+    return sorted(set(entries))
 
 
 def load_robots(site):
@@ -287,6 +300,8 @@ def main():
     parser.add_argument("--force", action="store_true", help="忽略历史状态，全量重推")
     parser.add_argument("--dry_run", action="store_true", help="只预览将推送的内容，不实际发送")
     parser.add_argument("--check", action="store_true", help="只检查站点可用性，不做推送")
+    parser.add_argument("--deep", action="store_true",
+                        help="忽略 lastmod，抓取全部页面用内容指纹判定（用于交叉核对 lastmod 是否可信）")
     args = parser.parse_args()
 
     site = args.url.strip().rstrip("/")
@@ -319,19 +334,38 @@ def main():
         return 0
 
     try:
-        urls = load_sitemap(site)
+        entries = load_sitemap(site)
     except Exception as error:
         summary(f"错误：{error}")
         return 1
 
-    summary(f"线上 sitemap 共 {len(urls)} 条 URL，已启用渠道：{', '.join(enabled.keys())}")
+    with_lastmod = [e for e in entries if e[1]]
+    without_lastmod = [url for url, lastmod in entries if not lastmod]
+    summary(
+        f"线上 sitemap 共 {len(entries)} 条 URL，已启用渠道：{', '.join(enabled.keys())}\n"
+        f"其中 {len(with_lastmod)} 条自带 lastmod，可直接比对；"
+        f"{len(without_lastmod)} 条缺少 lastmod，需抓取页面计算指纹。"
+    )
 
     if args.check:
         log("--check 模式，站点可访问，不做推送。")
         return 0
 
-    robots = load_robots(site)
-    current, excluded = build_state(urls, robots)
+    # 默认依据 lastmod 判定变更，不抓取页面；--deep 时改为全量内容指纹做交叉核对。
+    current = {}
+    excluded = []
+    if args.deep:
+        log("--deep 模式：改为抓取全部页面计算内容指纹（较慢，仅用于交叉核对 lastmod 是否可信）。")
+        robots = load_robots(site)
+        current, excluded = build_state([url for url, _ in entries], robots)
+    else:
+        for url, lastmod in entries:
+            current[url] = lastmod
+        if without_lastmod:
+            robots = load_robots(site)
+            fallback, excluded = build_state(without_lastmod, robots)
+            current.update(fallback)
+
     if excluded:
         summary("以下 URL 被排除：" + "\n".join(f"- {url}（{reason}）" for url, reason in sorted(excluded)))
 
