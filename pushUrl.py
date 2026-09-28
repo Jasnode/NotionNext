@@ -294,19 +294,27 @@ def main():
         summary("未配置站点地址。请在仓库 Settings → Secrets and variables → Actions 中添加 URL。")
         return 0
 
+    # 渠道说明：
+    #   IndexNow  —— 当前唯一启用的渠道，一次推送即覆盖 Bing / Yandex / Seznam / Naver，足够覆盖必应。
+    #   百度      —— 暂时停用。站点当前无法在百度站长平台添加，等可添加并拿到 token 后再配置
+    #                BAIDU_TOKEN，无需改动代码即可自动恢复。
+    #   Bing API  —— 备选，需 Bing Webmaster Tools 的 key。IndexNow 已能覆盖必应，通常不必再配。
     channels = {
-        "Baidu": (args.baidu_token, push_baidu),
-        "Bing": (args.bing_api_key, push_bing),
         "IndexNow": (args.indexnow_key, push_indexnow),
+        "Baidu": (args.baidu_token, push_baidu),      # 暂时停用：站点未在百度站长平台添加
+        "Bing": (args.bing_api_key, push_bing),       # 备选，不配则不启用
     }
     enabled = {name: fn for name, (token, fn) in channels.items() if token}
     if not enabled:
         summary(
             "没有任何渠道凭证，本次不推送。\n\n"
-            "请到仓库 Settings → Secrets and variables → Actions 配置以下任一项：\n"
-            "- INDEXNOW_KEY（推荐，覆盖 Bing / Yandex / Seznam / Naver）\n"
-            "- BAIDU_TOKEN（百度站长平台的主动推送 token）\n"
-            "- BING_API_KEY（Bing Webmaster Tools API key）"
+            "当前推荐使用 IndexNow（覆盖 Bing / Yandex / Seznam / Naver）。\n"
+            "请到仓库 Settings → Secrets and variables → Actions 配置:\n"
+            "- INDEXNOW_KEY\n"
+            "  同时需要在站点根目录放置 https://blog.88lin.eu.org/<key>.txt，文件内容即该 key 本身。\n\n"
+            "以下为暂时未启用的渠道：\n"
+            "- BAIDU_TOKEN：百度暂时无法添加站点，待添加后再配置\n"
+            "- BING_API_KEY：备选，IndexNow 已可覆盖必应，通常无需配置"
         )
         return 0
 

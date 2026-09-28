@@ -66,9 +66,12 @@ jobs:
         id: push
         env:
           URL: ${{ secrets.URL }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+          # 以下两项暂时留空即可自动停用：
+          #   百度——站点暂时无法在百度站长平台添加，待可用后补配 token
+          #   Bing Webmaster API——IndexNow 已能覆盖必应，通常不必再配
           BAIDU_TOKEN: ${{ secrets.BAIDU_TOKEN }}
           BING_API_KEY: ${{ secrets.BING_API_KEY }}
-          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
           # runner 上下文只能用于 step 级别，不能写在 job 级别的 env 里
           STATE_DIR: ${{ runner.temp }}/pushurl-state
         run: |
