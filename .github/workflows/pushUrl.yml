@@ -9,8 +9,16 @@ name: pushUrl
 #   2. workflow_dispatch：手动触发，可选 dry_run 预览或 force 全量重推。
 on:
   schedule:
-    # 每周一 UTC 03:37（北京时间 11:37）。避开整点，减少 GitHub cron 排队延迟。
+    # 每周一与周四各一次，UTC 03:37（北京时间 11:37）。避开整点，减少 cron 排队延迟。
+    #
+    # 为什么是两次而不是每周一次：记录各 URL 状态的 actions/cache 有
+    # 「7 天未被访问即回收」的规则。若只每周跑一次，间隔正好卡在 7 天边界，
+    # 而 GitHub cron 又常有延迟，缓存极易被回收，导致每次都退化成全量重推——
+    # 那就又回到「重复推送未变更 URL」的老问题上了。
+    # 两次运行把最大间隔压到 4 天，远低于回收阈值。
+    # 单次成本极低（只读一次 sitemap，约 1 秒），不产生额外负担。
     - cron: '37 3 * * 1'
+    - cron: '37 3 * * 4'
   workflow_dispatch:
     inputs:
       dry_run:
