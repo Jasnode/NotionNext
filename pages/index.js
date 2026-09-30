@@ -15,6 +15,7 @@ import { generateRedirectJson } from '@/lib/utils/redirect'
 import { checkDataFromAlgolia } from '@/lib/plugins/algolia'
 import pLimit from 'p-limit'
 import { adapterNotionBlockMap } from '@/lib/utils/notion.util'
+import { isExport } from '@/lib/utils/buildMode'
 
 /**
  * 首页布局
@@ -65,7 +66,7 @@ export async function getStaticProps(req) {
     false,
     props?.NOTION_CONFIG
   )
-  props.posts = props.allPages?.filter(
+  props.posts = (props.allPages ?? []).filter(
     page => page.type === 'Post' && page.status === 'Published'
   )
 
@@ -116,8 +117,10 @@ export async function getStaticProps(req) {
     if (shouldGenerateRssForLocale({ locale })) {
       await generateRss(props)
     }
-    // 生成
-    generateSitemapXml(props)
+    // 动态部署由 /sitemap.xml SSR 路由提供多语言索引，避免 public 文件遮蔽它。
+    if (isExport()) {
+      generateSitemapXml(props)
+    }
     // 检查数据是否需要从algolia删除
     await checkDataFromAlgolia(props)
     if (siteConfig('UUID_REDIRECT', false, props?.NOTION_CONFIG)) {

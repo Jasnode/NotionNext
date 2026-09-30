@@ -51,6 +51,7 @@ export default function PostRecommend({ recommendPosts, siteInfo }) {
                 <div className='relative h-28 overflow-hidden border-b border-slate-200/65 dark:border-slate-700/55 sm:h-32'>
                   <LazyImage
                     src={headerImage}
+                    alt={post?.title}
                     className='absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105'
                   />
                   <div className='absolute inset-0 bg-gradient-to-t from-slate-950/30 via-slate-900/8 to-white/0 dark:from-black/35 dark:via-black/8 dark:to-transparent' />

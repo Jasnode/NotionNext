@@ -1,8 +1,21 @@
-# 分页第 1 页是重复 URL，301 到无页码的规范地址。
+# 分页第 0 / 1 页都归并到无页码的规范地址。
 # 静态导出（EXPORT=true）下 getStaticProps 的 redirect 不执行，未导出的
-# page/1 会直接落到 404，因此由平台级重定向兜底。
+# page/0 与 page/1 会直接落到 404，因此由平台级重定向兜底。
 # 语法为 Cloudflare Pages / Netlify 通用；Vercel 忽略本文件（其 SSR 下由
 # getStaticProps 的 redirect 生效）。目标与页面 canonical 一致（无尾斜杠）。
+/page/0                       /                      301
+/category/:category/page/0    /category/:category    301
+/tag/:tag/page/0              /tag/:tag              301
+/page/0.html                  /                      301
+/category/:category/page/0.html /category/:category  301
+/tag/:tag/page/0.html         /tag/:tag              301
+/page/1.html                  /                      301
+/category/:category/page/1.html /category/:category  301
+/tag/:tag/page/1.html         /tag/:tag              301
 /page/1                       /                      301
 /category/:category/page/1    /category/:category    301
 /tag/:tag/page/1              /tag/:tag              301
+/search/:keyword/page/0       /search/:keyword       301
+/search/:keyword/page/0.html  /search/:keyword       301
+/search/:keyword/page/1       /search/:keyword       301
+/search/:keyword/page/1.html  /search/:keyword       301

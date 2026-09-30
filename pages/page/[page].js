@@ -1,4 +1,5 @@
 import BLOG from '@/blog.config'
+import { isExport } from '@/lib/utils/buildMode'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData, getPostBlocks } from '@/lib/db/SiteDataApi'
 import { formatNotionBlock } from '@/lib/db/notion/getPostBlocks'
@@ -29,7 +30,7 @@ export async function getStaticPaths({ locale }) {
     paths: Array.from({ length: totalPages - 1 }, (_, i) => ({
       params: { page: '' + (i + 2) }
     })),
-    fallback: 'blocking'
+    fallback: isExport() ? false : 'blocking'
   }
 }
 
@@ -51,7 +52,7 @@ export async function getStaticProps({ params: { page }, locale }) {
     props?.NOTION_CONFIG
   )
 
-  const allPosts = allPages?.filter(
+  const allPosts = (allPages ?? []).filter(
     page => page.type === 'Post' && page.status === 'Published'
   )
   const POSTS_PER_PAGE = siteConfig('POSTS_PER_PAGE', 12, props?.NOTION_CONFIG)

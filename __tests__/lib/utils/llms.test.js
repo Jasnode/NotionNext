@@ -1,4 +1,5 @@
 import fs from 'fs'
+import BLOG from '@/blog.config'
 import { generateLlmsTxt } from '@/lib/utils/llms.txt'
 
 jest.mock('@/lib/config', () => ({
@@ -19,6 +20,22 @@ describe('generateLlmsTxt', () => {
 
   afterEach(() => {
     writeSpy.mockRestore()
+  })
+
+  it('indexes normalized published content when the Notion status label is localized', () => {
+    const originalStatus = BLOG.NOTION_PROPERTY_NAME.status_publish
+    BLOG.NOTION_PROPERTY_NAME.status_publish = '已发布'
+    try {
+      generateLlmsTxt({
+        siteInfo: { title: 'Example' },
+        allPages: [{ title: 'Public', slug: 'article/public', status: 'Published' }],
+        NOTION_CONFIG: { LINK: 'https://example.com' }
+      })
+      expect(writeSpy.mock.calls.find(([file]) => file === 'llms-full.txt')[1])
+        .toContain('[Public](https://example.com/article/public)')
+    } finally {
+      BLOG.NOTION_PROPERTY_NAME.status_publish = originalStatus
+    }
   })
 
   it('writes a concise discovery file and a complete content index', () => {

@@ -1,4 +1,5 @@
 import BLOG from '@/blog.config'
+import { isExport } from '@/lib/utils/buildMode'
 import { getDataFromCache } from '@/lib/cache/cache_manager'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
@@ -56,7 +57,7 @@ export async function getStaticProps({ params: { keyword }, locale }) {
 export function getStaticPaths() {
   return {
     paths: [{ params: { keyword: 'NotionNext' } }],
-    fallback: true
+    fallback: isExport() ? false : true
   }
 }
 

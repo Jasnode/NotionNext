@@ -56,6 +56,7 @@ export default function PostHeader({ post, siteInfo, isDarkMode, lock }) {
             id='post-cover'
             className='w-full h-full object-cover opacity-60 max-h-[50rem] min-w-[50vw] min-h-[20rem]'
             src={headerImage}
+            alt={post?.title}
           />
         </div>
 

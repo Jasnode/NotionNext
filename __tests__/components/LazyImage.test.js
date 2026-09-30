@@ -20,6 +20,23 @@ describe('LazyImage Component', () => {
     mockIntersectionObserver.mockClear()
   })
 
+  it('preserves an explicitly decorative empty alt even with a title', () => {
+    const { container } = render(<LazyImage src='/decoration.svg' alt='' title='Decorative title' />)
+    expect(container.querySelector('img')).toHaveAttribute('alt', '')
+  })
+
+  it('uses a supplied title when alt is omitted', () => {
+    render(<LazyImage src='/cover.jpg' title='Article cover' />)
+    expect(screen.getByAltText('Article cover')).toBeInTheDocument()
+  })
+
+  it('does not turn the browser pathname into image text', () => {
+    window.history.replaceState({}, '', '/article/slug-with-no-image-description')
+    const { container } = render(<LazyImage src='/decoration.svg' />)
+    expect(container.querySelector('img')).toHaveAttribute('alt', '')
+    window.history.replaceState({}, '', '/')
+  })
+
   it('renders with required props', () => {
     render(<LazyImage {...defaultProps} />)
     

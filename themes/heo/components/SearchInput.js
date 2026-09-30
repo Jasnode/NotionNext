@@ -3,7 +3,7 @@ import { useImperativeHandle, useRef, useState } from 'react'
 import { useGlobal } from '@/lib/global'
 
 const SearchInput = props => {
-  const { currentSearch, cRef, className } = props
+  const { currentSearch, cRef, className, staticSearch = false } = props
   const [onLoading, setLoadingState] = useState(false)
   const router = useRouter()
   const searchInputRef = useRef()
@@ -20,13 +20,17 @@ const SearchInput = props => {
   })
 
   const handleSearch = () => {
-    const key = searchInputRef.current.value
+    if (lockRef.current) return
+    const key = searchInputRef.current.value.trim()
     if (key && key !== '') {
       setLoadingState(true)
-      router.push({ pathname: '/search/' + key }).then(r => {
+      // 静态导出无法生成任意关键词路径；动态部署保留服务端全文搜索。
+      const destination = staticSearch
+        ? { pathname: '/search', query: { s: key } }
+        : { pathname: '/search/[keyword]', query: { keyword: key } }
+      router.push(destination).catch(() => {}).finally(() => {
         setLoadingState(false)
       })
-      // location.href = '/search/' + key
     } else {
       router.push({ pathname: '/' }).then(r => {})
     }

@@ -253,7 +253,8 @@ export default function LazyImage({
     ref: imageRef,
     src: currentSrc,
     'data-src': src, // 存储原始图片地址
-    alt: alt || title || 'Image in ' + (typeof window !== 'undefined' ? window.location.pathname.split('/').pop() || 'homepage' : 'article'),
+    // 保留装饰图的空 alt；兜底文本在服务端和浏览器中保持一致。
+    alt: alt ?? title ?? '',
     onLoad: handleElementLoaded,
     onError: handleImageError,
     className: `${className || ''}${imageLoaded ? '' : ' lazy-image-placeholder'}`,

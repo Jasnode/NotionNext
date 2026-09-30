@@ -42,10 +42,11 @@ const BlogPostArchive = ({ posts = [], archiveTitle, siteInfo }) => {
                 {/* 图片封面 */}
                 {showPageCover && (
                   <div className='flex-shrink-0'>
-                    <SmartLink href={post?.href} passHref legacyBehavior>
+                    <SmartLink href={post?.href} className='block h-full'>
                       <LazyImage
                         className={'rounded-xl bg-center bg-cover w-28 h-full md:w-40 object-cover'}
                         src={cover}
+                        alt={post.title}
                       />
                     </SmartLink>
                   </div>

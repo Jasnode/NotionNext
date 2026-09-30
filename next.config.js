@@ -246,6 +246,7 @@ const nextConfig = {
     ignoreDuringBuilds: true
   },
   output: getOutput(),
+  outputFileTracingRoot: __dirname,
   staticPageGenerationTimeout: getStaticPageGenerationTimeoutSec(),
 
   // 性能优化配置
@@ -254,7 +255,6 @@ const nextConfig = {
   generateEtags: true,
 
   // 构建优化
-  swcMinify: true,
   modularizeImports: {
     '@heroicons/react/24/outline': {
       transform: '@heroicons/react/24/outline/{{member}}'
@@ -305,6 +305,13 @@ const nextConfig = {
     ? undefined
     : () => {
       return [
+        ...['', '/category/:category', '/tag/:tag', '/search/:keyword'].flatMap(prefix =>
+          ['', '.html'].map(extension => ({
+            source: `${prefix}/page/0${extension}`,
+            destination: prefix || '/',
+            permanent: true
+          }))
+        ),
         {
           source: '/feed',
           destination: '/rss/feed.xml',

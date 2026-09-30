@@ -21,6 +21,14 @@ Sending SIGTERM signal to Next.js build worker due to timeout of 300 seconds
 
 多语言 `NOTION_PAGE_ID` 用逗号拼接很多站点时，旧版构建缓存可能报 `ENAMETOOLONG: name too long`（锁文件/缓存文件名过长）。**4.9.5.3+** 已对缓存路径做 SHA-256 短名处理；升级后重新部署即可，无需缩短环境变量。
 
+## 根数据库读取失败
+
+`yarn build`、`yarn export` 和 `yarn build-all-in-dev` 均开启 `BUILD_MODE=true`。根数据库无法读取时会终止构建，避免发布缺少内容的站点。
+
+`build-all-in-dev` 设置 `VERCEL_ENV=production` 后调用 `yarn build`，复用构建保护、缓存与准备步骤，避免静态导出遗留的 `public/sitemap.xml` 与动态路由冲突。
+
+请检查 `NOTION_PAGE_ID` 是否指向博客数据库（而非普通 Page），数据库是否已开启公开访问，以及构建环境能否连接 Notion。有效数据库暂时没有文章可以正常构建；普通 Page 不能作为博客数据库使用。`yarn dev` 保留开发时的空数据回退。
+
 ## 环境变量一览
 
 在部署平台（Cloudflare Pages → **Settings → Environment variables**）或本地 `.env.local` 中配置（**构建时**生效，无需 `NEXT_PUBLIC_` 前缀）：

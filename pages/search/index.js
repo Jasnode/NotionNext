@@ -1,6 +1,7 @@
 import BLOG from '@/blog.config'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { isExport } from '@/lib/utils/buildMode'
 import { DynamicLayout } from '@/themes/theme'
 import { useRouter } from 'next/router'
 
@@ -10,10 +11,11 @@ import { useRouter } from 'next/router'
  * @returns
  */
 const Search = props => {
-  const { posts } = props
+  const { posts = [] } = props
 
   const router = useRouter()
-  const keyword = router?.query?.s
+  const query = router?.query?.s
+  const keyword = (Array.isArray(query) ? query[0] : query)?.trim() || ''
 
   let filteredPosts
   // 静态过滤
@@ -51,9 +53,10 @@ export async function getStaticProps({ locale }) {
     locale
   })
   const { allPages } = props
-  props.posts = allPages?.filter(
+  props.posts = (allPages ?? []).filter(
     page => page.type === 'Post' && page.status === 'Published'
   )
+  props.staticSearch = isExport()
   return {
     props,
     revalidate: process.env.EXPORT

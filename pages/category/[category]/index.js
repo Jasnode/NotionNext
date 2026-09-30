@@ -1,6 +1,8 @@
 import BLOG from '@/blog.config'
+import { isExport } from '@/lib/utils/buildMode'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { postHasCategory } from '@/lib/utils/postCategory'
 import { DynamicLayout } from '@/themes/theme'
 
 /**
@@ -18,16 +20,25 @@ export async function getStaticProps({ params: { category }, locale }) {
   let props = await fetchGlobalAllData({ from, locale })
 
   // 过滤状态
-  props.posts = props.allPages?.filter(
+  props.posts = (props.allPages ?? []).filter(
     page => page.type === 'Post' && page.status === 'Published'
   )
   // 处理过滤
   props.posts = props.posts.filter(
-    post => post && post.category && post.category.includes(category)
+    post => postHasCategory(post, category)
   )
 
   // 处理文章页数
   props.postCount = props.posts.length
+  const revalidate = process.env.EXPORT
+    ? undefined
+    : siteConfig(
+        'NEXT_REVALIDATE_SECOND',
+        BLOG.NEXT_REVALIDATE_SECOND,
+        props.NOTION_CONFIG
+      )
+  // 不存在或没有公开文章的集合返回可重新验证的 404，避免产生空列表软 404。
+  if (props.postCount === 0) return { notFound: true, revalidate }
   // 处理分页
   const POST_LIST_STYLE = siteConfig(
     'POST_LIST_STYLE',
@@ -49,13 +60,7 @@ export async function getStaticProps({ params: { category }, locale }) {
 
   return {
     props,
-    revalidate: process.env.EXPORT
-      ? undefined
-      : siteConfig(
-          'NEXT_REVALIDATE_SECOND',
-          BLOG.NEXT_REVALIDATE_SECOND,
-          props.NOTION_CONFIG
-        )
+    revalidate
   }
 }
 
@@ -67,6 +72,6 @@ export async function getStaticPaths() {
     paths: categories.map(category => ({
       params: { category: category?.name }
     })),
-    fallback: true
+    fallback: isExport() ? false : 'blocking'
   }
 }

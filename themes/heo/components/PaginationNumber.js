@@ -15,18 +15,28 @@ const PaginationNumber = ({ page, totalPage }) => {
   const router = useRouter()
   const { locale } = useGlobal()
 
-  const total = Math.max(1, Number(totalPage) || 1)
-  const currentPage = Math.max(1, Number(page) || 1)
+  const total = Math.max(1, Math.floor(Number(totalPage)) || 1)
+  const currentPage = Math.min(total, Math.max(1, Math.floor(Number(page)) || 1))
 
   const showNext = currentPage < total && total > 1
   const showPrev = currentPage > 1
   const pagePrefix = router.asPath
-    .split('?')[0]
-    .replace(/\/page\/[1-9]\d*/, '')
+    .split(/[?#]/)[0]
     .replace(/\/$/, '')
-    .replace('.html', '')
+    .replace(/\.html$/, '')
+    .replace(/\/page\/\d+$/, '')
 
-  const pages = generatePages(pagePrefix, currentPage, total)
+  const getPageHref = targetPage => {
+    const query = router.query.s ? { s: router.query.s } : {}
+    if (router.route === '/search') {
+      return {
+        pathname: '/search',
+        query: { ...query, ...(targetPage > 1 ? { page: targetPage } : {}) }
+      }
+    }
+    return { pathname: getPagePath(pagePrefix, targetPage), query }
+  }
+  const pages = generatePages(getPageHref, currentPage, total)
 
   const [value, setValue] = useState('')
 
@@ -42,13 +52,7 @@ const PaginationNumber = ({ page, totalPage }) => {
     if (!value) return
     const targetPage = Math.min(total, Math.max(1, Number(value)))
 
-    const pathname =
-      targetPage === 1 ? `${pagePrefix}/` : `${pagePrefix}/page/${targetPage}`
-
-    router.push({
-      pathname,
-      query: router.query.s ? { s: router.query.s } : {}
-    })
+    router.push(getPageHref(targetPage))
   }
 
   return (
@@ -59,14 +63,8 @@ const PaginationNumber = ({ page, totalPage }) => {
       {/* pc端分页按钮 */}
       <div className='hidden lg:flex justify-between items-end mt-10 px-px pb-px font-medium text-black duration-500 dark:text-gray-300 pt-3 space-x-2 overflow-x-auto'>
         {/* 上一页 */}
-        <SmartLink
-          href={{
-            pathname:
-              currentPage === 2
-                ? `${pagePrefix}/`
-                : `${pagePrefix}/page/${currentPage - 1}`,
-            query: router.query.s ? { s: router.query.s } : {}
-          }}
+        {showPrev ? (<SmartLink
+          href={getPageHref(currentPage - 1)}
           rel='prev'
           aria-label={locale?.PAGINATION?.PREV || 'Previous page'}
           className={`${showPrev ? 'block' : 'invisible'}`}
@@ -77,7 +75,7 @@ const PaginationNumber = ({ page, totalPage }) => {
               {locale.PAGINATION.PREV}
             </div>
           </div>
-        </SmartLink>
+        </SmartLink>) : <div aria-hidden='true' className='w-24 h-10 invisible' />}
 
         {/* 分页 */}
         <div className='flex items-center space-x-2'>
@@ -109,11 +107,8 @@ const PaginationNumber = ({ page, totalPage }) => {
         </div>
 
         {/* 下一页 */}
-        <SmartLink
-          href={{
-            pathname: `${pagePrefix}/page/${Math.min(currentPage + 1, total)}`,
-            query: router.query.s ? { s: router.query.s } : {}
-          }}
+        {showNext ? (<SmartLink
+          href={getPageHref(currentPage + 1)}
           rel='next'
           aria-label={locale?.PAGINATION?.NEXT || 'Next page'}
           className={`${showNext ? 'block' : 'invisible'}`}
@@ -124,41 +119,32 @@ const PaginationNumber = ({ page, totalPage }) => {
               {locale.PAGINATION.NEXT}
             </div>
           </div>
-        </SmartLink>
+        </SmartLink>) : <div aria-hidden='true' className='w-24 h-10 invisible' />}
       </div>
 
       {/* 移动端分页 */}
       <div className='lg:hidden w-full flex flex-row'>
         {/* 上一页 */}
-        <SmartLink
-          href={{
-            pathname:
-              currentPage === 2
-                ? `${pagePrefix}/`
-                : `${pagePrefix}/page/${currentPage - 1}`,
-            query: router.query.s ? { s: router.query.s } : {}
-          }}
+        {showPrev && (<SmartLink
+          href={getPageHref(currentPage - 1)}
           rel='prev'
           aria-label={locale?.PAGINATION?.PREV || 'Previous page'}
           className={`${showPrev ? 'block' : 'hidden'} dark:text-white relative w-full flex-1 h-14 flex items-center transition-all duration-200 justify-center py-2 px-2 bg-white dark:bg-[#1e1e1e] border border-gray-200/60 dark:border-gray-600 rounded-full cursor-pointer`}
         >
           {locale.PAGINATION.PREV}
-        </SmartLink>
+        </SmartLink>)}
 
         {showPrev && showNext && <div className='w-12'></div>}
 
         {/* 下一页 */}
-        <SmartLink
-          href={{
-            pathname: `${pagePrefix}/page/${Math.min(currentPage + 1, total)}`,
-            query: router.query.s ? { s: router.query.s } : {}
-          }}
+        {showNext && (<SmartLink
+          href={getPageHref(currentPage + 1)}
           rel='next'
           aria-label={locale?.PAGINATION?.NEXT || 'Next page'}
           className={`${showNext ? 'block' : 'hidden'} dark:text-white relative w-full flex-1 h-14 flex items-center transition-all duration-200 justify-center py-2 px-2 bg-white dark:bg-[#1e1e1e] border border-gray-200/60 dark:border-gray-600 rounded-full cursor-pointer`}
         >
           {locale.PAGINATION.NEXT}
-        </SmartLink>
+        </SmartLink>)}
       </div>
     </nav>
   )
@@ -171,14 +157,14 @@ const PaginationNumber = ({ page, totalPage }) => {
  * @param {*} pagePrefix
  * @returns
  */
-function getPageElement(page, currentPage, pagePrefix) {
+function getPageElement(page, currentPage, getPageHref) {
   if (!page) return null
 
   const selected = page === currentPage
 
   return (
     <SmartLink
-      href={page === 1 ? `${pagePrefix}/` : `${pagePrefix}/page/${page}`}
+      href={getPageHref(page)}
       key={page}
       passHref
       aria-current={selected ? 'page' : undefined}
@@ -194,6 +180,11 @@ function getPageElement(page, currentPage, pagePrefix) {
   )
 }
 
+function getPagePath(pagePrefix, page) {
+  if (page === 1) return pagePrefix || '/'
+  return `${pagePrefix}/page/${page}`
+}
+
 /**
  * 获取所有页码
  * @param {*} pagePrefix
@@ -201,15 +192,15 @@ function getPageElement(page, currentPage, pagePrefix) {
  * @param {*} totalPage
  * @returns
  */
-function generatePages(pagePrefix, currentPage, totalPage) {
+function generatePages(getPageHref, currentPage, totalPage) {
   const pages = []
   const groupCount = 7 // 最多显示页签数
   if (totalPage <= groupCount) {
     for (let i = 1; i <= totalPage; i++) {
-      pages.push(getPageElement(i, currentPage, pagePrefix))
+      pages.push(getPageElement(i, currentPage, getPageHref))
     }
   } else {
-    pages.push(getPageElement(1, currentPage, pagePrefix))
+    pages.push(getPageElement(1, currentPage, getPageHref))
 
     const dynamicGroupCount = groupCount - 2
     let startPage = currentPage - 2
@@ -235,7 +226,7 @@ function generatePages(pagePrefix, currentPage, totalPage) {
     for (let i = 0; i < dynamicGroupCount; i++) {
       const page = startPage + i
       if (page < totalPage) {
-        pages.push(getPageElement(page, currentPage, pagePrefix))
+        pages.push(getPageElement(page, currentPage, getPageHref))
       }
     }
 
@@ -247,7 +238,7 @@ function generatePages(pagePrefix, currentPage, totalPage) {
       )
     }
 
-    pages.push(getPageElement(totalPage, currentPage, pagePrefix))
+    pages.push(getPageElement(totalPage, currentPage, getPageHref))
   }
   return pages
 }

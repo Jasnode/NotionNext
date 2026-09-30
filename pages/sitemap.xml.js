@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import {
   buildSitemapLoc,
+  buildCollectionSitemapFields,
   getLatestSitemapDate,
   normalizeSitemapBaseUrl,
   normalizeSitemapLocale,
@@ -31,7 +32,7 @@ export const getServerSideProps = async ctx => {
       siteData?.siteInfo?.link,
       siteData.NOTION_CONFIG
     )
-    const localeFields = generateLocalesSitemap(link, siteData.allPages, locale)
+    const localeFields = generateLocalesSitemap(link, siteData.allPages, locale, siteData.NOTION_CONFIG)
     fields = fields.concat(localeFields)
   }
 
@@ -45,13 +46,13 @@ export const getServerSideProps = async ctx => {
   return getServerSideSitemap(ctx, fields)
 }
 
-function generateLocalesSitemap(link, allPages, locale) {
+function generateLocalesSitemap(link, allPages, locale, NOTION_CONFIG) {
   const normalizedLink = normalizeSitemapBaseUrl(link)
   const normalizedLocale = normalizeSitemapLocale(locale)
   const dateNow = toSitemapDateString(new Date())
   const publishedPages =
     allPages
-      ?.filter(p => p.status === BLOG.NOTION_PROPERTY_NAME.status_publish)
+      ?.filter(p => p.status === 'Published')
       ?.filter(p => isValidSitemapSlug(p.slug)) ?? []
   const latestContentDate = getLatestSitemapDate(publishedPages, dateNow)
 
@@ -120,7 +121,11 @@ function generateLocalesSitemap(link, allPages, locale) {
       })
       ?.filter(Boolean) ?? []
 
-  return defaultFields.concat(postFields)
+  return defaultFields.concat(postFields, buildCollectionSitemapFields({
+    allPages, baseUrl: normalizedLink, locale: normalizedLocale,
+    postsPerPage: siteConfig('POSTS_PER_PAGE', 12, NOTION_CONFIG),
+    paginated: siteConfig('POST_LIST_STYLE', 'page', NOTION_CONFIG) === 'page'
+  }))
 }
 
 function getUniqueFields(fields) {

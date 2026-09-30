@@ -1,6 +1,8 @@
 import BLOG from '@/blog.config'
+import { isExport } from '@/lib/utils/buildMode'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
+import { postHasCategory } from '@/lib/utils/postCategory'
 import { DynamicLayout } from '@/themes/theme'
 
 /**
@@ -14,7 +16,7 @@ export default function Category(props) {
   return <DynamicLayout theme={theme} layoutName='LayoutPostList' {...props} />
 }
 
-export async function getStaticProps({ params: { category, page } }) {
+export async function getStaticProps({ params: { category, page }, locale }) {
   const pageNumber = Number(page)
   if (!Number.isInteger(pageNumber) || pageNumber < 1) {
     return { notFound: true }
@@ -29,12 +31,12 @@ export async function getStaticProps({ params: { category, page } }) {
   }
 
   const from = 'category-page-props'
-  let props = await fetchGlobalAllData({ from })
+  let props = await fetchGlobalAllData({ from, locale })
 
   // 过滤状态类型
-  props.posts = props.allPages
-    ?.filter(page => page.type === 'Post' && page.status === 'Published')
-    .filter(post => post && post.category && post.category.includes(category))
+  props.posts = (props.allPages ?? [])
+    .filter(page => page.type === 'Post' && page.status === 'Published')
+    .filter(post => postHasCategory(post, category))
   // 处理文章页数
   props.postCount = props.posts.length
   const POSTS_PER_PAGE = siteConfig('POSTS_PER_PAGE', 12, props?.NOTION_CONFIG)
@@ -78,10 +80,10 @@ export async function getStaticPaths() {
 
   categoryOptions?.forEach(category => {
     // 过滤状态类型
-    const categoryPosts = allPages
-      ?.filter(page => page.type === 'Post' && page.status === 'Published')
+    const categoryPosts = (allPages ?? [])
+      .filter(page => page.type === 'Post' && page.status === 'Published')
       .filter(
-        post => post && post.category && post.category.includes(category.name)
+        post => postHasCategory(post, category.name)
       )
     // 处理文章页数
     const postCount = categoryPosts.length
@@ -97,6 +99,6 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: 'blocking'
+    fallback: isExport() ? false : 'blocking'
   }
 }

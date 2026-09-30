@@ -1,4 +1,5 @@
 import BLOG from '@/blog.config'
+import { isExport } from '@/lib/utils/buildMode'
 import { getDataFromCache } from '@/lib/cache/cache_manager'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
@@ -20,6 +21,19 @@ const Index = props => {
  * @returns
  */
 export async function getStaticProps({ params: { keyword, page }, locale }) {
+  const pageNumber = Number(page)
+  if (!Number.isInteger(pageNumber) || pageNumber < 1) {
+    return { notFound: true }
+  }
+  if (pageNumber === 1) {
+    return {
+      redirect: {
+        destination: `/search/${encodeURIComponent(keyword)}`,
+        permanent: true
+      }
+    }
+  }
+
   const props = await fetchGlobalAllData({
     from: 'search-props',
     pageType: ['Post'],
@@ -32,30 +46,36 @@ export async function getStaticProps({ params: { keyword, page }, locale }) {
   props.posts = await filterByMemCache(allPosts, keyword)
   props.postCount = props.posts.length
   const POSTS_PER_PAGE = siteConfig('POSTS_PER_PAGE', 12, props?.NOTION_CONFIG)
+  const revalidate = isExport()
+    ? undefined
+    : siteConfig(
+        'NEXT_REVALIDATE_SECOND',
+        BLOG.NEXT_REVALIDATE_SECOND,
+        props.NOTION_CONFIG
+      )
+  // 越界页允许 ISR 重试，新增搜索结果后可以重新生成。
+  if (pageNumber > Math.ceil(props.postCount / POSTS_PER_PAGE)) {
+    return { notFound: true, revalidate }
+  }
   // 处理分页
   props.posts = props.posts.slice(
-    POSTS_PER_PAGE * (page - 1),
-    POSTS_PER_PAGE * page
+    POSTS_PER_PAGE * (pageNumber - 1),
+    POSTS_PER_PAGE * pageNumber
   )
   props.keyword = keyword
-  props.page = page
+  props.page = pageNumber
   delete props.allPages
   return {
     props,
-    revalidate: process.env.EXPORT
-      ? undefined
-      : siteConfig(
-          'NEXT_REVALIDATE_SECOND',
-          BLOG.NEXT_REVALIDATE_SECOND,
-          props.NOTION_CONFIG
-        )
+    revalidate
   }
 }
 
 export function getStaticPaths() {
   return {
-    paths: [{ params: { keyword: 'NotionNext', page: '1' } }],
-    fallback: true
+    // 第 1 页由平台重定向；静态导出不生成重复 HTML。
+    paths: [],
+    fallback: isExport() ? false : 'blocking'
   }
 }
 

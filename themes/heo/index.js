@@ -204,6 +204,16 @@ const LayoutSearch = props => {
   const { keyword } = props
   const router = useRouter()
   const currentSearch = keyword || router?.query?.s
+  const querySearch = router.route === '/search'
+  const pageSize = siteConfig('POSTS_PER_PAGE', 12, props.NOTION_CONFIG)
+  const requestedPage = Number(router.query.page)
+  const page = Math.min(
+    Math.max(1, Math.ceil((props.postCount || 0) / pageSize)),
+    Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1
+  )
+  const paginatedProps = querySearch
+    ? { ...props, page, posts: props.posts?.slice((page - 1) * pageSize, page * pageSize) }
+    : props
 
   useEffect(() => {
     // 高亮搜索结果
@@ -219,7 +229,7 @@ const LayoutSearch = props => {
         })
       }, 100)
       return () => clearTimeout(timer)
-  }, [currentSearch])
+  }, [currentSearch, paginatedProps.page])
   return (
     <div data-current-search={currentSearch || ''}>
       <div id='post-outer-wrapper' className='px-5  md:px-0'>
@@ -227,10 +237,10 @@ const LayoutSearch = props => {
           <SearchNav {...props} />
         ) : (
           <div id='posts-wrapper'>
-            {siteConfig('POST_LIST_STYLE') === 'page' ? (
-              <BlogPostListPage {...props} />
+            {siteConfig('POST_LIST_STYLE', 'page', props.NOTION_CONFIG) === 'page' ? (
+              <BlogPostListPage {...paginatedProps} />
             ) : (
-              <BlogPostListScroll {...props} />
+              <BlogPostListScroll key={currentSearch} {...props} currentSearch={currentSearch} />
             )}
           </div>
         )}
@@ -507,7 +517,8 @@ const Layout404 = props => {
                 className='error-img h-60 md:h-full p-4'
                 src={
                   'https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/6401a7906aa4a.gif'
-                }></LazyImage>
+                }
+                alt='页面未找到'></LazyImage>
 
               {/* 右侧文字 */}
               <div className='error-info flex-1 flex flex-col justify-center items-center space-y-4'>

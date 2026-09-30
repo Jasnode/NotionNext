@@ -1,4 +1,5 @@
 import BLOG from '@/blog.config'
+import { isExport } from '@/lib/utils/buildMode'
 import { siteConfig } from '@/lib/config'
 import { fetchGlobalAllData } from '@/lib/db/SiteDataApi'
 import { DynamicLayout } from '@/themes/theme'
@@ -47,7 +48,7 @@ export function getStaticPaths() {
       { params: { index: [] } }, // 使 /sign-up 路径可访问
       { params: { index: ['sign-up'] } } // 明确 sign-up 生成路径
     ],
-    fallback: 'blocking' // 使用 'blocking' 模式让未生成的路径也能正确响应
+    fallback: isExport() ? false : 'blocking'
   }
 }
 export default SignUp
