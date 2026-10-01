@@ -21,6 +21,39 @@ describe('convertInnerUrl', () => {
     window.history.replaceState({}, '', 'http://localhost/notice')
   })
 
+  it('keeps restored Notion source references in a new tab', () => {
+    document.body.innerHTML = '<div id="notion-article"><a class="notion-page-link" href="https://www.notion.so/da8daa2f8d19420987d51cc9bdf01241" target="_blank">Source</a></div>'
+    convertInnerUrl({ allPages: [] })
+    expect(document.querySelector('a')).toHaveAttribute('target', '_blank')
+  })
+
+  it('leaves unrelated external UUID links and disabled anchors alone', () => {
+    document.body.innerHTML = '<div id="notion-article"><a class="notion-link" href="https://example.com/4aea95fb3fd5fcf81846aaaaaaaaaaaa" target="_blank">External</a><a class="notion-collection-card">Disabled</a></div>'
+    convertInnerUrl({ allPages: [{ href: '/links', short_id: 'fcf8-1846-aaaaaaaaaaaa' }] })
+    expect(document.querySelector('a')).toHaveAttribute('href', 'https://example.com/4aea95fb3fd5fcf81846aaaaaaaaaaaa')
+    expect(document.querySelector('a')).toHaveAttribute('target', '_blank')
+    expect(document.querySelector('.notion-collection-card')).not.toHaveAttribute('href')
+  })
+
+  it('does not append child IDs again when processing server-rendered parent paths', () => {
+    window.history.replaceState({}, '', 'http://localhost/en/article/parent')
+    const href = '/en/article/parent/da8daa2f8d19420987d51cc9bdf01241#block'
+    document.body.innerHTML = `<div id="notion-article"><a class="notion-page-link" href="${href}">Child</a></div>`
+    convertInnerUrl({ allPages: [], lang: 'en', innerPageUrlParentPath: true })
+    convertInnerUrl({ allPages: [], lang: 'en', innerPageUrlParentPath: true })
+    expect(document.querySelector('a')).toHaveAttribute('href', href)
+  })
+
+  it('does not duplicate a locale prefix already present in the published URL', () => {
+    window.history.replaceState({}, '', 'http://localhost/en/article/parent')
+    document.body.innerHTML = '<div id="notion-article"><a class="notion-link" href="https://www.notion.so/4aea95fb3fd5fcf81846aaaaaaaaaaaa?pvs=4#section" target="_blank">Links</a></div>'
+    convertInnerUrl({
+      allPages: [{ href: '/en/links', short_id: 'fcf8-1846-aaaaaaaaaaaa' }],
+      lang: 'en'
+    })
+    expect(document.querySelector('a')).toHaveAttribute('href', '/en/links?pvs=4#section')
+  })
+
   it('maps notice links to published Page records from allLinkPages', () => {
     document.body.innerHTML = `
       <div id="notion-article">
@@ -122,7 +155,7 @@ describe('convertInnerUrl', () => {
     )
   })
 
-  it('strips query params before extracting Notion ID', () => {
+  it('preserves query params while resolving Notion ID', () => {
     // Notion URLs often include ?pvs=4 which must not break ID extraction
     document.body.innerHTML = `
       <div id="notion-article">
@@ -145,11 +178,11 @@ describe('convertInnerUrl', () => {
 
     expect(document.querySelector('a.notion-link')).toHaveAttribute(
       'href',
-      '/links'
+      '/links?pvs=4'
     )
   })
 
-  it('strips hash fragment before extracting Notion ID', () => {
+  it('preserves hash fragments while resolving Notion ID', () => {
     document.body.innerHTML = `
       <div id="notion-article">
         <a class="notion-link" href="https://www.notion.so/4aea95fb3fd5fcf81846aaaaaaaaaaaa#section" target="_blank">Links</a>
@@ -171,7 +204,7 @@ describe('convertInnerUrl', () => {
 
     expect(document.querySelector('a.notion-link')).toHaveAttribute(
       'href',
-      '/links'
+      '/links#section'
     )
   })
 })

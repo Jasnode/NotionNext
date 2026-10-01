@@ -2,11 +2,14 @@ import { siteConfig } from '@/lib/config'
 import { compressImage, mapImgUrl } from '@/lib/db/notion/mapImage'
 import NotionEmbed from '@/components/NotionEmbed'
 import NotionLink from '@/components/NotionLink'
+import { resolveNotionPageUrl } from '@/lib/db/notion/pageUrl'
+import { useGlobal } from '@/lib/global'
 import { isBrowser, loadExternalResource } from '@/lib/utils'
 import mediumZoom from '@fisch0920/medium-zoom'
 import 'katex/dist/katex.min.css'
 import dynamic from 'next/dynamic'
-import { useEffect, useRef } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useMemo, useRef } from 'react'
 import { NotionRenderer } from 'react-notion-x'
 import OriginalityProof from './OriginalityProof'
 
@@ -21,6 +24,30 @@ const NotionPage = ({ post, className }) => {
   const POST_DISABLE_GALLERY_CLICK = siteConfig('POST_DISABLE_GALLERY_CLICK')
   const POST_DISABLE_DATABASE_CLICK = siteConfig('POST_DISABLE_DATABASE_CLICK')
   const SPOILER_TEXT_TAG = siteConfig('SPOILER_TEXT_TAG')
+  const INNER_PAGE_URL_PARENT_PATH = siteConfig('INNER_PAGE_URL_PARENT_PATH', false)
+  const siteOrigin = siteConfig('LINK')
+  const { allLinkPages = [], lang } = useGlobal() || {}
+  const { asPath = '/', locale, defaultLocale } = useRouter()
+  // Next's asPath omits the native i18n prefix; exported rewrites keep it in the path.
+  const langPrefix = locale && defaultLocale
+    ? (locale === defaultLocale ? '' : `/${locale}`)
+    : (asPath.split(/[?#]/)[0].split('/')[1] === lang ? `/${lang}` : '')
+  const currentPath = asPath.split(/[?#]/)[0]
+  const { mapPageUrl, PageLink } = useMemo(() => {
+    const mapPageUrl = value => resolveNotionPageUrl(value, allLinkPages, langPrefix, { siteOrigin })
+    const PageLink = ({ href, ...props }) => {
+      const classes = props.className?.split(/\s+/) || []
+      const disabledGallery = POST_DISABLE_GALLERY_CLICK &&
+        classes.includes('notion-collection-card')
+      const resolvedHref = resolveNotionPageUrl(href, allLinkPages, langPrefix, {
+        siteOrigin,
+        parentPath: INNER_PAGE_URL_PARENT_PATH && classes.includes('notion-page-link')
+          ? currentPath : undefined
+      })
+      return <NotionLink {...props} href={disabledGallery ? undefined : resolvedHref} />
+    }
+    return { mapPageUrl, PageLink }
+  }, [allLinkPages, langPrefix, siteOrigin, currentPath, POST_DISABLE_GALLERY_CLICK, INNER_PAGE_URL_PARENT_PATH])
 
   const zoomRef = useRef(null)
   const IMAGE_ZOOM_IN_WIDTH = siteConfig('IMAGE_ZOOM_IN_WIDTH', 1200)
@@ -124,7 +151,8 @@ const NotionPage = ({ post, className }) => {
           Collection,
           Embed: NotionEmbed,
           Equation,
-          Link: NotionLink,
+          Link: PageLink,
+          PageLink,
           Modal,
           Pdf,
           Quote: NotionQuote,
@@ -198,16 +226,6 @@ const autoScrollToHash = () => {
       }
     }
   }, 180)
-}
-
-/**
- * 将id映射成博文内部链接。
- * @param {*} id
- * @returns
- */
-const mapPageUrl = id => {
-  // return 'https://www.notion.so/' + id.replace(/-/g, '')
-  return '/' + id.replace(/-/g, '')
 }
 
 /**
