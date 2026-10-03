@@ -403,6 +403,10 @@ const nextConfig = {
         {
           source: '/:path*{/}?',
           headers: [
+            // Apply to this host only; embedded pages still need cross-origin framing.
+            { key: 'Strict-Transport-Security', value: 'max-age=31536000' },
+            { key: 'X-Content-Type-Options', value: 'nosniff' },
+            { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
             // 为了博客兼容性，不做过多安全限制
             { key: 'Access-Control-Allow-Credentials', value: 'true' },
             { key: 'Access-Control-Allow-Origin', value: '*' },

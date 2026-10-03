@@ -107,7 +107,7 @@ POST_URL_PREFIX 配置为： `%category%/%year%/%month%/%day%`
 该能力从 `4.10.10` 起提供，默认关闭。只有希望未收录的 Notion 内嵌子页面 URL 跟随父级文章路径时，才需要开启。
 :::
 
-Notion 页面中可以继续嵌套子页面。默认情况下，NotionNext 会优先把能在站点数据库中找到的内页链接转换为该页面自己的 `slug`；如果子页面没有收录到数据库中，则会保留 Notion 页面 ID 作为兜底地址。
+Notion 页面中可以继续嵌套子页面。默认情况下，NotionNext 会优先把能在站点数据库中找到的内页链接转换为该页面自己的 `slug`；如果子页面没有收录到数据库中，则链接到原始 Notion 页面，避免生成不存在的本站 ID 地址。原始页面是否可读取决于其 Notion 公开权限。
 
 如果希望未收录的内嵌子页面 URL 也体现父级文章层级，推荐直接在 Notion Config 配置中心添加一行：
 
@@ -127,7 +127,7 @@ NEXT_PUBLIC_INNER_PAGE_URL_PARENT_PATH=true
 开启后，在 `/article/fpga-studying-notes` 文章中点击未收录的内嵌子页面时，链接会从默认的：
 
 ```txt
-/aac03c95df87469ca52c471453416f4d
+https://www.notion.so/aac03c95df87469ca52c471453416f4d
 ```
 
 改写为：

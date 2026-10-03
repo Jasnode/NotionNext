@@ -1,0 +1,6 @@
+# Static exports on Cloudflare Pages/Netlify use this file; Next serves its own headers.
+# Keep iframe embedding available. Do not force HTTPS on unrelated subdomains.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
