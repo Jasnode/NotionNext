@@ -8,10 +8,12 @@ import { isBrowser, loadExternalResource } from '@/lib/utils'
 import mediumZoom from '@fisch0920/medium-zoom'
 import 'katex/dist/katex.min.css'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/compat/router'
 import { useEffect, useMemo, useRef } from 'react'
 import { NotionRenderer } from 'react-notion-x'
 import OriginalityProof from './OriginalityProof'
+
+const EMPTY_LINK_PAGES = []
 
 /**
  * 整个站点的核心组件
@@ -19,20 +21,24 @@ import OriginalityProof from './OriginalityProof'
  * @param {*} param0
  * @returns
  */
-const NotionPage = ({ post, className }) => {
+const NotionPage = ({ post, className, linkOptions = {} }) => {
   // 是否关闭数据库和画册的点击跳转
-  const POST_DISABLE_GALLERY_CLICK = siteConfig('POST_DISABLE_GALLERY_CLICK')
+  const POST_DISABLE_GALLERY_CLICK = linkOptions.disableGalleryClick ?? siteConfig('POST_DISABLE_GALLERY_CLICK')
   const POST_DISABLE_DATABASE_CLICK = siteConfig('POST_DISABLE_DATABASE_CLICK')
   const SPOILER_TEXT_TAG = siteConfig('SPOILER_TEXT_TAG')
-  const INNER_PAGE_URL_PARENT_PATH = siteConfig('INNER_PAGE_URL_PARENT_PATH', false)
-  const siteOrigin = siteConfig('LINK')
-  const { allLinkPages = [], lang } = useGlobal() || {}
-  const { asPath = '/', locale, defaultLocale } = useRouter()
+  const INNER_PAGE_URL_PARENT_PATH = linkOptions.innerPageUrlParentPath ?? siteConfig('INNER_PAGE_URL_PARENT_PATH', false)
+  const siteOrigin = linkOptions.siteOrigin ?? siteConfig('LINK')
+  const global = useGlobal()
+  const allLinkPages = linkOptions.allLinkPages ?? global?.allLinkPages ?? EMPTY_LINK_PAGES
+  const lang = global?.lang
+  const absoluteUrls = linkOptions.absoluteUrls ?? false
+  // RSS renders this component directly, outside Next's router context.
+  const { asPath = post?.href || '/', locale, defaultLocale } = useRouter() || {}
   // Next's asPath omits the native i18n prefix; exported rewrites keep it in the path.
-  const langPrefix = locale && defaultLocale
+  const langPrefix = linkOptions.langPrefix ?? (locale && defaultLocale
     ? (locale === defaultLocale ? '' : `/${locale}`)
-    : (asPath.split(/[?#]/)[0].split('/')[1] === lang ? `/${lang}` : '')
-  const currentPath = asPath.split(/[?#]/)[0]
+    : (asPath.split(/[?#]/)[0].split('/')[1] === lang ? `/${lang}` : ''))
+  const currentPath = linkOptions.currentPath ?? asPath.split(/[?#]/)[0]
   const { mapPageUrl, PageLink } = useMemo(() => {
     const mapPageUrl = value => resolveNotionPageUrl(value, allLinkPages, langPrefix, { siteOrigin })
     const PageLink = ({ href, ...props }) => {
@@ -44,21 +50,34 @@ const NotionPage = ({ post, className }) => {
         parentPath: INNER_PAGE_URL_PARENT_PATH && classes.includes('notion-page-link')
           ? currentPath : undefined
       })
-      return <NotionLink {...props} href={disabledGallery ? undefined : resolvedHref} />
+      let linkHref = resolvedHref
+      if (absoluteUrls && typeof resolvedHref === 'string' && resolvedHref) {
+        try {
+          linkHref = new URL(resolvedHref, new URL(currentPath, siteOrigin)).href
+        } catch {
+          // Keep the resolved link if the configured site origin is invalid.
+        }
+      }
+      return <NotionLink {...props} siteOrigin={siteOrigin} preferSameTab href={disabledGallery ? undefined : linkHref} />
     }
     return { mapPageUrl, PageLink }
-  }, [allLinkPages, langPrefix, siteOrigin, currentPath, POST_DISABLE_GALLERY_CLICK, INNER_PAGE_URL_PARENT_PATH])
+  }, [allLinkPages, langPrefix, siteOrigin, currentPath, absoluteUrls, POST_DISABLE_GALLERY_CLICK, INNER_PAGE_URL_PARENT_PATH])
 
+  const articleRef = useRef(null)
   const zoomRef = useRef(null)
   const IMAGE_ZOOM_IN_WIDTH = siteConfig('IMAGE_ZOOM_IN_WIDTH', 1200)
   // 页面首次打开时执行的勾子
   useEffect(() => {
     // 检测当前的url并自动滚动到对应目标
-    autoScrollToHash()
-  }, [])
+    const timer = autoScrollToHash(articleRef.current)
+    return () => clearTimeout(timer)
+  }, [post?.id])
 
   // 页面文章发生变化时会执行的勾子
   useEffect(() => {
+    const articleRoot = articleRef.current
+    if (!articleRoot) return
+    const timers = new Set()
     // 相册视图点击禁止跳转，只能放大查看图片
     if (POST_DISABLE_GALLERY_CLICK) {
       if (!zoomRef.current && isBrowser) {
@@ -68,25 +87,20 @@ const NotionPage = ({ post, className }) => {
         })
       }
       // 针对页面中的gallery视图，点击后是放大图片还是跳转到gallery的内部页面
-      processGalleryImg(zoomRef?.current)
+      timers.add(processGalleryImg(zoomRef.current, articleRoot))
     }
 
     // 页内数据库点击禁止跳转，只能查看
     if (POST_DISABLE_DATABASE_CLICK) {
-      processDisableDatabaseUrl()
+      processDisableDatabaseUrl(articleRoot)
     }
 
     /**
      * 放大查看图片时替换成高清图像
      */
-    const articleRoot =
-      document.getElementById('notion-article') || document.body
     const hasAnyImage = Boolean(articleRoot.querySelector('img'))
-    if (!hasAnyImage) {
-      return
-    }
 
-    const observer = new MutationObserver((mutationsList, observer) => {
+    const observer = hasAnyImage ? new MutationObserver(mutationsList => {
       mutationsList.forEach(mutation => {
         if (
           mutation.type === 'attributes' &&
@@ -94,7 +108,8 @@ const NotionPage = ({ post, className }) => {
         ) {
           if (mutation.target.classList.contains('medium-zoom-image--opened')) {
             // 等待动画完成后替换为更高清的图像
-            setTimeout(() => {
+            const timer = setTimeout(() => {
+              timers.delete(timer)
               // 获取该元素的 src 属性
               const src = mutation?.target?.getAttribute('src')
               //   替换为更高清的图像
@@ -103,43 +118,51 @@ const NotionPage = ({ post, className }) => {
                 compressImage(src, IMAGE_ZOOM_IN_WIDTH)
               )
             }, 800)
+            timers.add(timer)
           }
         }
       })
-    })
+    }) : null
 
     // 监视正文容器，避免对整个 document.body 做高开销监听
-    observer.observe(articleRoot, {
+    observer?.observe(articleRoot, {
       attributes: true,
       subtree: true,
       attributeFilter: ['class']
     })
 
     return () => {
-      observer.disconnect()
+      observer?.disconnect()
+      timers.forEach(clearTimeout)
+      zoomRef.current?.detach()
+      zoomRef.current = null
     }
-  }, [post])
+  }, [post, IMAGE_ZOOM_IN_WIDTH, POST_DISABLE_DATABASE_CLICK, POST_DISABLE_GALLERY_CLICK])
 
   useEffect(() => {
+    let disposed = false
     // Spoiler文本功能
     if (SPOILER_TEXT_TAG) {
       import('lodash/escapeRegExp').then(escapeRegExp => {
+        if (disposed) return
         Promise.all([
           loadExternalResource('/js/spoilerText.js', 'js'),
           loadExternalResource('/css/spoiler-text.css', 'css')
         ]).then(() => {
-          window.textToSpoiler &&
+          !disposed && window.textToSpoiler &&
             window.textToSpoiler(escapeRegExp.default(SPOILER_TEXT_TAG))
         })
       })
     }
-  }, [post])
+    return () => { disposed = true }
+  }, [post, SPOILER_TEXT_TAG])
 
   // const cleanBlockMap = cleanBlocksWithWarn(post?.blockMap);
   // console.log('NotionPage render with post:', post);
 
   return (
     <div
+      ref={articleRef}
       id='notion-article'
       className={`mx-auto overflow-hidden ${className || ''}`}>
       <NotionRenderer
@@ -178,9 +201,9 @@ const hasCodeBlock = blockMap => {
 /**
  * 页面的数据库链接禁止跳转，只能查看
  */
-const processDisableDatabaseUrl = () => {
+const processDisableDatabaseUrl = articleRoot => {
   if (isBrowser) {
-    const links = document.querySelectorAll('.notion-table a')
+    const links = articleRoot.querySelectorAll('.notion-table a')
     for (const e of links) {
       e.removeAttribute('href')
     }
@@ -190,10 +213,10 @@ const processDisableDatabaseUrl = () => {
 /**
  * gallery视图，点击后是放大图片还是跳转到gallery的内部页面
  */
-const processGalleryImg = zoom => {
-  setTimeout(() => {
+const processGalleryImg = (zoom, articleRoot) => {
+  return setTimeout(() => {
     if (isBrowser) {
-      const imgList = document?.querySelectorAll(
+      const imgList = articleRoot.querySelectorAll(
         '.notion-collection-card-cover img'
       )
       if (imgList && zoom) {
@@ -202,7 +225,7 @@ const processGalleryImg = zoom => {
         }
       }
 
-      const cards = document.getElementsByClassName('notion-collection-card')
+      const cards = articleRoot.getElementsByClassName('notion-collection-card')
       for (const e of cards) {
         e.removeAttribute('href')
       }
@@ -213,15 +236,15 @@ const processGalleryImg = zoom => {
 /**
  * 根据url参数自动滚动到锚位置
  */
-const autoScrollToHash = () => {
-  setTimeout(() => {
+const autoScrollToHash = articleRoot => {
+  return setTimeout(() => {
     // 跳转到指定标题
     const hash = window?.location?.hash
     const needToJumpToTitle = hash && hash.length > 0
     if (needToJumpToTitle) {
       console.log('jump to hash', hash)
       const tocNode = document.getElementById(hash.substring(1))
-      if (tocNode && tocNode?.className?.indexOf('notion') > -1) {
+      if (tocNode && articleRoot?.contains(tocNode) && tocNode?.className?.indexOf('notion') > -1) {
         tocNode.scrollIntoView({ block: 'start', behavior: 'smooth' })
       }
     }

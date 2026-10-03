@@ -4,6 +4,25 @@ import NotionLink, {
 } from '@/components/NotionLink'
 
 describe('NotionLink', () => {
+  it('uses the configured site origin during SSR and does not leak it to the DOM', () => {
+    render(<NotionLink href='https://blog.example.com/article/abc' siteOrigin='https://blog.example.com/'>Internal</NotionLink>)
+    const link = screen.getByRole('link', { name: 'Internal' })
+    expect(link).not.toHaveAttribute('target')
+    expect(link).not.toHaveAttribute('siteOrigin')
+  })
+
+  it('opens protocol-relative external links safely', () => {
+    render(<NotionLink href='//external.example.com/post'>External</NotionLink>)
+    expect(screen.getByRole('link')).toHaveAttribute('target', '_blank')
+    expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('honors the trailing hash convention on the first render', () => {
+    render(<NotionLink href='/links#'>New tab</NotionLink>)
+    expect(screen.getByRole('link')).toHaveAttribute('target', '_blank')
+    expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
   it('opens external http links in a new tab', () => {
     render(<NotionLink href='https://example.com'>Example</NotionLink>)
 

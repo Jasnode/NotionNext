@@ -4,6 +4,48 @@ const id = '4aea95fb3fd5fcf81846aaaaaaaaaaaa'
 const pages = [{ id, short_id: 'fcf8-1846-aaaaaaaaaaaa', href: '/links' }]
 
 describe('Notion page URLs', () => {
+  it.each(['/', '/article/parent', '/en/article/parent'])(
+    'keeps destinations stable when converted again under %s', parentPath => {
+      for (const records of [[], pages]) {
+        for (const suffix of ['', '?tag=a&tag=b', '#section', '?view=full#']) {
+          const resolve = value => resolveNotionPageUrl(value, records, '/en', { parentPath })
+          const first = resolve(`/${id}${suffix}`)
+          expect(resolve(first)).toBe(first)
+        }
+      }
+    }
+  )
+
+  it('preserves the trailing hash opt-in when mapping and falling back', () => {
+    expect(resolveNotionPageUrl(`/${id}#`, pages)).toBe('/links#')
+    expect(resolveNotionPageUrl(`/${id}#`, [])).toBe(`https://www.notion.so/${id}#`)
+    expect(resolveNotionPageUrl(`/${id}#`, [], '', { parentPath: '/parent' }))
+      .toBe(`/parent/${id}#`)
+  })
+
+  it('normalizes same-site absolute destinations with the active locale', () => {
+    expect(resolveNotionPageUrl(id, [{ id, href: 'https://blog.example.com/links' }], '/en', {
+      siteOrigin: 'https://blog.example.com/'
+    })).toBe('/en/links')
+  })
+
+  it('retains configured destination options alongside source query parameters', () => {
+    expect(resolveNotionPageUrl(`/${id}?tag=a&tag=b#section`, [{ id, href: '/links?view=gallery&tag=old' }]))
+      .toBe('/links?view=gallery&tag=a&tag=b#section')
+  })
+
+  it('does not turn a mapped Notion page into a script URL', () => {
+    expect(resolveNotionPageUrl(id, [{ id, href: 'javascript:alert(1)' }]))
+      .toBe(`https://www.notion.so/${id}`)
+  })
+
+  it('ignores invalid page records and malformed destination URLs without crashing', () => {
+    expect(resolveNotionPageUrl(id, [null, { id: 123, href: '/wrong' }, ...pages]))
+      .toBe('/links')
+    expect(resolveNotionPageUrl(id, [{ id, href: 'https://[' }]))
+      .toBe(`https://www.notion.so/${id}`)
+  })
+
   it.each([id, `/${id}`, '4aea95fb-3fd5-fcf8-1846-aaaaaaaaaaaa', `https://www.notion.so/${id}`, `https://example.notion.site/Links-${id}`])(
     'resolves published pages before hydration: %s', value => {
       expect(resolveNotionPageUrl(value, pages)).toBe('/links')

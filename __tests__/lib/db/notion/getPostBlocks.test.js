@@ -16,6 +16,21 @@ import {
 } from '@/lib/db/notion/normalizeExternalMediaBlock'
 
 describe('formatNotionBlock', () => {
+  it('preserves relative Notion link options before react-notion-x rewrites them', () => {
+    const href = '/4aea95fb3fd5fcf81846aaaaaaaaaaaa?pvs=4#'
+    const block = { text: { value: { id: 'text', type: 'text', properties: {
+      title: [
+        ['Page', [['a', href]]],
+        ['Local', [['a', '/article/59?from=menu#section']]],
+        ['External', [['a', '//external.example.com/page']]]
+      ]
+    } } } }
+    const formatted = formatNotionBlock(block)
+    expect(formatted.text.value.properties.title[0][1][0][1]).toBe(`https://www.notion.so${href}`)
+    expect(formatted.text.value.properties.title.slice(1)).toEqual(block.text.value.properties.title.slice(1))
+    expect(block.text.value.properties.title[0][1][0][1]).toBe(href)
+  })
+
   it('detects Apple Music single-track embed URLs', () => {
     expect(
       isAppleMusicEmbedUrl(

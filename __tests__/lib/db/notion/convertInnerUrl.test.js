@@ -16,6 +16,23 @@ jest.mock('notion-utils', () => ({
 import { convertInnerUrl } from '@/lib/db/notion/convertInnerUrl'
 
 describe('convertInnerUrl', () => {
+  it('opens newly restored external source links safely and preserves rel tokens', () => {
+    document.body.innerHTML = '<div id="notion-article"><a class="notion-page-link" href="/da8daa2f8d19420987d51cc9bdf01241" rel="nofollow">Source</a></div>'
+    convertInnerUrl({ allPages: [] })
+    const link = document.querySelector('a')
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link.rel.split(' ')).toEqual(expect.arrayContaining(['nofollow', 'noopener', 'noreferrer']))
+  })
+
+  it('preserves mapped trailing-hash links as safe new-tab links', () => {
+    document.body.innerHTML = '<div id="notion-article"><a class="notion-link" href="/4aea95fb3fd5fcf81846aaaaaaaaaaaa#">Links</a></div>'
+    convertInnerUrl({ allPages: [{ href: '/links', short_id: 'fcf8-1846-aaaaaaaaaaaa' }] })
+    const link = document.querySelector('a')
+    expect(link).toHaveAttribute('href', '/links#')
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
   beforeEach(() => {
     document.body.innerHTML = ''
     window.history.replaceState({}, '', 'http://localhost/notice')

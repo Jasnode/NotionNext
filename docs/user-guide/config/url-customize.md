@@ -138,6 +138,10 @@ https://www.notion.so/aac03c95df87469ca52c471453416f4d
 
 这只是内页访问路径的显示和导航优化。未收录子页面不会因此自动进入 sitemap、RSS 或站内搜索；如果页面需要稳定 SEO 收录，仍建议把它加入 NotionNext 主数据库，并配置明确的 `slug`。
 
+正文中的链接会在首次渲染时完成转换，保留查询参数和锚点，并根据当前站点语言添加前缀。站内链接在当前窗口打开；外部 HTTP(S) 链接在新窗口打开，并带有 `noopener noreferrer`。如需让站内链接也在新窗口打开，可在地址末尾保留一个空的 `#`。
+
+RSS 全文使用相同的页面映射和父路径规则，并输出完整 URL，便于订阅阅读器打开。RSS 仅为默认语言生成，不依赖浏览器路由上下文。
+
 ## 原文链接
 
 https://docs.tangly1024.com/article/notion-next-url-customize
