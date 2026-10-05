@@ -22,7 +22,7 @@ const CONFIG = {
   // 英雄区(首页顶部大卡)
   HEO_HERO_TITLE_1: '记录分享教程',
   HEO_HERO_TITLE_2: '与思维认知',
-  HEO_HERO_TITLE_3: 'BLOG.88LIN.EU.ORG',
+  HEO_HERO_TITLE_3: '88LIN.EU.ORG',
   HEO_HERO_TITLE_4: '新版上线',
   HEO_HERO_TITLE_5: '生活明朗 万物可爱',
   HEO_HERO_TITLE_LINK: 'https://blog.88lin.eu.org',
@@ -60,7 +60,7 @@ const CONFIG = {
   HEO_INFO_CARD_URL1:
     'https://cdn.jsdmirror.com/gh/88lin/picx-images-hosting@master/weixin.jpg',
   HEO_INFO_CARD_ICON1: 'fa-regular fa-comment-dots',
-  HEO_INFO_CARD_URL2: '/about',
+  HEO_INFO_CARD_URL2: 'https://dev.88lin.eu.org',
   HEO_INFO_CARD_ICON2: 'fas fa-user',
   HEO_INFO_CARD_ICON_ORCID: 'fab fa-orcid',
   HEO_INFO_CARD_ICON_CSDN: 'fab fa-csdn',
