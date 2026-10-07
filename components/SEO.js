@@ -660,7 +660,7 @@ const getSEOMeta = (props, router, locale) => {
     case '/archive':
       return {
         title: `${locale.NAV.ARCHIVE} | ${SITE_NAME}`,
-        description: `${SITE_NAME}的文章归档，按时间浏览所有已发布文章`,
+        description: `浏览${SITE_NAME}的文章归档，按年份和月份查找已发布文章，回顾不同时间的记录与分享。点击文章标题即可阅读全文，方便找回旧文和继续阅读。`,
         image: `${siteInfo?.pageCover}`,
         slug: 'archive',
         type: 'website',
@@ -763,7 +763,7 @@ const getSEOMeta = (props, router, locale) => {
     case '/category':
       return {
         title: `${locale.COMMON.CATEGORY} | ${SITE_NAME}`,
-        description: `${SITE_NAME}的所有文章分类`,
+        description: `浏览${SITE_NAME}的文章分类目录，按主题查找感兴趣的内容。选择分类可查看该主题下的文章列表，再进入文章阅读全文，方便集中阅读和发现相关内容。`,
         image: `${siteInfo?.pageCover}`,
         slug: 'category',
         type: 'website',
