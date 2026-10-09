@@ -33,6 +33,11 @@ import catalog from './bookCatalog.json'
 import styles from './styles.module.css'
 
 const FAVORITES_KEY = 'notionnext-book-favorites-v1'
+const TOUCH_LOCK_DISTANCE = 12
+const TOUCH_SWIPE_DISTANCE = 44
+// 卡片右侧只有 48px（移动端 42px）留白，跟手位移超出就会顶出横向溢出。
+const DRAG_MAX_RIGHT = 42
+const DRAG_MAX_LEFT = -72
 
 const CATEGORIES = [
   { key: 'all', label: '全部' },
@@ -107,7 +112,10 @@ const BookShelf = ({ bookStats }) => {
   const [pageReady, setPageReady] = useState(false)
   const pageRef = useRef(null)
   const catalogRef = useRef(null)
+  const featuredStackRef = useRef(null)
+  const featuredDragCardRef = useRef(null)
   const featuredTouchStartRef = useRef(null)
+  const featuredTouchAxisRef = useRef('')
   const featuredSwipeAtRef = useRef(0)
   const dialogRef = useRef(null)
   const closeButtonRef = useRef(null)
@@ -474,32 +482,138 @@ const BookShelf = ({ bookStats }) => {
     })
   }, [])
 
-  // 记录触摸起点，只有足够明显的纵向位移才触发翻卡。
-  const handleFeaturedTouchStart = useCallback(event => {
-    featuredTouchStartRef.current = event.touches[0]?.clientY ?? null
+  // 松手后清掉行内样式，归位动画交给卡片自身的 transition 收尾。
+  const releaseFeaturedDrag = useCallback(() => {
+    const card = featuredDragCardRef.current
+    featuredDragCardRef.current = null
+    if (!card) return
+    card.style.transition = ''
+    card.style.transform = ''
   }, [])
+
+  const resetFeaturedTouch = useCallback(() => {
+    featuredTouchStartRef.current = null
+    featuredTouchAxisRef.current = ''
+    releaseFeaturedDrag()
+  }, [releaseFeaturedDrag])
+
+  const cancelFeaturedTouch = useCallback(() => {
+    featuredSwipeAtRef.current = Date.now()
+    resetFeaturedTouch()
+  }, [resetFeaturedTouch])
+
+  // 记录触摸起点，方向留给 touchmove 判断。
+  const handleFeaturedTouchStart = useCallback(
+    event => {
+      // 多指操作交给浏览器；剩下的手指也不能接着翻卡。
+      if (event.touches.length !== 1) {
+        cancelFeaturedTouch()
+        return
+      }
+
+      resetFeaturedTouch()
+      // 新的一次点按不受上一次滑动的 click 屏蔽影响。
+      featuredSwipeAtRef.current = 0
+      const touch = event.touches[0]
+      featuredTouchStartRef.current = {
+        id: touch.identifier,
+        x: touch.clientX,
+        y: touch.clientY
+      }
+    },
+    [cancelFeaturedTouch, resetFeaturedTouch]
+  )
+
+  const handleFeaturedTouchMove = useCallback(
+    event => {
+      const start = featuredTouchStartRef.current
+      if (!start) return
+      if (event.touches.length !== 1) {
+        cancelFeaturedTouch()
+        return
+      }
+
+      const touch = Array.from(event.touches).find(
+        touch => touch.identifier === start.id
+      )
+      if (!touch) {
+        cancelFeaturedTouch()
+        return
+      }
+
+      const deltaX = touch.clientX - start.x
+      const deltaY = touch.clientY - start.y
+
+      // 位移足够时锁定方向：横向由推荐卡处理，纵向交还给页面滚动。
+      if (!featuredTouchAxisRef.current) {
+        if (
+          Math.abs(deltaX) < TOUCH_LOCK_DISTANCE &&
+          Math.abs(deltaY) < TOUCH_LOCK_DISTANCE
+        ) {
+          return
+        }
+        featuredTouchAxisRef.current =
+          Math.abs(deltaX) > Math.abs(deltaY) ? 'x' : 'y'
+      }
+
+      if (featuredTouchAxisRef.current !== 'x') return
+
+      // 只有最上面那张跟着手指走；后面的卡片留在原位。
+      let card = featuredDragCardRef.current
+      if (!card) {
+        card = featuredStackRef.current?.querySelector('[data-depth="0"]')
+        if (!card) return
+        featuredDragCardRef.current = card
+      }
+
+      // 跟手位移做阻尼；向右不超过右侧留白，避免整页出现横向溢出。
+      const drag = Math.max(
+        DRAG_MAX_LEFT,
+        Math.min(DRAG_MAX_RIGHT, deltaX * 0.45)
+      )
+      card.style.transition = 'none'
+      card.style.transform = `translate3d(${drag}px, 0, 0)`
+    },
+    [cancelFeaturedTouch]
+  )
 
   const handleFeaturedTouchEnd = useCallback(
     event => {
-      const startY = featuredTouchStartRef.current
-      const endY = event.changedTouches[0]?.clientY
-      featuredTouchStartRef.current = null
-      if (startY === null || endY === undefined) return
+      const start = featuredTouchStartRef.current
+      if (!start) return
 
-      const distance = endY - startY
-      if (Math.abs(distance) < 44) return
+      const end = Array.from(event.changedTouches).find(
+        touch => touch.identifier === start.id
+      )
+      if (!end) return
+      if (event.touches.length) {
+        cancelFeaturedTouch()
+        return
+      }
 
-      // 手机端纵向划过叠卡时切换推荐；下滑看下一本，上滑返回上一本。
+      const axis = featuredTouchAxisRef.current
+      resetFeaturedTouch()
+
+      if (axis !== 'x') return
+
+      // 只要出现横向拖动就压掉随后的 click，避免轻拖也被当成点按打开详情。
       featuredSwipeAtRef.current = Date.now()
-      showFeaturedBook(distance > 0 ? 1 : -1)
+
+      const distance = end.clientX - start.x
+      if (Math.abs(distance) < TOUCH_SWIPE_DISTANCE) return
+
+      // 手机端横向划过叠卡时切换推荐：左划看下一本，右划回上一本。
+      showFeaturedBook(distance < 0 ? 1 : -1)
     },
-    [showFeaturedBook]
+    [cancelFeaturedTouch, resetFeaturedTouch, showFeaturedBook]
   )
 
   const handleFeaturedOpen = useCallback(
-    book => {
-      // 触摸滑动结束后浏览器可能补发 click，这里避免误打开详情。
-      if (Date.now() - featuredSwipeAtRef.current < 500) return
+    (book, event) => {
+      // 只拦截滑动后补发的点按，键盘和辅助技术触发的 click 始终可用。
+      if (event.detail !== 0 && Date.now() - featuredSwipeAtRef.current < 500) {
+        return
+      }
       openBook(book)
     },
     [openBook]
@@ -684,11 +798,11 @@ const BookShelf = ({ bookStats }) => {
 
             <div
               className={styles.featuredStack}
+              ref={featuredStackRef}
               onTouchStart={handleFeaturedTouchStart}
+              onTouchMove={handleFeaturedTouchMove}
               onTouchEnd={handleFeaturedTouchEnd}
-              onTouchCancel={() => {
-                featuredTouchStartRef.current = null
-              }}
+              onTouchCancel={cancelFeaturedTouch}
             >
               {FEATURED_BOOKS.map((book, index) => {
                 const depth =
@@ -706,8 +820,8 @@ const BookShelf = ({ bookStats }) => {
                     data-depth={depth}
                     data-category={book.category}
                     data-tone={FEATURED_TONES[index]}
-                    onClick={() => {
-                      if (isActive) handleFeaturedOpen(book)
+                    onClick={event => {
+                      if (isActive) handleFeaturedOpen(book, event)
                     }}
                     aria-hidden={!isActive}
                     tabIndex={isActive ? 0 : -1}

@@ -71,8 +71,7 @@
   --growth-on-solid: #2a140d;
   --card-shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
   --card-shadow-hover:
-    0 14px 26px -9px rgba(0, 0, 0, 0.58),
-    0 5px 12px -7px rgba(0, 0, 0, 0.42);
+    0 14px 26px -9px rgba(0, 0, 0, 0.58), 0 5px 12px -7px rgba(0, 0, 0, 0.42);
   --sheet-shadow: 0 28px 90px rgba(0, 0, 0, 0.62);
 }
 
@@ -320,7 +319,8 @@
   height: 382px;
   margin: 14px 48px 0 0;
   position: relative;
-  touch-action: pan-x;
+  /* 保留纵向滚页和双指缩放，横向交给 JS 切换推荐。 */
+  touch-action: pan-y pinch-zoom;
   user-select: none;
 }
 
@@ -405,9 +405,15 @@
   transform: translate3d(42px, 0, 0);
 }
 
-.heroFeature[data-active='true']:hover {
-  transform: translate3d(-4px, -4px, 0);
-  box-shadow: 0 17px 36px rgba(30, 34, 69, 0.18);
+@media (hover: hover) and (pointer: fine) {
+  .heroFeature[data-active='true']:hover {
+    transform: translate3d(-4px, -4px, 0);
+    box-shadow: 0 17px 36px rgba(30, 34, 69, 0.18);
+  }
+
+  :global(.dark) .heroFeature[data-active='true']:hover {
+    box-shadow: 0 17px 36px rgba(0, 0, 0, 0.3);
+  }
 }
 
 .heroFeature[data-tone='azure'] {
@@ -471,10 +477,6 @@
 
 :global(.dark) .heroFeature[data-depth='0'] {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
-}
-
-:global(.dark) .heroFeature[data-active='true']:hover {
-  box-shadow: 0 17px 36px rgba(0, 0, 0, 0.3);
 }
 
 :global(.dark) .heroFeature[data-tone='azure'] {
