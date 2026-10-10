@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import React from 'react'
 import { render } from '@testing-library/react'
 
@@ -27,18 +29,23 @@ const galleryProps = format => ({
 })
 
 describe('NotionCollection gallery visibility wrapper', () => {
-  it('keeps the wrapper full width when a visibility class is needed', () => {
+  it('wraps the collection with the visibility class when a gallery override is needed', () => {
     const { container } = render(
       <NotionCollection
         {...galleryProps({
-          gallery_properties: [{ property: 'title', visible: true }]
+          gallery_properties: [{ property: 'title', visible: false }]
         })}
       />
     )
 
     expect(container.firstChild).toHaveClass(
       GALLERY_VISIBILITY_WRAPPER_CLASS,
-      'notion-gallery-hide-page-icons'
+      'notion-gallery-hide-page-icons',
+      'notion-gallery-hide-titles'
+    )
+    expect(container.firstChild.firstElementChild).toHaveAttribute(
+      'data-testid',
+      'friend-links-collection'
     )
   })
 
@@ -56,5 +63,18 @@ describe('NotionCollection gallery visibility wrapper', () => {
       'data-testid',
       'friend-links-collection'
     )
+  })
+
+  it('keeps one stretch rule that prevents the wrapper from collapsing into one column', () => {
+    const css = fs.readFileSync(
+      path.resolve(__dirname, '../../styles/notion.css'),
+      'utf8'
+    )
+    const rules = css.match(/\.notion-gallery-visibility-wrapper\s*\{[^}]*\}/g)
+
+    expect(rules).toHaveLength(1)
+    expect(rules[0]).toContain('align-self: stretch')
+    expect(rules[0]).toContain('width: 100%')
+    expect(rules[0]).toContain('min-width: 100%')
   })
 })
