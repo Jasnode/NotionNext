@@ -1,6 +1,8 @@
 /** @jest-environment node */
 
-import NotionCollection from '@/components/NotionCollection'
+import NotionCollection, {
+  GALLERY_VISIBILITY_WRAPPER_CLASS
+} from '@/components/NotionCollection'
 import { galleryVisibilityClassName } from '@/lib/notion/galleryVisibilityClassName'
 import { execFileSync } from 'child_process'
 import React from 'react'
@@ -17,17 +19,6 @@ jest.mock('@/components/FriendLinksCollection', () => ({
 jest.mock('notion-utils', () => ({
   getBlockValue: value => value?.value || value
 }))
-
-jest.mock('react-notion-x/build/third-party/collection', () => {
-  const React = require('react')
-
-  return {
-    Collection: props =>
-      React.createElement('div', {
-        'data-collection-class-name': props.className || ''
-      })
-  }
-})
 
 const galleryView = format => ({ id: 'gallery_view', type: 'gallery', format })
 
@@ -135,7 +126,7 @@ describe('Notion Gallery visibility settings', () => {
     )
 
     expect(markup).toContain(
-      'class="notion-gallery-visibility-wrapper notion-gallery-hide-page-icons notion-gallery-hide-titles"'
+      `class="${GALLERY_VISIBILITY_WRAPPER_CLASS} notion-gallery-hide-page-icons notion-gallery-hide-titles"`
     )
   })
 
@@ -151,7 +142,7 @@ describe('Notion Gallery visibility settings', () => {
     )
 
     expect(markup).toContain(
-      'class="notion-gallery-visibility-wrapper notion-gallery-hide-page-icons notion-gallery-hide-titles"'
+      `class="${GALLERY_VISIBILITY_WRAPPER_CLASS} notion-gallery-hide-page-icons notion-gallery-hide-titles"`
     )
   })
 
@@ -167,7 +158,7 @@ describe('Notion Gallery visibility settings', () => {
     )
 
     expect(markup).toContain(
-      'class="notion-gallery-visibility-wrapper notion-gallery-hide-page-icons"'
+      `class="${GALLERY_VISIBILITY_WRAPPER_CLASS} notion-gallery-hide-page-icons"`
     )
     expect(markup).not.toContain('notion-gallery-hide-titles')
   })
@@ -184,7 +175,7 @@ describe('Notion Gallery visibility settings', () => {
     )
 
     expect(markup).toContain(
-      'class="notion-gallery-visibility-wrapper notion-gallery-hide-page-icons"'
+      `class="${GALLERY_VISIBILITY_WRAPPER_CLASS} notion-gallery-hide-page-icons"`
     )
   })
 
